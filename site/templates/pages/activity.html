@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Activity{% endblock %}
+{% block description %}Upstream bug reports and fixes, the corpus's releases, and the project's milestones: state, dates, counts and links only.{% endblock %}
+{% block content %}
+<article id="activity">
+<h1>Activity</h1>
+<p class="lede lvl lvl-simple">What is happening around the test kit: the bug reports and fixes in the python-sgp4 library, the test kit’s releases, and the project’s milestones.</p>
+<p class="lede lvl lvl-technical">Upstream items and repository state read from the GitHub REST API through an edge-cached function (<code>/api/activity</code>, one refresh per hour); state, dates, counts and links only. The timeline is maintained by hand.</p>
+
+<h2>Upstream tracker</h2>
+<p class="small muted lvl lvl-simple">Each item is a public thread on GitHub. The badge says whether it is still open, has been merged into the library, or is closed.</p>
+<div class="grid activity-items">
+  <article class="card activity-item" data-activity-item="python-sgp4#169">
+    <h3><a href="https://github.com/brandon-rhodes/python-sgp4/issues/169" data-link>python-sgp4 #169</a> <span class="badge neutral" data-state>issue</span></h3>
+    <p class="attribution">Reported upstream by another user</p>
+    <p class="topic">Nine-digit catalog numbers rejected by the OMM reader</p>
+    <p class="meta small muted" data-meta>Opened 2026-08-20.</p>
+    <p class="lvl lvl-simple" data-simple>A reported problem in the library.</p>
+  </article>
+  <article class="card activity-item" data-activity-item="python-sgp4#170">
+    <h3><a href="https://github.com/brandon-rhodes/python-sgp4/pull/170" data-link>python-sgp4 PR #170</a> <span class="badge neutral" data-state>pull request</span></h3>
+    <p class="attribution">Fix by karlhillx, tested against this corpus</p>
+    <p class="topic">Proposed fix for #169 · <a href="https://github.com/brandon-rhodes/python-sgp4/pull/170#issuecomment-5755703491">test report</a></p>
+    <p class="meta small muted" data-meta>Opened 2026-09-01.</p>
+    <p class="lvl lvl-simple" data-simple>A proposed fix for the library.</p>
+  </article>
+  <article class="card activity-item" data-activity-item="python-sgp4#171">
+    <h3><a href="https://github.com/brandon-rhodes/python-sgp4/issues/171" data-link>python-sgp4 #171</a> <span class="badge neutral" data-state>issue</span></h3>
+    <p class="attribution">Issue filed by the maintainer of this corpus</p>
+    <p class="topic">Empty OBJECT_ID in OMM XML raises an error</p>
+    <p class="meta small muted" data-meta>Opened 2026-09-21.</p>
+    <p class="lvl lvl-simple" data-simple>A reported problem in the library.</p>
+  </article>
+  <article class="card activity-item" data-activity-item="python-sgp4#172">
+    <h3><a href="https://github.com/brandon-rhodes/python-sgp4/pull/172" data-link>python-sgp4 PR #172</a> <span class="badge neutral" data-state>pull request</span></h3>
+    <p class="attribution">Fix submitted by the maintainer of this corpus</p>
+    <p class="topic">Fix for #171</p>
+    <p class="meta small muted" data-meta>Opened 2026-09-21.</p>
+    <p class="lvl lvl-simple" data-simple>A proposed fix for the library.</p>
+  </article>
+</div>
+<p class="small muted" id="activity-status" aria-live="polite"><noscript>Live state needs scripts; the links above always work.</noscript></p>
+
+<h2>The corpus on GitHub</h2>
+<div class="grid">
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Latest version of the test kit</span><span class="lvl lvl-technical">Latest release, hneogy/gp-omm-conformance</span></p><p class="value" data-repo="corpus-release">v{{ corpus.version }}</p><p class="sub" data-repo="corpus-release-date"><a href="{{ corpus.repo }}/releases">releases</a></p></div>
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Last change to the test kit</span><span class="lvl lvl-technical">Last push, hneogy/gp-omm-conformance</span></p><p class="value" data-repo="corpus-pushed">—</p><p class="sub"><a href="{{ corpus.repo }}">repository</a></p></div>
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Last change to this site</span><span class="lvl lvl-technical">Last push, hneogy/gpconf-site</span></p><p class="value" data-repo="site-pushed">—</p><p class="sub" data-repo="site-sub">not published yet</p></div>
+</div>
+
+<h2>Timeline</h2>
+<p class="small muted lvl lvl-technical">Hand-maintained (<code>data/timeline.json</code>); every entry links to a public record.</p>
+<ol class="timeline">
+{% for e in timeline.events %}
+  <li><time datetime="{{ e.time or e.date }}">{{ e.date }}</time> <a href="{{ e.url }}">{{ e.title }}</a><span class="lvl lvl-simple"> — {{ e.simple }}</span><span class="lvl lvl-technical"> — {{ e.technical }}</span></li>
+{% endfor %}
+</ol>
+
+<h2 class="lvl lvl-technical">How this page gets its data</h2>
+<div class="lvl lvl-technical">
+<ul>
+  <li><code>/api/activity</code> is a Cloudflare Pages Function. On a cache miss it makes seven GitHub REST calls (two issues, two pull requests, the corpus's latest release, and the two repositories), keeps state, dates, counts and links, and stores the result at the edge for one hour; visitors are served the cached copy, so GitHub sees about one refresh per hour per edge location.</li>
+  <li>If GitHub fails, the last good copy (kept for 30 days) is served with its original timestamp and a “stale” note; if none exists the page shows the static links only.</li>
+  <li>Requests are authenticated with a read-only, public-repositories token stored as a Cloudflare secret; the token never appears in a response. No titles, bodies or comment text are read or shown.</li>
+</ul>
+</div>
+</article>
+{% endblock %}
+{% block scripts %}<script src="/static/js/activity.js" defer></script>{% endblock %}

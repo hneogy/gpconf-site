@@ -1,0 +1,4 @@
+# Copy to .dev.vars (git-ignored) for local `wrangler pages dev`. In production the same name is a
+# Cloudflare Pages secret. Fine-grained token, read-only, public repositories only. Optional: without
+# it the function runs unauthenticated within GitHub's 60 requests/hour.
+GITHUB_TOKEN=

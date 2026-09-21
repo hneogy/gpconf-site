@@ -29,6 +29,7 @@ PAGES = [
     ("library", "library/index.html", "/library/"),
     ("tools", "tools/index.html", "/tools/"),
     ("about", "about/index.html", "/about/"),
+    ("activity", "activity/index.html", "/activity/"),
     ("404", "404.html", "/404.html"),
 ]
 NAV = [
@@ -37,6 +38,7 @@ NAV = [
     {"id": "tracker", "href": "/tracker/", "label": "Live tracker"},
     {"id": "library", "href": "/library/", "label": "Library status"},
     {"id": "tools", "href": "/tools/", "label": "Tools"},
+    {"id": "activity", "href": "/activity/", "label": "Activity"},
     {"id": "about", "href": "/about/", "label": "How it was built"},
 ]
 CORPUS = {
@@ -118,6 +120,7 @@ def context() -> dict:
         "examples": load(SITE / "content" / "examples.json"),
         "failures": load(SITE / "content" / "failures.json"),
         "alpha5_vectors": load(DATA / "vectors" / "alpha5.json"),
+        "timeline": load(DATA / "timeline.json", {"events": []}),
     }
 
 

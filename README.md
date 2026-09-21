@@ -46,6 +46,9 @@ volume is a few hundred kilobytes and at most one expected 404.
 | `data/vectors/` | `alpha5.json` vendored from corpus v0.1.0 with `PROVENANCE.md` |
 | `tests/` | policy, measurement, drift, output and build-contract tests; a node test for the JavaScript Alpha-5 module |
 | `.github/workflows/` | `tracker.yml` (daily 06:17 UTC), `library.yml` (Mondays 07:23 UTC), `ci.yml` (tests and build on push) |
+| `functions/api/activity.js` | Cloudflare Pages Function serving `/api/activity` (see below) |
+| `data/timeline.json` | hand-maintained project milestones shown on the Activity page; every entry links to a public record |
+| `wrangler.toml` | Pages configuration for `wrangler pages dev` and for the connected project |
 
 ## Tracker metrics
 
@@ -56,6 +59,37 @@ nine-digit ids are present in the Starlink SupGP CSV and how many. Weekly, rotat
 match/drift for each of the corpus's 22 stable `gp-first.php` sources. History is seeded with the corpus's
 published counts of 2026-09-21 (marked `kind: seed`). A failed fetch marks the measurement `ok: false`; the
 run is `partial`; `latest.json` carries the last successful value per measurement with its timestamp.
+
+## Activity page and the `/api/activity` function
+
+The Activity page shows four upstream items (brandon-rhodes/python-sgp4 issues #169 and #171, pull
+requests #170 and #172), the corpus repository's latest release and last push, this site's repository, and
+a hand-maintained timeline. Sources are public only; the page shows state, dates, counts and links and
+never copies titles, bodies or comment text (the function does not read them into its output; a test
+asserts it). Attributions are fixed text in the template.
+
+`functions/api/activity.js` runs as a Cloudflare Pages Function. On a cache miss it makes seven GitHub
+REST calls, stores the result in the edge cache for one hour (`FRESH_SECONDS`) and a "last good" copy for
+30 days, and serves the cached copy to every visitor, so GitHub sees about one refresh per hour per edge
+location (the Cache API is per location; worldwide that is a handful of refreshes an hour, far below the
+API limits). If GitHub fails, the last good copy is served with its original `generated_at`, `stale: true`
+and a reason; if none exists the function answers 503 and the page falls back to its static links.
+Responses carry `x-gpconf-cache: HIT|MISS|STALE|NONE`.
+
+**Secret:** `GITHUB_TOKEN`, read from the environment (`env.GITHUB_TOKEN`), never committed and never
+echoed. Create a GitHub fine-grained personal access token with *Repository access: Public repositories
+(read-only)* and no additional permissions (the default read-only metadata access is enough for public
+issues, pull requests, releases and repositories). Store it in Cloudflare Pages as an encrypted
+environment variable named `GITHUB_TOKEN` (Settings → Environment variables, Production and Preview), or
+with `wrangler pages secret put GITHUB_TOKEN`. Without a token the function still works within GitHub's
+unauthenticated limit of 60 requests per hour per address.
+
+Local test, emulating the function with wrangler (optional `.dev.vars` from `.dev.vars.example`):
+
+```bash
+python3 build.py && npx wrangler pages dev dist --port 8788
+curl -s -D - http://127.0.0.1:8788/api/activity | sed -n '1,12p'
+```
 
 ## Run locally
 

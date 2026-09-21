@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 PAGES = ["index.html", "migration/index.html", "findings/index.html", "tracker/index.html",
-         "library/index.html", "tools/index.html", "about/index.html", "404.html"]
+         "library/index.html", "tools/index.html", "about/index.html", "activity/index.html", "404.html"]
 
 
 class Build(unittest.TestCase):
@@ -71,6 +71,38 @@ class Build(unittest.TestCase):
         # derived Alpha-5 example (SARAMAGO first record) and the CCSDS annex G rendering.
         for name, html in self.pages.items():
             self.assertNotIn("space-track.org/basicspacedata", html.lower(), name)
+
+
+class Activity(unittest.TestCase):
+    def test_attributions_are_exact_and_no_thread_text(self):
+        import build
+        tmp = tempfile.mkdtemp()
+        try:
+            build.main(Path(tmp))
+            html = (Path(tmp) / "activity/index.html").read_text(encoding="utf-8")
+        finally:
+            shutil.rmtree(tmp)
+        for phrase in ("Issue filed by the maintainer of this corpus", "Fix submitted by the maintainer of this corpus",
+                       "Fix by karlhillx, tested against this corpus", "Reported upstream by another user"):
+            self.assertEqual(html.count(phrase), 1, phrase)
+        self.assertIn('data-activity-item="python-sgp4#172"', html)
+        self.assertIn("timeline", html)
+
+    def test_function_has_no_secret_and_only_public_sources(self):
+        text = (ROOT / "functions/api/activity.js").read_text()
+        self.assertNotRegex(text, r"gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}")
+        self.assertIn("env.GITHUB_TOKEN", text)
+        for repo in ("brandon-rhodes/python-sgp4", "hneogy/gp-omm-conformance", "hneogy/gpconf-site"):
+            self.assertIn(repo, text)
+        self.assertNotIn("title", text.split("// Only state")[1].split("export async function buildActivity")[0].replace("titles", ""))
+
+    def test_function_builder(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node not installed")
+        proc = subprocess.run([node, str(ROOT / "tests/activity-function.test.mjs")], capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assertIn('"ok":true', proc.stdout.replace(" ", ""))
 
 
 class Alpha5JavaScript(unittest.TestCase):

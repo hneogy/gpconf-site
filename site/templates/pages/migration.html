@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}The story and the migration{% endblock %}
+{% block description %}What happened to satellite catalog numbers in July 2026, why it matters, and the old and new data formats side by side.{% endblock %}
+{% block content %}
+{% set g = examples.goes9 %}{% set s = examples.saramago %}
+<article class="prose">
+<div class="lvl lvl-simple">
+<h1>The story: when the licence plates ran out</h1>
+<p class="lede">Every object in orbit has a catalog number. Think of it as a licence plate. The plate had room for five digits. In July 2026 the numbers got too big for the plate.</p>
+
+<h2>What happened</h2>
+<p>Catalog numbers are handed out in order. Sputnik 1 was number 1. The International Space Station is 25544. The numbers kept climbing as launches got cheaper.</p>
+<p>The oldest data format still in daily use, the <strong>TLE</strong> (two-line element set), was designed on punch cards. It gives the plate exactly five characters. So the biggest plate was 99999. In practice the format stopped even earlier, at 69999, because the numbers 70000 to 99999 were set aside for temporary and provisional use.</p>
+<p>On <strong>11 July 2026</strong> a small Portuguese CubeSat named <strong>SARAMAGO</strong> was catalogued as number <strong>100000</strong>. It did not fit on the plate. Every satellite catalogued since has a six-digit number.</p>
+
+<h2>Two ways out</h2>
+<ol>
+  <li><strong>Letters on the plate.</strong> Space-Track, the US Space Force’s public catalog, replaces the first digit with a letter. A means 10, B means 11, and so on up to Z for 33. So 100000 is written <code>A0000</code> and the plate stretches to 339999. The letters I and O are skipped so nobody mistakes them for 1 and 0. This is called <strong>Alpha-5</strong>. It is a stopgap.</li>
+  <li><strong>A new form with room to spare.</strong> Since 2020 both catalogs also publish the same information in a modern form called the <strong>OMM</strong>, where each value has a name and a full number, up to nine digits. No plate, no squeezing.</li>
+</ol>
+
+<h2>What CelesTrak does</h2>
+<p>CelesTrak is the free, widely used mirror of the catalog that most hobby and open-source software reads. It chose not to use letters. If you ask CelesTrak for the old format, it simply <strong>leaves out</strong> every object with a six-digit number. If none are left to show, it answers “not found” (an HTTP 404). Old software often reads that as “nothing new happened” and carries on, missing every recent launch.</p>
+
+<h2>Why it matters</h2>
+<p>Software written for five digits does one of three things with a six-digit number: it crashes, it mangles the number, or it never sees the satellite at all because the old format cannot carry it. The third is the dangerous one, because nothing looks wrong. Tracking apps, ground-station schedulers, collision screeners and hobby dashboards are all affected if they were never updated.</p>
+
+<h2>What to do</h2>
+<ul>
+  <li>If you <strong>use</strong> satellite software: ask whether it reads the new OMM formats and six-digit numbers. Check that satellites launched after July 2026 show up.</li>
+  <li>If you <strong>build</strong> it: run the <a href="{{ corpus.repo }}">free test kit</a>. It shows exactly which of sixteen real-world situations your code survives. The <a href="/findings/">findings</a> page shows what broke for three example programs.</li>
+</ul>
+
+<h2>Old and new, side by side</h2>
+<p>The same satellite written the old way and the new way. The example is the one printed in the international standard for the new format (a weather satellite called GOES 9), so no live data is involved.</p>
+<div class="side-by-side">
+  <div><h3>Old: the TLE</h3><pre class="tle" aria-label="TLE example">{{ g.line0 }}
+{{ g.line1 }}
+{{ g.line2 }}</pre><p class="small muted">Three fixed-width lines. Position decides meaning. The catalog number is characters 3 to 7 of lines 1 and 2.</p></div>
+  <div><h3>New: the OMM</h3><pre aria-label="OMM example">OBJECT_NAME         = GOES 9
+OBJECT_ID           = 1995-025A
+EPOCH               = 2020-064T10:34:41.4264
+MEAN_MOTION         = 1.00273272
+ECCENTRICITY        = 0.0005013
+INCLINATION         = 3.0539
+NORAD_CAT_ID        = 23581
+…</pre><p class="small muted">Named values, no fixed widths. The catalog number can have up to nine digits.</p></div>
+</div>
+<p>Here is what the lettered plate looks like on a real six-digit object. These lines are the corpus’s own rendering of catalog number 100000, SARAMAGO, and are published in the test kit; CelesTrak never emits lettered lines itself.</p>
+<pre class="tle" aria-label="Alpha-5 example">{{ s.line0 }}
+{{ s.line1 }}
+{{ s.line2 }}</pre>
+<p>Take either example apart field by field in the <a href="/tools/">tools</a>.</p>
+
+<h2>Glossary</h2>
+<dl class="glossary">
+  <dt>Catalog number (NORAD id)</dt><dd>The unique number every tracked object gets, in order of cataloguing. The licence plate.</dd>
+  <dt>TLE</dt><dd>Two-line element set. The 1960s-era text format for an orbit: two lines of 69 characters (often with a name line above). Five characters for the catalog number.</dd>
+  <dt>OMM</dt><dd>Orbit Mean-Elements Message. The modern standard (CCSDS 502.0) for the same information, with named fields. Comes as CSV, JSON, XML or a key = value text called KVN.</dd>
+  <dt>Alpha-5</dt><dd>Space-Track’s trick of writing the first digit of a six-digit number as a letter so it still fits in five characters. Works up to 339999.</dd>
+  <dt>CelesTrak</dt><dd>A non-profit site run by Dr. T.S. Kelso that republishes catalog data for free. Most open-source software reads it.</dd>
+  <dt>Space-Track</dt><dd>The US Space Force’s official public catalog site. Requires an account; its terms forbid passing its data on, which is why nothing from it appears here.</dd>
+  <dt>Parser</dt><dd>The part of a program that reads a data format. The test kit tests parsers.</dd>
+  <dt>404</dt><dd>The web’s “not found” answer. CelesTrak gives it when a TLE request has nothing it can show.</dd>
+  <dt>SupGP</dt><dd>Supplemental data CelesTrak publishes from satellite operators, such as SpaceX for Starlink. It is where nine-digit numbers appear, for a few days after each launch.</dd>
+  <dt>Analyst object</dt><dd>An object tracked but not yet identified. Analyst objects have numbers in special ranges and often no name or launch designation.</dd>
+</dl>
+</div>
+
+<div class="lvl lvl-technical">
+<h1>The migration: Alpha-5, OMM and what CelesTrak serves</h1>
+<p class="lede">What changed on 2026-07-11, the two coexisting answers, what each provider actually emits, and a field-by-field comparison of the TLE and the OMM on the CCSDS example. Sources are cited as in the corpus’s <a href="{{ corpus.blob }}/docs/RESEARCH.md">research notes</a>.</p>
+
+<h2>What changed</h2>
+<p>On 2026-07-11 the US Space Force catalog assigned number 100000 to the Portuguese CubeSat SARAMAGO (international designator 2026-067CY, launched 2026-03-30) after exhausting the five-digit range. CelesTrak’s notice: “All newly cataloged objects will have 6-digit catalog numbers of 100000+ and GP data will not be available for them using the TLE format.” The legacy fixed-width SATCAT continues to update but contains only objects below 70000.</p>
+<p>The usable five-digit range ends at 69999, not 99999. Of the 70000–99999 block, primary sources describe only 80000–89999, the analyst range (Space-Track); the 72000-series ids seen in supplemental launch data and the 90000 block are described by secondary sources only. The corpus records this as a stated gap rather than guessing.</p>
+
+<h2>Alpha-5 (Space-Track only)</h2>
+<p>Space-Track’s definition: replace the first digit of the five-character field with a letter, A=10 … Z=33, skipping I and O, capitals only. 100000 becomes <code>A0000</code>, 339999 becomes <code>Z9999</code>, and nothing above 339999 has a TLE form. Only the TLE and 3LE formats show Alpha-5; the other formats carry integers up to 999,999,999. Its legacy API classes stay five-digit. In the checksum a letter counts 0, like a blank.</p>
+<div class="table-wrap"><table><caption>The Alpha-5 letter table</caption><thead><tr><th>letter</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
+<tbody><tr><th scope="row">value</th><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td>32</td><td>33</td></tr></tbody></table></div>
+<p>Real catalog numbers so far exist only for letters A (100000–100789 at the corpus snapshot) and T (270000–270449, Space Fence analyst objects); every other letter is covered by vectors only. The corpus’s <a href="{{ corpus.tree }}/derived/alpha5-tle">derived Alpha-5 lines</a> are rendered from CelesTrak OMM records, because CelesTrak emits no Alpha-5; their encoding was corroborated by the maintainer against Space-Track output (44 records, letters A and T, zero defects; corpus decision D-070) without redistributing any of it.</p>
+
+<h2>OMM (CCSDS 502.0-B-3)</h2>
+<p>The Orbit Mean-Elements Message carries <code>NORAD_CAT_ID</code> as “an integer of up to nine digits”, four-digit years, and no fixed widths. CelesTrak has served it since May 2020 in CSV, JSON, XML and KVN; Space-Track’s GP class serves the same keywords. CelesTrak’s renderings have documented quirks a parser must accept:</p>
+<ul>
+  <li>CSV and JSON omit the constant mandatory keywords (<code>CENTER_NAME</code>, <code>REF_FRAME</code>, <code>TIME_SYSTEM</code>, <code>MEAN_ELEMENT_THEORY</code>) and the whole header; defaults are EARTH, TEME, UTC, SGP4.</li>
+  <li>XML is an <code>&lt;ndm&gt;</code> aggregate of <code>&lt;omm version="2.0"&gt;</code> elements with empty <code>CREATION_DATE</code> and <code>ORIGINATOR</code>; it validates against the SANA 2.0.0 schema set and fails the current 4.0.0 set only on the version attribute.</li>
+  <li>KVN writes <code>MEAN_ELEMENT_THEORY = SGP/SGP4</code> where the XML says <code>SGP4</code>; decimals may start with a dot (<code>.0005013</code>); lines end CRLF.</li>
+  <li>Analyst objects have an empty <code>OBJECT_ID</code> in every format (an empty XML element, which Python’s ElementTree returns as <code>None</code>) and the literal name <code>UNKNOWN</code>.</li>
+  <li>Supplemental (SupGP) records add non-OMM columns (<code>RMS</code>, <code>DATA_SOURCE</code>), use classification <code>C</code>, element set 0, and are where nine-digit ids (7995016xx launch nominals) appear for roughly a week after a launch.</li>
+</ul>
+
+<h2>What CelesTrak does</h2>
+<p>It emits no Alpha-5. A TLE, 3LE or 2LE request returns only the objects below 100000; if none qualify the response is HTTP 404 with the body <code>No GP data found</code>. The OMM formats return everything. The default <code>FORMAT</code> has been CSV since 2026-05-09. The <a href="/tracker/">tracker</a> checks the 404 and the count relations daily.</p>
+
+<h2>TLE versus OMM, field by field</h2>
+<p>The CCSDS 502.0-B-3 annex G example (GOES 9), with the OMM values as printed in the standard and the TLE rendered from them by the corpus renderer (validated against 304 of 304 CelesTrak lines). No live data is involved.</p>
+<div class="side-by-side">
+<pre class="tle" aria-label="TLE rendering of the annex G example">{{ g.line0 }}
+{{ g.line1 }}
+{{ g.line2 }}</pre>
+<pre aria-label="OMM KVN rendering of the annex G example">OBJECT_NAME         = {{ g.omm.OBJECT_NAME }}
+OBJECT_ID           = {{ g.omm.OBJECT_ID }}
+CENTER_NAME         = {{ g.omm.CENTER_NAME }}
+REF_FRAME           = {{ g.omm.REF_FRAME }}
+TIME_SYSTEM         = {{ g.omm.TIME_SYSTEM }}
+MEAN_ELEMENT_THEORY = {{ g.omm.MEAN_ELEMENT_THEORY }}
+EPOCH               = {{ g.omm.EPOCH }}
+MEAN_MOTION         = {{ g.omm.MEAN_MOTION }}
+ECCENTRICITY        = {{ g.omm.ECCENTRICITY }}
+INCLINATION         = {{ g.omm.INCLINATION }}
+RA_OF_ASC_NODE      = {{ g.omm.RA_OF_ASC_NODE }}
+ARG_OF_PERICENTER   = {{ g.omm.ARG_OF_PERICENTER }}
+MEAN_ANOMALY        = {{ g.omm.MEAN_ANOMALY }}
+EPHEMERIS_TYPE      = {{ g.omm.EPHEMERIS_TYPE }}
+CLASSIFICATION_TYPE = {{ g.omm.CLASSIFICATION_TYPE }}
+NORAD_CAT_ID        = {{ g.omm.NORAD_CAT_ID }}
+ELEMENT_SET_NO      = {{ g.omm.ELEMENT_SET_NO }}
+REV_AT_EPOCH        = {{ g.omm.REV_AT_EPOCH }}
+BSTAR               = {{ g.omm.BSTAR }}
+MEAN_MOTION_DOT     = {{ g.omm.MEAN_MOTION_DOT }}
+MEAN_MOTION_DDOT    = {{ g.omm.MEAN_MOTION_DDOT }}</pre>
+</div>
+<div class="table-wrap"><table>
+<caption>Field map (header keywords omitted)</caption>
+<thead><tr><th>TLE columns</th><th>OMM keyword</th><th>example</th><th>notes</th></tr></thead>
+<tbody>
+<tr><td>line 0</td><td><code>OBJECT_NAME</code></td><td>GOES 9</td><td>TLE name line is padded or cut to 24 characters</td></tr>
+<tr><td>1: 3–7, 2: 3–7</td><td><code>NORAD_CAT_ID</code></td><td>23581</td><td>five characters or Alpha-5 in the TLE; integer up to nine digits in the OMM</td></tr>
+<tr><td>1: 8</td><td><code>CLASSIFICATION_TYPE</code></td><td>U</td><td>C in CelesTrak supplemental data</td></tr>
+<tr><td>1: 10–17</td><td><code>OBJECT_ID</code></td><td>95025A ↔ 1995-025A</td><td>two-digit launch year in the TLE; may be empty (analyst objects)</td></tr>
+<tr><td>1: 19–32</td><td><code>EPOCH</code></td><td>20064.44075725 ↔ 2020-064T10:34:41.4264</td><td>two-digit year (57 pivot) and day of year; OMM allows calendar or day-of-year, optional fraction and Z; TLE resolution 864 µs</td></tr>
+<tr><td>1: 34–43</td><td><code>MEAN_MOTION_DOT</code></td><td>-.00000113</td><td>the OMM carries the TLE field as printed (ndot/2), 304/304 records</td></tr>
+<tr><td>1: 45–52</td><td><code>MEAN_MOTION_DDOT</code></td><td>00000+0 ↔ 0.0</td><td>implied decimal and exponent; mantissa rounded half up to 5 digits by CelesTrak</td></tr>
+<tr><td>1: 54–61</td><td><code>BSTAR</code></td><td>10000-3 ↔ 0.0001</td><td>implied decimal and exponent; same rounding rule</td></tr>
+<tr><td>1: 63</td><td><code>EPHEMERIS_TYPE</code></td><td>0</td><td></td></tr>
+<tr><td>1: 65–68</td><td><code>ELEMENT_SET_NO</code></td><td>925 ↔ 0925</td><td>leading zero legal in KVN; may be 0 in supplemental data</td></tr>
+<tr><td>2: 9–16</td><td><code>INCLINATION</code></td><td>3.0539</td><td>degrees</td></tr>
+<tr><td>2: 18–25</td><td><code>RA_OF_ASC_NODE</code></td><td>81.7939</td><td>degrees</td></tr>
+<tr><td>2: 27–33</td><td><code>ECCENTRICITY</code></td><td>0005013 ↔ 0.0005013</td><td>implied leading decimal; CelesTrak truncates to 7 digits, Space-Track rounds</td></tr>
+<tr><td>2: 35–42</td><td><code>ARG_OF_PERICENTER</code></td><td>249.2363</td><td>degrees</td></tr>
+<tr><td>2: 44–51</td><td><code>MEAN_ANOMALY</code></td><td>150.1602</td><td>degrees</td></tr>
+<tr><td>2: 53–63</td><td><code>MEAN_MOTION</code></td><td>1.00273272</td><td>rev/day</td></tr>
+<tr><td>2: 64–68</td><td><code>REV_AT_EPOCH</code></td><td>4316</td><td>may be 0 or 1 in supplemental data</td></tr>
+<tr><td>1: 69, 2: 69</td><td>—</td><td>4, 9</td><td>modulo-10 checksum: digits count their value, minus signs 1, everything else 0</td></tr>
+</tbody></table></div>
+<p>Because the TLE is the lossy side, OMM → TLE → OMM does not round-trip: eccentricity is truncated, the two exponent-form mantissas are rounded, and supplemental epochs are quantised to the TLE’s resolution (86 µs differences observed). The corpus compares TLE against OMM under those rules and reports a check that needed a tolerance separately from an exact pass.</p>
+
+<h2>The nine-digit case</h2>
+<p>Nine-digit <code>NORAD_CAT_ID</code>s exist today only in CelesTrak’s supplemental launch nominals (7995016xx) for roughly five to eight days after a launch. They cannot be rendered as TLE at all, and a library that stores the catalog number internally as an Alpha-5 string cannot load them from any format: python-sgp4 2.27 and Skyfield 1.55 raise <code>ValueError</code> on every such record (see <a href="/library/">library status</a>).</p>
+
+<h2>What to change</h2>
+<ul>
+  <li>Parse the catalog number as an integer from any source; decode Alpha-5 strictly (reject I, O, lowercase) if you read Space-Track TLEs.</li>
+  <li>Treat an empty <code>OBJECT_ID</code> or <code>OBJECT_NAME</code> as legitimate; default the constant metadata; accept all CCSDS epoch forms.</li>
+  <li>Tolerate unknown keys and non-<code>U</code> classifications; compare TLE and OMM under the precision rules; read <code>MEAN_MOTION_DOT</code> as the printed TLE field.</li>
+  <li>Treat a TLE 404 as “unrepresentable in this format”, not as an outage, and prefer the OMM formats, which both providers say are the future.</li>
+</ul>
+<p>Then run the corpus against your parser: <a href="{{ corpus.repo }}#quick-start">quick start</a>.</p>
+</div>
+</article>
+{% endblock %}

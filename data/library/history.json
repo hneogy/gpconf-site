@@ -1,0 +1,27 @@
+[
+ {
+  "checked_at": "2026-09-21T05:52:03Z",
+  "versions": {
+   "python": "3.14.4",
+   "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+   "sgp4": "2.27",
+   "skyfield": "1.55",
+   "sgp4_accelerated": true
+  },
+  "counts": {
+   "pass": 3,
+   "fail": 6
+  },
+  "results": {
+   "sgp4-nine-digit-omm": "fail",
+   "sgp4-empty-object-id-xml": "fail",
+   "sgp4-classification-omm": "fail",
+   "sgp4-classification-tle": "pass",
+   "sgp4-alpha5-encode": "pass",
+   "sgp4-alpha5-decode": "pass",
+   "sgp4-alpha5-reject-invalid": "fail",
+   "sgp4-alpha5-reject-unrepresentable": "fail",
+   "skyfield-nine-digit-from-omm": "fail"
+  }
+ }
+]

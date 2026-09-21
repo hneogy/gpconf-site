@@ -1,0 +1,257 @@
+{
+ "provenance": {
+  "corpus": "gp-omm-conformance",
+  "corpus_version": "0.1.0",
+  "tag": "v0.1.0",
+  "tag_commit": "fdf4043",
+  "manifest_generated_at": "2026-09-21T04:07:27Z",
+  "manifest_sha256": "a8438077c7112b5f9ea1df444df57faae4703e2fbef789718a572b0344dd95b3",
+  "note": "Daily URLs are endpoints the corpus fetched in Phase 2 (tools/fetchlist.json). Stable sources are every stable-tier CelesTrak source in manifest.json with its recorded SHA-256; the drift check re-fetches each at most once a week, a few per day, and compares hashes only."
+ },
+ "policy": {
+  "max_requests_per_run": 10,
+  "runs_per_day": 1,
+  "pause_seconds": 2,
+  "retries": 0,
+  "follow_redirects": false,
+  "user_agent": "gpconf-site/0.1 (+https://gpconf.neogy.dev; scheduled tracker, at most 10 requests per day; https://github.com/hneogy/gp-omm-conformance)",
+  "celestrak_policy": "https://celestrak.org/NORAD/documentation/gp-data-formats.php (FAQ addendum, updated 2026-03-26): data refreshes at most every 2 hours; more than 50 HTTP errors in 2 hours, or more than about 100 MB per day from one address, leads to a firewall entry; never repeat a 403 or 404."
+ },
+ "daily": [
+  {
+   "id": "last30-csv",
+   "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=CSV",
+   "kind": "csv",
+   "metric": "last30",
+   "what": "objects catalogued in the last 30 days, OMM CSV: record count, highest catalog number, six-digit count"
+  },
+  {
+   "id": "last30-tle",
+   "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=TLE",
+   "kind": "tle",
+   "metric": "last30_tle",
+   "what": "the same group as TLE: HTTP 404 when every member is six-digit, else the record count (must equal the CSV's count below 100000)"
+  },
+  {
+   "id": "analyst-csv",
+   "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=analyst&FORMAT=CSV",
+   "kind": "csv",
+   "metric": "analyst",
+   "what": "analyst objects, OMM CSV: record count, six-digit count, count below 100000"
+  },
+  {
+   "id": "analyst-tle",
+   "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=analyst&FORMAT=TLE",
+   "kind": "tle",
+   "metric": "analyst_tle",
+   "what": "analyst objects as TLE: record count (the TLE keeps only the five-digit ones)"
+  },
+  {
+   "id": "supgp-starlink-csv",
+   "url": "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php?FILE=starlink&FORMAT=CSV",
+   "kind": "csv",
+   "metric": "supgp_starlink",
+   "what": "Starlink supplemental GP, CSV: whether any nine-digit NORAD_CAT_ID is present and how many; nothing else is read"
+  }
+ ],
+ "stable": [
+  {
+   "id": "gp-first-25544-TLE",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=TLE",
+   "sha256": "274de71dc147837c977a27f289a06768a92d093396ae73b524fd88be6b76042f",
+   "bytes": 168,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:11:49Z"
+  },
+  {
+   "id": "gp-first-25544-2LE",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=2LE",
+   "sha256": "a3c757af5751a3f2a6f468257af916fe0ce08f60810d23166f4b8b50348fbb9b",
+   "bytes": 142,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:47Z"
+  },
+  {
+   "id": "gp-first-25544-CSV",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=CSV",
+   "sha256": "cbdd6a2e36b97d543654a12e6ff60767e1d570d7fcbd5248b0999d85a6292af5",
+   "bytes": 368,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:39Z"
+  },
+  {
+   "id": "gp-first-25544-JSON",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=JSON",
+   "sha256": "e18ebbe14d38ae617b0506e79230d51df539704dbd0ff1fd9d6f9d8f15e13dd5",
+   "bytes": 414,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:11:51Z"
+  },
+  {
+   "id": "gp-first-25544-JSON-PRETTY",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=JSON-PRETTY",
+   "sha256": "481ea9ae0881f58a6f14ee0adab6058a8104188e63eb9e36f7348dc07e0bd815",
+   "bytes": 517,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:50Z"
+  },
+  {
+   "id": "gp-first-25544-XML",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=XML",
+   "sha256": "cdcfd5fbd9e8b4766c7c09b360f0a44e4709172f7e6a58ce5e2b621a77dac13c",
+   "bytes": 1198,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:41Z"
+  },
+  {
+   "id": "gp-first-25544-KVN",
+   "case": "epoch-year-19xx",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=25544&FORMAT=KVN",
+   "sha256": "b23fb2823e24b7f9c29f3a790fd71a85d44fd13386baff6dd1c7d40df5daac90",
+   "bytes": 626,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:45Z"
+  },
+  {
+   "id": "gp-first-100000-TLE",
+   "case": "six-digit-omm-saramago",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=TLE",
+   "sha256": "000844fd5b7a7b64f14b58cc34f0016ad51b0982b0d38f915986560e4e217683",
+   "bytes": 16,
+   "http_status": 404,
+   "baseline_retrieved": "2026-09-21T00:43:53Z"
+  },
+  {
+   "id": "gp-first-100000-CSV",
+   "case": "six-digit-omm-saramago",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=CSV",
+   "sha256": "2a1913dc0c5e2babfc914fd92df9685181cdf964134e9cb9133d7edb89095a9d",
+   "bytes": 374,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:55Z"
+  },
+  {
+   "id": "gp-first-100000-JSON",
+   "case": "six-digit-omm-saramago",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=JSON",
+   "sha256": "1d04dc3b4e49d6f7162c69b2f86b6132302bf302265f912a312dcee7b5585b0a",
+   "bytes": 420,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:43:58Z"
+  },
+  {
+   "id": "gp-first-100000-XML",
+   "case": "six-digit-omm-saramago",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=XML",
+   "sha256": "c2523a59549f0e95e0573630b50626cc15089bfeb5d9486f033aa6d54702d71b",
+   "bytes": 1204,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:00Z"
+  },
+  {
+   "id": "gp-first-100000-KVN",
+   "case": "six-digit-omm-saramago",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=KVN",
+   "sha256": "bb9073b3b323e25961ef7a4012aadc252abb46653c011b8806a205e7044d719e",
+   "bytes": 632,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:03Z"
+  },
+  {
+   "id": "gp-first-270449-TLE",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=270449&FORMAT=TLE",
+   "sha256": "000844fd5b7a7b64f14b58cc34f0016ad51b0982b0d38f915986560e4e217683",
+   "bytes": 16,
+   "http_status": 404,
+   "baseline_retrieved": "2026-09-21T00:44:05Z"
+  },
+  {
+   "id": "gp-first-270449-CSV",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=270449&FORMAT=CSV",
+   "sha256": "f9caeec84ba49dc0ae95e1f493193724f875b1b7c25cdd607fb7af9e37d1a050",
+   "bytes": 363,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:08Z"
+  },
+  {
+   "id": "gp-first-270449-JSON",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=270449&FORMAT=JSON",
+   "sha256": "c50e3ee57a0108411bd844e1d0af5fe91386a458c0c6daf9460a6164f6fa4263",
+   "bytes": 409,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:11Z"
+  },
+  {
+   "id": "gp-first-270449-XML",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=270449&FORMAT=XML",
+   "sha256": "94c54614780dbe36b3a6394f9b9ba8c01eb19e737e886a5f302e0a7ae4b01f02",
+   "bytes": 1193,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:15Z"
+  },
+  {
+   "id": "gp-first-270449-KVN",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=270449&FORMAT=KVN",
+   "sha256": "e90632bbe787b917248c91dea641df65bb2a3e4b23cb46752ba25f2f95804613",
+   "bytes": 621,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:17Z"
+  },
+  {
+   "id": "gp-first-81011-TLE",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=81011&FORMAT=TLE",
+   "sha256": "f06539e94675d87b1b5f4958e7b918ffb67cf10204da1f3bb966acb529c004e2",
+   "bytes": 168,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:20Z"
+  },
+  {
+   "id": "gp-first-81011-CSV",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=81011&FORMAT=CSV",
+   "sha256": "339ed35b58d6300d12d42c66cc981d636ae9bfaee9df74f7c3d41f3f9a878703",
+   "bytes": 357,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:23Z"
+  },
+  {
+   "id": "gp-first-81011-JSON",
+   "case": "analyst-objects",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=81011&FORMAT=JSON",
+   "sha256": "742bd531a42360d694b5d99603fa66e8686ed3ecdae18c02e7d42485ee031906",
+   "bytes": 402,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:26Z"
+  },
+  {
+   "id": "gp-first-69999-TLE",
+   "case": "bstar-and-derivative-forms",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=69999&FORMAT=TLE",
+   "sha256": "b7f96c3912c2445c1ba94cd9a061e4b270f5f58bd4fb27fd188cc838c645700d",
+   "bytes": 168,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:29Z"
+  },
+  {
+   "id": "gp-first-69999-CSV",
+   "case": "bstar-and-derivative-forms",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=69999&FORMAT=CSV",
+   "sha256": "601736c2b121cea243ec864e2dd50383c404a0c4fabd110bb981652ad0ccb108",
+   "bytes": 376,
+   "http_status": 200,
+   "baseline_retrieved": "2026-09-21T00:44:33Z"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Tools{% endblock %}
+{% block description %}A strict Alpha-5 encoder/decoder and an interactive anatomy of a TLE. Everything runs in your browser and nothing is sent anywhere.{% endblock %}
+{% block content %}
+{% set g = examples.goes9 %}{% set s = examples.saramago %}
+<article>
+<h1>Tools</h1>
+<p class="lede lvl lvl-simple">Two small tools. Both run entirely in your browser: nothing you type is sent anywhere.</p>
+<p class="lede lvl lvl-technical">Client-side only. The page’s Content-Security-Policy forbids connections to anything but this origin and forbids form submission; the scripts contain no network call. The Alpha-5 implementation is checked against the corpus’s specification vectors, which you can re-run here.</p>
+
+<section aria-labelledby="a5-h">
+<h2 id="a5-h">Alpha-5 encoder and decoder</h2>
+<div class="lvl lvl-simple"><p>Type a catalog number (like <code>100000</code>) to see its five-character lettered form, or type a lettered field (like <code>A0000</code>) to get the number back. The rules are strict: capital letters only, never I or O, nothing above 339999.</p></div>
+<div class="lvl lvl-technical"><p>Space-Track’s definition, applied strictly: A=10 … Z=33, I and O skipped, capitals only, exactly five characters; numbers below 100000 are five zero-padded digits; nothing above 339999 encodes. Lenient decoders (python-sgp4’s accepts I, O and lowercase) disagree with strict ones on such inputs, which is why the corpus treats them as invalid.</p></div>
+<div class="form-row">
+  <div><label for="a5-input">Catalog number or five-character field</label><input type="text" id="a5-input" inputmode="text" autocomplete="off" spellcheck="false" maxlength="12" placeholder="100000 or A0000"></div>
+</div>
+<p class="small">Examples: {% for ex in ['25544','100000','A0000','270449','T0449','339999','Z9999','340000','I0000','a0000'] %}<button type="button" class="btn small" data-a5-example="{{ ex }}">{{ ex }}</button> {% endfor %}</p>
+<div id="a5-result" class="result" aria-live="polite"></div>
+<details><summary>Letter table</summary><div class="table-wrap"><table><thead><tr><th>letter</th><th class="num">value</th><th class="num">catalog numbers</th></tr></thead><tbody id="a5-table"></tbody></table></div></details>
+<p><button type="button" class="btn" id="a5-selftest">Run the specification vectors</button> <span class="small muted">({{ examples_vectors_note if examples_vectors_note else 'official examples, boundaries, skip boundaries, below-100000 forms, invalid fields and unrepresentable numbers from corpus v' ~ corpus.version }})</span></p>
+<div id="a5-selftest-result" class="result" aria-live="polite"></div>
+</section>
+
+<section aria-labelledby="tle-h">
+<h2 id="tle-h">Anatomy of a TLE</h2>
+<div class="lvl lvl-simple"><p>A TLE is two lines of exactly 69 characters, sometimes with a name line above. Every position has a meaning. Hover over, tap or tab through the coloured fields to see what each one is. The first example is the one printed in the international standard; the second is the test kit’s lettered rendering of catalog number 100000.</p></div>
+<div class="lvl lvl-technical"><p>Column layout per CelesTrak’s format documentation; checksum recomputed; the catalog field decoded with the strict Alpha-5 rules; exponent fields decoded from their implied-decimal form; the epoch resolved through the 57 pivot. Presets: the CCSDS annex G example rendered by the corpus renderer, and the corpus’s published derived Alpha-5 line (SARAMAGO, first record).</p></div>
+<div id="tle-anatomy">
+  <p><button type="button" class="btn" data-tle-example="goes9" aria-pressed="true">CCSDS example (GOES 9)</button> <button type="button" class="btn" data-tle-example="saramago" aria-pressed="false">Alpha-5 example (SARAMAGO, A0000)</button></p>
+  <pre class="tle" id="tle-view" aria-label="TLE with selectable fields"></pre>
+  <div class="field-panel" id="tle-panel" aria-live="polite"></div>
+  <h3>Paste your own</h3>
+  <p class="lvl lvl-simple">Paste a TLE (two or three lines). It is checked and taken apart right here in your browser and never leaves this page.</p>
+  <p class="lvl lvl-technical">Parsed in the browser: line lengths, both checksums, catalog-field agreement between the lines and strict Alpha-5 decoding. Not sent anywhere; see the CSP in the response headers.</p>
+  <label for="tle-paste">TLE lines</label>
+  <textarea id="tle-paste" spellcheck="false" autocomplete="off" placeholder="1 ...&#10;2 ..."></textarea>
+  <div id="tle-paste-report" aria-live="polite"></div>
+</div>
+</section>
+<script type="application/json" id="tle-examples">{{ {'goes9': g, 'saramago': s} | tojson }}</script>
+<script type="application/json" id="alpha5-vectors">{{ alpha5_vectors | tojson }}</script>
+</article>
+{% endblock %}
+{% block scripts %}<script src="/static/js/alpha5.js" defer></script><script src="/static/js/tle.js" defer></script>{% endblock %}

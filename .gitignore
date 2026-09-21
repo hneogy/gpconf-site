@@ -1,0 +1,16 @@
+# build output (Cloudflare Pages builds it; never committed)
+dist/
+# local virtual environments
+.venv/
+venv-*/
+# raw provider bodies cached by a local job run; never committed
+.cache/
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+# no Space-Track data of any kind, ever (same guard as the corpus)
+*spacetrack*
+*space-track*
+*Space-Track*
+*SpaceTrack*

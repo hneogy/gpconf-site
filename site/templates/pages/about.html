@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}How it was built{% endblock %}
+{% block description %}Provenance, the independent audit, AI assistance under human direction, and who is responsible for the corpus and this site.{% endblock %}
+{% block content %}
+<article class="prose">
+<h1>How it was built</h1>
+<div class="lvl lvl-simple">
+<p class="lede">Where the numbers come from, who checked them, and who is responsible.</p>
+<h2>Where the numbers come from</h2>
+<p>Nothing on this site or in the test kit was made up. Every expected value in the kit comes from a real answer that CelesTrak gave on 21 September 2026, and each answer’s web address, time and fingerprint (a SHA-256 hash) are written down. The example satellite used on every page here comes from the printed international standard, not from live data.</p>
+<h2>Who checked it</h2>
+<p>Before publication the kit went through an independent audit: a separate reviewer, with no access to the notes of the people who built it, recomputed every value from the raw responses with its own code. It found no wrong value, and a list of documentation problems that were then fixed. The <a href="{{ corpus.blob }}/AUDIT.md">audit report</a> is public, including the findings.</p>
+<h2>AI, under human direction</h2>
+<p>The kit and this site were built with an AI coding assistant (Anthropic’s Claude) working under written rules and step-by-step human review. The AI was not allowed to invent data, had to record every decision in a public log, and could not publish anything on its own. The auditor was also an AI, in a separate session, told to trust nothing in the repository. This is stated plainly so you can weigh it.</p>
+<h2>Who is responsible</h2>
+<p>The corpus and this site are maintained by Honorius Neogy and published by NEOGY LLC under the MIT licence. If you find a mistake, the most useful report names the case, the file’s hash and the field; open an issue on the <a href="{{ corpus.repo }}/issues">corpus repository</a>.</p>
+<h2>What this site will never show</h2>
+<ul>
+  <li>No orbit data copied from CelesTrak: only counts, yes/no answers and times.</li>
+  <li>No values from operator-supplied (SupGP) data.</li>
+  <li>Nothing from Space-Track, whose terms forbid passing its data on.</li>
+  <li>No requests to CelesTrak caused by you visiting. A scheduled job fetches a few pages a day; the site only shows what it computed.</li>
+  <li>No trackers, no cookies, no outside scripts. The tools run in your browser and send nothing.</li>
+</ul>
+</div>
+<div class="lvl lvl-technical">
+<p class="lede">Provenance, verification, the audit, AI assistance under human direction, and the rules this site is built under.</p>
+<h2>Provenance of the corpus</h2>
+<ul>
+  <li><strong>No element set was invented.</strong> Every value traces to a CelesTrak response whose URL, retrieval time and SHA-256 are recorded in <code>manifest.json</code>, to a published standard cited by clause, or to a committed, labelled transformation of such a record (<code>derived/</code>, each with a provenance sidecar).</li>
+  <li><strong>Raw provider files are not redistributed.</strong> CelesTrak states no redistribution terms and silence is not permission; <code>tools/fetch.py</code> rebuilds the fixtures on your machine under CelesTrak’s own policy, once, cached, never looped, and reports hash drift for stable sources.</li>
+  <li><strong>Verification.</strong> Expected values were produced by reference readers written from the format documents and cross-checked record by record against python-sgp4 and Skyfield; the renderer behind the derived TLE lines reproduced 304 of 304 CelesTrak lines byte for byte. Where a specification and provider practice disagree, both are recorded as an ambiguity and neither is silently chosen.</li>
+  <li><strong>Space-Track.</strong> Its user agreement prohibits transferring its data, so none is in the corpus or on this site. The maintainer verified the Alpha-5 encoding against their own Space-Track account with a tool that prints verdicts only (decision D-070); a name guard in the repository refuses any Space-Track-named path.</li>
+</ul>
+<h2>The independent audit</h2>
+<p>Completed 2026-09-21 before publication, at commit <code>4db7d2a</code>. The auditor was a separate AI session with no access to the building session’s context, instructed to trust nothing in the repository and to recompute values independently. It made 65,887 field-level comparisons across every record of every case, all agreeing with the frozen expected values, and confirmed all 128 recorded hashes, byte counts, statuses and record counts. It found three false statements in public documentation, several overstated claims, two decisions never implemented and minor inconsistencies; every finding and its resolution is in <a href="{{ corpus.blob }}/AUDIT.md">AUDIT.md</a> and <a href="{{ corpus.blob }}/DECISIONS.md">DECISIONS.md</a> (D-054 onward). It was not a human review.</p>
+<h2>AI assistance under human direction</h2>
+<p>The corpus was built with Anthropic’s Claude operating as a coding agent under a written decision policy (<code>CLAUDE.md</code>): decide technical matters autonomously, log every non-trivial choice, reversal and correction in an append-only <code>DECISIONS.md</code>, fix weak provenance without asking, and stop for anything involving terms, credentials, publishing, contacting people or spending. Work ran in phases, each ending in the owner’s review. This site was built the same way, with its own <code>DECISIONS.md</code>; the catalog change it documents happened after the model’s training data ends, so nothing rests on the model’s memory of the domain.</p>
+<h2>Upstream</h2>
+<ul>
+  <li><a href="{{ corpus.issue_171 }}">python-sgp4 #171</a>: empty <code>&lt;OBJECT_ID/&gt;</code> import failure, filed from the corpus with a prepared patch.</li>
+  <li><a href="{{ corpus.issue_169 }}">python-sgp4 #169</a> / <a href="{{ corpus.pr_170 }}">PR #170</a>: nine-digit ids, reported independently before the corpus existed; the corpus <a href="{{ corpus.pr_170_comment }}">tested the PR</a> across all sixteen cases and reported the result.</li>
+</ul>
+<h2>This site</h2>
+<ul>
+  <li>Static HTML built by a small Python script (Jinja2 templates), served from Cloudflare Pages; no framework, no external scripts, fonts or images; a strict Content-Security-Policy (<code>connect-src 'self'</code>, <code>form-action 'none'</code>) so the tools cannot send anything anywhere.</li>
+  <li>The tracker and library data are produced by scheduled GitHub Actions jobs that commit computed JSON; the pages are rendered from that JSON at build time and work without JavaScript. Visitors never trigger a request to CelesTrak.</li>
+  <li>Fetch etiquette: at most ten CelesTrak requests per day (five daily endpoints plus at most four weekly drift checks), each URL once per run, a User-Agent naming the project and this site, no redirects, no retries, two seconds between requests. The policy is enforced in code and tested.</li>
+  <li>Shown data: counts, yes/no states, HTTP statuses, byte counts, hashes and timestamps. The only element sets on the site are the CCSDS annex G example and the corpus’s published derived Alpha-5 example.</li>
+</ul>
+<h2>Responsibility and licence</h2>
+<p>Maintainer: Honorius Neogy. Publisher and copyright holder: NEOGY LLC. Code, text, vectors, derived files and expected values are MIT-licensed. Provider data is not included. To cite the corpus use its <code>CITATION.cff</code>: concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a>, version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for v{{ corpus.version }}.</p>
+</div>
+</article>
+{% endblock %}

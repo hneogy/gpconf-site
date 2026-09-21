@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Live tracker{% endblock %}
+{% block description %}Daily counts from CelesTrak's catalog data: highest catalog number, six-digit objects, the TLE 404, analyst counts, nine-digit ids, and weekly stable-source drift.{% endblock %}
+{% block content %}
+{% set ls = tracker.last_successful if tracker else {} %}{% set le = tracker.latest if tracker else none %}{% set dr = tracker.drift if tracker else none %}
+<article>
+<h1>Live tracker</h1>
+<p class="lede lvl lvl-simple">Once a day a small job asks CelesTrak five questions and writes down the answers as numbers and yes/no. Nothing you do on this page contacts CelesTrak.</p>
+<p class="lede lvl lvl-technical">Daily counts from five CelesTrak endpoints and a weekly hash check of the corpus’s 22 stable sources, computed by a scheduled job and served as static JSON. Derived measurements only: no element values are stored or shown.</p>
+{% if not tracker %}
+<p class="callout warn">No tracker data has been built yet.</p>
+{% else %}
+{% if le and le.status != 'ok' %}
+<div class="callout {{ 'bad' if le.status == 'failed' else 'warn' }}"><strong>Last run {{ le.checked_at | fmt_ts }} was {{ le.status }}.</strong>
+{% for key, m in le.metrics.items() %}{% if not m.ok %} {{ key }}: {{ m.error or ('HTTP ' ~ m.status) }}.{% endif %}{% endfor %}
+The values below are the last successful ones for each measurement, with their own timestamps.</div>
+{% elif le %}
+<p class="callout ok">Last successful check: {{ le.checked_at | fmt_ts }}{% if le.kind == 'seed' %} (seeded from the corpus’s own fetch; the first scheduled run replaces it){% endif %}. {{ le.fetch.requests }} request{{ '' if le.fetch.requests == 1 else 's' }}, {{ le.fetch.errors }} error{{ '' if le.fetch.errors == 1 else 's' }}.</p>
+{% endif %}
+
+<h2>Current values</h2>
+<div class="grid">
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Highest satellite number among recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days CSV</span></p><p class="value">{{ ls.last30.highest | fmt_int }}</p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Recent satellites with six-digit numbers</span><span class="lvl lvl-technical">Six-digit objects in that group</span></p><p class="value">{{ ls.last30.six_digit | fmt_int }}<span class="muted small"> of {{ ls.last30.records | fmt_int }}</span></p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
+  <div class="tile {{ 'bad' if ls.last30_tle.is_404 else 'ok' }}"><p class="label"><span class="lvl lvl-simple">The same list in the old format</span><span class="lvl lvl-technical">last-30-days TLE request</span></p><p class="value">{% if ls.last30_tle.is_404 %}404{% else %}{{ ls.last30_tle.records | fmt_int }}{% endif %}</p><p class="sub"><span class="lvl lvl-simple">{% if ls.last30_tle.is_404 %}“not found”: none of them fit the old format{% else %}records returned: some still fit{% endif %}</span><span class="lvl lvl-technical">{% if ls.last30_tle.is_404 %}No GP data found{% else %}records (objects below 100000){% endif %}</span> · {{ ls.last30_tle.checked_at | fmt_ts }}</p></div>
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Unidentified objects: new format vs old</span><span class="lvl lvl-technical">Analyst group, CSV vs TLE record count</span></p><p class="value">{{ ls.analyst.records | fmt_int }}<span class="muted small"> vs {{ ls.analyst_tle.records | fmt_int }}</span></p><p class="sub"><span class="lvl lvl-simple">{{ ls.analyst.six_digit | fmt_int }} have six-digit numbers and are missing from the old format</span><span class="lvl lvl-technical">{{ ls.analyst.six_digit | fmt_int }} six-digit, {{ ls.analyst.below_100000 | fmt_int }} below 100000</span> · {{ ls.analyst.checked_at | fmt_ts }}</p></div>
+  <div class="tile"><p class="label"><span class="lvl lvl-simple">Nine-digit numbers in Starlink launch data</span><span class="lvl lvl-technical">Nine-digit ids in the Starlink SupGP feed</span></p><p class="value">{{ ls.supgp_starlink.nine_digit_present | yesno }}<span class="muted small"> ({{ ls.supgp_starlink.nine_digit | fmt_int }})</span></p><p class="sub">{{ ls.supgp_starlink.checked_at | fmt_ts }}</p></div>
+  <div class="tile {{ 'bad' if dr.drift else ('ok' if dr.match else 'warn') }}"><p class="label"><span class="lvl lvl-simple">Did the “first ever” records change?</span><span class="lvl lvl-technical">gp-first stable-source drift (weekly)</span></p><p class="value">{% if dr.drift %}{{ dr.drift }} drift{% elif dr.match %}match{% else %}pending{% endif %}</p><p class="sub">{{ dr.match }} match · {{ dr.drift }} drift · {{ dr.never_checked }} not yet checked of {{ dr.sources }}{% if dr.last_check %} · {{ dr.last_check | fmt_ts }}{% endif %}</p></div>
+</div>
+{% if le and le.relations %}
+<p class="small muted lvl lvl-technical">Count relations at the last run: TLE records = CSV records below 100000 for last-30-days: {{ le.relations.last30_tle_equals_below_100000 | yesno }}; for analyst: {{ le.relations.analyst_tle_equals_below_100000 | yesno }}.</p>
+{% endif %}
+
+<h2>History</h2>
+<p class="lvl lvl-simple">One point per day. The first point, marked in amber, comes from the test kit’s own data collection on 21 September 2026.</p>
+<p class="lvl lvl-technical">One entry per day from <code>/data/tracker/history.json</code>; the seed entry (amber) is the corpus’s Phase 2 fetch of 2026-09-21. Each chart has a data table for screen readers and for scripts-off browsing.</p>
+<div class="charts">
+  <figure class="chart"><figcaption>Highest catalog number in the last-30-days group</figcaption><div data-chart="highest">Loading…</div></figure>
+  <figure class="chart"><figcaption>Six-digit objects in the last-30-days group</figcaption><div data-chart="six">Loading…</div></figure>
+  <figure class="chart"><figcaption>last-30-days TLE request: 404 (red) or data returned (green)</figcaption><div data-chart="tle404">Loading…</div></figure>
+  <figure class="chart"><figcaption>Analyst objects in CSV</figcaption><div data-chart="analystcsv">Loading…</div></figure>
+  <figure class="chart"><figcaption>Analyst objects in TLE</figcaption><div data-chart="analysttle">Loading…</div></figure>
+  <figure class="chart"><figcaption>Nine-digit ids in the Starlink SupGP feed</figcaption><div data-chart="nine">Loading…</div></figure>
+  <figure class="chart"><figcaption>Nine-digit ids present (green) or not (red)</figcaption><div data-chart="ninebool">Loading…</div></figure>
+</div>
+<noscript><div class="table-wrap"><table><caption>History</caption><thead><tr><th>date</th><th>highest</th><th>six-digit</th><th>TLE 404</th><th>analyst CSV</th><th>analyst TLE</th><th>nine-digit</th></tr></thead><tbody>
+{% for e in tracker_history | reverse %}<tr><td>{{ e.date }}{% if e.kind == 'seed' %} (seed){% endif %}</td><td class="num">{{ e.metrics.last30.highest | fmt_int }}</td><td class="num">{{ e.metrics.last30.six_digit | fmt_int }}</td><td>{{ e.metrics.last30_tle.is_404 | yesno }}</td><td class="num">{{ e.metrics.analyst.records | fmt_int }}</td><td class="num">{{ e.metrics.analyst_tle.records | fmt_int }}</td><td class="num">{{ e.metrics.supgp_starlink.nine_digit | fmt_int }}</td></tr>
+{% endfor %}</tbody></table></div></noscript>
+
+<h2>Stable-source drift</h2>
+<div class="lvl lvl-simple"><p>The test kit’s frozen answers rest on CelesTrak’s “first ever record” pages staying the same. Each week the job re-reads them and compares fingerprints. “Match” means unchanged.</p></div>
+<div class="lvl lvl-technical"><p>The corpus assumes <code>gp-first.php</code> is stable (ambiguity <code>gp-first-stability</code>). The job re-fetches each of the 22 stable-tier sources once every 7 days, at most 4 per day so the daily budget stays under 10 requests, and compares the SHA-256 with the manifest of v{{ corpus.version }}. Two of the sources are the 16-byte <code>No GP data found</code> body of a TLE request for a six-digit object; a match there means the 404 semantics are unchanged.</p></div>
+<div class="table-wrap"><table><caption>22 stable sources</caption><thead><tr><th>source</th><th>case</th><th>last checked</th><th>result</th></tr></thead><tbody>
+{% for s in dr.per_source %}<tr><td><code>{{ s.id }}</code></td><td><code>{{ s.case }}</code></td><td>{{ s.last_checked | fmt_ts }}</td><td><span class="badge {{ s.last_status or 'neutral' }}">{{ s.last_status or 'not yet checked' }}</span></td></tr>
+{% endfor %}</tbody></table></div>
+
+<h2>How the tracker works</h2>
+<div class="lvl lvl-simple">
+<ul>
+  <li>A scheduled job runs once a day on GitHub’s servers, not in your browser.</li>
+  <li>It asks CelesTrak for five pages, each once, and never more than ten a day including the weekly checks. It identifies itself by name and by this site’s address.</li>
+  <li>It keeps only counts, yes/no answers, times and fingerprints, then saves them as small files that this page reads.</li>
+  <li>If CelesTrak does not answer, the job records that and this page shows the last good values with their dates.</li>
+</ul>
+</div>
+<div class="lvl lvl-technical">
+<ul>
+  <li>Endpoints, once per run:{% for d in sources.daily %} <code>{{ d.url.replace('https://celestrak.org', '') }}</code>{{ ';' if not loop.last }}{% endfor %}. Plus at most {{ 4 }} <code>gp-first.php</code> drift checks. Hard cap {{ sources.policy.max_requests_per_run }} requests per run, one run per day; a repeated URL raises before anything is sent.</li>
+  <li>User-Agent: <code>{{ sources.policy.user_agent }}</code>. No redirects followed, no retries, {{ sources.policy.pause_seconds }} s between requests, a 404 is recorded and never repeated (CelesTrak’s policy: 50 errors in two hours leads to a firewall entry; the job produces at most one expected 404 a day).</li>
+  <li>Stored per source: HTTP status, byte count, SHA-256, timestamp; per measurement: counts and booleans. Raw bodies are not written anywhere in CI. The tests assert that no element value can appear in the outputs.</li>
+  <li>Failure handling: a failed fetch marks that measurement <code>ok: false</code> with the error class; the run is “partial”; <code>latest.json</code> carries the last successful value per measurement with its timestamp; the page shows both.</li>
+  <li>Data files: <a href="/data/tracker/latest.json"><code>latest.json</code></a>, <a href="/data/tracker/history.json"><code>history.json</code></a>, <a href="/data/tracker/drift.json"><code>drift.json</code></a> (CORS-enabled, cached ten minutes). Job source: <code>jobs/tracker.py</code> in the site repository.</li>
+</ul>
+</div>
+{% endif %}
+</article>
+{% endblock %}
+{% block scripts %}<script src="/static/js/charts.js" defer></script>{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Library status{% endblock %}
+{% block description %}Weekly check of the latest python-sgp4 and Skyfield releases against the corpus's no-network reproducers and Alpha-5 vectors.{% endblock %}
+{% block content %}
+{% set L = library %}
+<article>
+<h1>Library status</h1>
+<p class="lede lvl lvl-simple">Two popular free libraries do most of the orbit maths in open-source satellite software. Every week we install their newest versions and check, without touching the network, whether the problems the test kit found are fixed yet.</p>
+<p class="lede lvl lvl-technical">A weekly job installs the latest PyPI <code>sgp4</code> and <code>skyfield</code>, runs the corpus’s no-network reproducers (nine-digit id, empty <code>OBJECT_ID</code>, classification) built on the CCSDS 502.0-B-3 annex G example values, and runs the Alpha-5 vectors from corpus v{{ corpus.version }}. Pass means the behaviour the corpus expects; fail means the finding still stands.</p>
+{% if not L %}
+<p class="callout warn">No library check has been recorded yet.</p>
+{% else %}
+<p class="callout {{ 'ok' if L.counts.fail == 0 else 'warn' }}">Last check {{ L.checked_at | fmt_ts }}: python-sgp4 <strong>{{ L.versions.sgp4 }}</strong>{% if L.versions.sgp4_accelerated is not none %} ({{ 'accelerated C++' if L.versions.sgp4_accelerated else 'pure Python' }} build){% endif %}, Skyfield <strong>{{ L.versions.skyfield }}</strong>, Python {{ L.versions.python }}. {{ L.counts.pass }} pass, {{ L.counts.fail }} fail.</p>
+<div class="table-wrap"><table>
+<caption>Behaviours</caption>
+<thead><tr><th>result</th><th>behaviour</th><th>library</th><th class="lvl lvl-technical">detail</th><th>upstream</th></tr></thead>
+<tbody>
+{% for b in L.behaviours %}
+<tr><td><span class="badge {{ b.result }}">{{ b.result }}</span></td>
+<td>{{ b.title }}<div class="small muted lvl lvl-technical">expected: {{ b.expected }}</div></td>
+<td>{{ b.library }}</td>
+<td class="lvl lvl-technical"><code class="small">{{ b.detail }}</code></td>
+<td>{% for u in b.upstream %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
+{% endfor %}
+</tbody></table></div>
+{% if L.group_errors %}<p class="callout bad">Some groups could not run: {% for k, v in L.group_errors.items() %}{{ k }}: <code>{{ v }}</code>{{ '; ' if not loop.last }}{% endfor %}</p>{% endif %}
+
+<div class="lvl lvl-simple">
+<h2>What the rows mean</h2>
+<ul>
+  <li><strong>Nine-digit id</strong>: can the library load a record whose catalog number has nine digits, as CelesTrak publishes for new Starlink launches? Today it refuses.</li>
+  <li><strong>Empty OBJECT_ID</strong>: can it read an XML record for an object with no launch designation? Today it crashes (our report #171).</li>
+  <li><strong>Classification C</strong>: does it keep the “C” marker on operator-supplied records? Today it changes it to “U” in some paths.</li>
+  <li><strong>Alpha-5 vectors</strong>: does it turn numbers into lettered fields and back exactly as the rules say, and refuse the forbidden letters? It encodes and decodes correctly but accepts letters it should refuse.</li>
+</ul>
+</div>
+<div class="lvl lvl-technical">
+<h2>Method</h2>
+<ul>
+  <li>Inputs: the annex G example (GOES 9) with <code>NORAD_CAT_ID</code> replaced by 799501621, or <code>CLASSIFICATION_TYPE</code> set to C, or rendered as a TLE with C; the same values in CelesTrak’s <code>&lt;ndm&gt;</code>-wrapped XML shape with an empty <code>&lt;OBJECT_ID&gt;</code>; the vendored <code>vectors/alpha5.json</code> (SHA-256 recorded in the repository).</li>
+  <li>No provider data, no network: Skyfield’s timescale is loaded from its bundled data. Recorded per behaviour: pass/fail, exception type and message (never element values), the expected behaviour and upstream links; per run: package versions, whether the C++ extension is active, Python version.</li>
+  <li>The classification result on the TLE path depends on the build: the corpus found the pure-Python <code>twoline2rv</code> resets C to U while the accelerated build keeps it; the row above says which build ran.</li>
+  <li>Data: <a href="/data/library/latest.json"><code>latest.json</code></a>, <a href="/data/library/history.json"><code>history.json</code></a>. Job source: <code>jobs/library_status.py</code> in the site repository.</li>
+</ul>
+</div>
+
+<h2>Run history</h2>
+<div class="table-wrap"><table><thead><tr><th>checked</th><th>python-sgp4</th><th>Skyfield</th><th class="num">pass</th><th class="num">fail</th></tr></thead><tbody>
+{% for h in library_history | reverse %}<tr><td>{{ h.checked_at | fmt_ts }}</td><td>{{ h.versions.sgp4 }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td>{{ h.versions.skyfield }}</td><td class="num">{{ h.counts.pass }}</td><td class="num">{{ h.counts.fail }}</td></tr>
+{% endfor %}</tbody></table></div>
+{% endif %}
+</article>
+{% endblock %}

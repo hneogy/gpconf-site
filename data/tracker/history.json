@@ -1,0 +1,163 @@
+[
+ {
+  "date": "2026-09-21",
+  "checked_at": "2026-09-21T00:41:30Z",
+  "kind": "seed",
+  "status": "ok",
+  "provenance": "Seeded from the public corpus gp-omm-conformance v0.1.0, Phase 2 fetch of 2026-09-21 (fixtures tle-omits-six-digit-objects, analyst-objects and nine-digit-supgp-launch-nominals: case.md coverage counts and MANIFEST.md). No request was made by this site for this entry.",
+  "metrics": {
+   "last30": {
+    "ok": true,
+    "status": 200,
+    "records": 256,
+    "highest": 100789,
+    "six_digit": 256,
+    "nine_digit": 0,
+    "below_100000": 0,
+    "checked_at": "2026-09-21T00:10:07Z"
+   },
+   "last30_tle": {
+    "ok": true,
+    "status": 404,
+    "is_404": true,
+    "records": 0,
+    "body_is_no_gp_data": true,
+    "checked_at": "2026-09-21T00:41:28Z",
+    "note": "captured twice by the corpus (00:10:10Z hand-recorded, 00:41:28Z clean)"
+   },
+   "analyst": {
+    "ok": true,
+    "status": 200,
+    "records": 565,
+    "six_digit": 346,
+    "nine_digit": 0,
+    "below_100000": 219,
+    "checked_at": "2026-09-21T00:11:30Z"
+   },
+   "analyst_tle": {
+    "ok": true,
+    "status": 200,
+    "is_404": false,
+    "records": 219,
+    "checked_at": "2026-09-21T00:41:30Z"
+   },
+   "supgp_starlink": {
+    "ok": true,
+    "status": 200,
+    "records": null,
+    "nine_digit": 27,
+    "nine_digit_present": true,
+    "checked_at": "2026-09-21T00:11:59Z",
+    "note": "27 nine-digit ids 799501621-799501647 in the full Starlink SupGP file at the snapshot; the file's total record count was not published by the corpus"
+   }
+  },
+  "relations": {
+   "last30_tle_equals_below_100000": true,
+   "analyst_tle_equals_below_100000": true
+  },
+  "drift": {
+   "checked": 0,
+   "results": [],
+   "note": "baseline: 22 stable-source hashes recorded by the corpus on 2026-09-21"
+  },
+  "fetch": {
+   "requests": 0,
+   "errors": 0,
+   "bytes": 0,
+   "note": "seed entry"
+  }
+ },
+ {
+  "date": "2026-09-21",
+  "checked_at": "2026-09-21T05:51:40Z",
+  "kind": "scheduled",
+  "status": "ok",
+  "metrics": {
+   "last30": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-21T05:51:40Z",
+    "bytes": 35446,
+    "records": 231,
+    "highest": 100789,
+    "six_digit": 231,
+    "nine_digit": 0,
+    "below_100000": 0
+   },
+   "last30_tle": {
+    "ok": true,
+    "status": 404,
+    "checked_at": "2026-09-21T05:51:43Z",
+    "bytes": 16,
+    "is_404": true,
+    "records": 0,
+    "body_is_no_gp_data": true
+   },
+   "analyst": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-21T05:51:45Z",
+    "bytes": 80471,
+    "records": 594,
+    "highest": 290027,
+    "six_digit": 375,
+    "nine_digit": 0,
+    "below_100000": 219
+   },
+   "analyst_tle": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-21T05:51:48Z",
+    "bytes": 36792,
+    "is_404": false,
+    "records": 219
+   },
+   "supgp_starlink": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-21T05:51:50Z",
+    "bytes": 1802605,
+    "records": 11141,
+    "highest": 799501647,
+    "six_digit": 418,
+    "nine_digit": 27,
+    "below_100000": 10696,
+    "nine_digit_present": true
+   }
+  },
+  "relations": {
+   "last30_tle_equals_below_100000": true,
+   "analyst_tle_equals_below_100000": true
+  },
+  "drift": {
+   "checked": 4,
+   "results": [
+    {
+     "id": "gp-first-100000-CSV",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-100000-JSON",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-100000-KVN",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-100000-TLE",
+     "result": "match",
+     "http_status": 404
+    }
+   ]
+  },
+  "fetch": {
+   "requests": 9,
+   "errors": 0,
+   "bytes": 1956772
+  }
+ }
+]

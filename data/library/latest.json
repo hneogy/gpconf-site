@@ -1,0 +1,155 @@
+{
+ "checked_at": "2026-09-21T05:52:03Z",
+ "versions": {
+  "python": "3.14.4",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "sgp4": "2.27",
+  "skyfield": "1.55",
+  "sgp4_accelerated": true
+ },
+ "inputs": "CCSDS 502.0-B-3 annex G example values; corpus vectors/alpha5.json (v0.1.0)",
+ "behaviours": [
+  {
+   "id": "sgp4-nine-digit-omm",
+   "title": "Nine-digit NORAD_CAT_ID loads through sgp4.omm.initialize",
+   "library": "python-sgp4",
+   "expected": "a record with NORAD_CAT_ID 799501621 loads and satnum equals it",
+   "upstream": [
+    {
+     "label": "issue #169",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/issues/169"
+    },
+    {
+     "label": "PR #170",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/pull/170"
+    },
+    {
+     "label": "corpus test report on PR #170",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/pull/170#issuecomment-5755703491"
+    }
+   ],
+   "result": "fail",
+   "detail": "ValueError: satellite number cannot exceed 339999, whose Alpha 5 encoding is 'Z9999'",
+   "traceback_tail": "ValueError: satellite number cannot exceed 339999, whose Alpha 5 encoding is 'Z9999'"
+  },
+  {
+   "id": "sgp4-empty-object-id-xml",
+   "title": "Empty <OBJECT_ID/> in OMM XML loads through parse_xml and initialize",
+   "library": "python-sgp4",
+   "expected": "no exception; an empty OBJECT_ID is a legitimate CelesTrak value for analyst objects",
+   "upstream": [
+    {
+     "label": "issue #171",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/issues/171"
+    }
+   ],
+   "result": "fail",
+   "detail": "TypeError: 'NoneType' object is not subscriptable",
+   "traceback_tail": "TypeError: 'NoneType' object is not subscriptable"
+  },
+  {
+   "id": "sgp4-classification-omm",
+   "title": "CLASSIFICATION_TYPE C survives sgp4.omm.initialize",
+   "library": "python-sgp4",
+   "expected": "sat.classification == 'C'",
+   "upstream": [
+    {
+     "label": "corpus note",
+     "url": "https://github.com/hneogy/gp-omm-conformance/blob/main/docs/upstream/python-sgp4-omm-initialize-drops-classification.md"
+    }
+   ],
+   "result": "fail",
+   "detail": "classification after initialize: 'U'"
+  },
+  {
+   "id": "sgp4-classification-tle",
+   "title": "Classification C survives Satrec.twoline2rv",
+   "library": "python-sgp4",
+   "expected": "sat.classification == 'C' (the corpus found the pure-Python build resets it and the accelerated build keeps it)",
+   "upstream": [
+    {
+     "label": "corpus note",
+     "url": "https://github.com/hneogy/gp-omm-conformance/blob/main/docs/upstream/python-sgp4-omm-initialize-drops-classification.md"
+    }
+   ],
+   "result": "pass",
+   "detail": "classification after twoline2rv: 'C' (accelerated=True)"
+  },
+  {
+   "id": "sgp4-alpha5-encode",
+   "title": "to_alpha5 matches every valid vector",
+   "library": "python-sgp4",
+   "expected": "all valid vectors encode as the Space-Track table says",
+   "upstream": [
+    {
+     "label": "corpus case alpha5-encoding-vectors",
+     "url": "https://github.com/hneogy/gp-omm-conformance/tree/main/fixtures/alpha5-encoding-vectors"
+    }
+   ],
+   "result": "pass",
+   "detail": "64/64 encode vectors"
+  },
+  {
+   "id": "sgp4-alpha5-decode",
+   "title": "from_alpha5 matches every valid vector",
+   "library": "python-sgp4",
+   "expected": "all valid vectors decode to their integer",
+   "upstream": [
+    {
+     "label": "corpus case alpha5-encoding-vectors",
+     "url": "https://github.com/hneogy/gp-omm-conformance/tree/main/fixtures/alpha5-encoding-vectors"
+    }
+   ],
+   "result": "pass",
+   "detail": "64/64 decode vectors"
+  },
+  {
+   "id": "sgp4-alpha5-reject-invalid",
+   "title": "from_alpha5 rejects I, O, lowercase and malformed fields",
+   "library": "python-sgp4",
+   "expected": "every invalid vector raises (Space-Track never uses I or O and defines capital letters only)",
+   "upstream": [
+    {
+     "label": "corpus case alpha5-encoding-vectors",
+     "url": "https://github.com/hneogy/gp-omm-conformance/tree/main/fixtures/alpha5-encoding-vectors"
+    }
+   ],
+   "result": "fail",
+   "detail": "2/6 invalid fields rejected; accepted: ['I0000', 'O1234', 'a0000', 'A000']"
+  },
+  {
+   "id": "sgp4-alpha5-reject-unrepresentable",
+   "title": "to_alpha5 rejects numbers outside 0-339999",
+   "library": "python-sgp4",
+   "expected": "every unrepresentable number raises",
+   "upstream": [
+    {
+     "label": "corpus case alpha5-encoding-vectors",
+     "url": "https://github.com/hneogy/gp-omm-conformance/tree/main/fixtures/alpha5-encoding-vectors"
+    }
+   ],
+   "result": "fail",
+   "detail": "2/3 unrepresentable numbers rejected; accepted: [-1]"
+  },
+  {
+   "id": "skyfield-nine-digit-from-omm",
+   "title": "Nine-digit NORAD_CAT_ID loads through EarthSatellite.from_omm",
+   "library": "Skyfield",
+   "expected": "a record with NORAD_CAT_ID 799501621 loads (Skyfield delegates to python-sgp4)",
+   "upstream": [
+    {
+     "label": "python-sgp4 issue #169",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/issues/169"
+    }
+   ],
+   "result": "fail",
+   "detail": "ValueError: satellite number cannot exceed 339999, whose Alpha 5 encoding is 'Z9999'",
+   "traceback_tail": "ValueError: satellite number cannot exceed 339999, whose Alpha 5 encoding is 'Z9999'"
+  }
+ ],
+ "group_errors": {},
+ "counts": {
+  "pass": 3,
+  "fail": 6
+ }
+}

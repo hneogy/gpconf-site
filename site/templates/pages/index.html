@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Satellite numbers outgrew their format{% endblock %}
+{% block content %}
+{% set ls = tracker.last_successful if tracker else {} %}
+<section class="hero">
+  <div class="lvl lvl-simple">
+    <h1>The world ran out of five-digit satellite numbers. Does your software know?</h1>
+    <p class="lede">On 11 July 2026 the satellite catalog reached number 100000. Older software quietly loses every satellite launched since. This is a free test kit that shows developers exactly where their code breaks.</p>
+    <div class="actions">
+      <a class="btn primary" href="/migration/" data-level-link="simple">Read the story</a>
+      <a class="btn" href="/tools/">Try the tools</a>
+      <a class="btn" href="/tracker/">See the live tracker</a>
+    </div>
+  </div>
+  <div class="lvl lvl-technical">
+    <h1>A conformance corpus for parsers crossing the five-digit catalog-number boundary</h1>
+    <p class="lede">Sixteen cases built from real CelesTrak responses: Alpha-5 TLEs, six- and nine-digit <code>NORAD_CAT_ID</code>s, and CCSDS OMM in CSV, JSON, XML and KVN. Every expected value traces to a recorded URL, retrieval time and SHA-256. Point the runner at your parser; it tells you, case by case, what breaks and why.</p>
+    <div class="actions">
+      <a class="btn primary" href="/migration/" data-level-link="technical">Read the migration</a>
+      <a class="btn" href="/findings/">Findings</a>
+      <a class="btn" href="{{ corpus.repo }}">Corpus on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="snap-h">
+  <h2 id="snap-h"><span class="lvl lvl-simple">What the catalog looks like today</span><span class="lvl lvl-technical">Tracker snapshot</span></h2>
+  {% if ls %}
+  <div class="grid">
+    <div class="tile"><p class="label"><span class="lvl lvl-simple">Highest satellite number seen in recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days group</span></p><p class="value">{{ ls.last30.highest | fmt_int }}</p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}{% if ls.last30.seed %} · seeded from the corpus{% endif %}</p></div>
+    <div class="tile"><p class="label"><span class="lvl lvl-simple">Recent satellites with six-digit numbers</span><span class="lvl lvl-technical">Six-digit objects in that group</span></p><p class="value">{{ ls.last30.six_digit | fmt_int }}<span class="muted small"> of {{ ls.last30.records | fmt_int }}</span></p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
+    <div class="tile {{ 'bad' if ls.last30_tle.is_404 else 'ok' }}"><p class="label"><span class="lvl lvl-simple">Old format asked for recent satellites</span><span class="lvl lvl-technical">TLE request for that group</span></p><p class="value">{% if ls.last30_tle.is_404 %}404{% else %}{{ ls.last30_tle.records | fmt_int }} records{% endif %}</p><p class="sub"><span class="lvl lvl-simple">{% if ls.last30_tle.is_404 %}“not found”: none of them fit{% else %}some still fit the old format{% endif %}</span><span class="lvl lvl-technical">{% if ls.last30_tle.is_404 %}No GP data found{% else %}objects below 100000 present{% endif %}</span> · {{ ls.last30_tle.checked_at | fmt_ts }}</p></div>
+    <div class="tile"><p class="label"><span class="lvl lvl-simple">Nine-digit numbers in Starlink launch data</span><span class="lvl lvl-technical">Nine-digit ids in the Starlink SupGP feed</span></p><p class="value">{{ ls.supgp_starlink.nine_digit_present | yesno }}<span class="muted small"> ({{ ls.supgp_starlink.nine_digit | fmt_int }})</span></p><p class="sub">{{ ls.supgp_starlink.checked_at | fmt_ts }}</p></div>
+  </div>
+  <p class="small muted">Counts and yes/no states only, computed once a day by a scheduled job; this page never contacts CelesTrak. <a href="/tracker/">Full tracker with history</a>.</p>
+  {% else %}
+  <p class="callout warn">No tracker data has been built yet.</p>
+  {% endif %}
+</section>
+
+<section aria-labelledby="entry-h">
+  <h2 id="entry-h">Where to go next</h2>
+  <div class="grid">
+    <article class="card"><h3><a href="/migration/" data-level-link="simple">The story</a></h3><p class="lvl lvl-simple">Licence plates, a satellite called SARAMAGO, and why old software goes quiet. No jargon, with a glossary.</p><p class="lvl lvl-technical">The plain-language version of the migration, for colleagues who do not parse TLEs for a living.</p></article>
+    <article class="card"><h3><a href="/migration/" data-level-link="technical">The migration</a></h3><p class="lvl lvl-simple">The full technical version: formats, column layouts, the Alpha-5 letter table and what CelesTrak actually returns.</p><p class="lvl lvl-technical">Alpha-5, OMM, what CelesTrak serves, a TLE-versus-OMM side-by-side on the CCSDS example, and what to change.</p></article>
+    <article class="card"><h3><a href="/findings/">Findings</a></h3><p class="lvl lvl-simple">What broke when three different programs read today’s data, and two bugs we reported to a popular free library.</p><p class="lvl lvl-technical">Naive versus reference versus python-sgp4 across sixteen cases, the CelesTrak TLE 404, provider rendering differences and the upstream reports.</p></article>
+    <article class="card"><h3><a href="/tools/">Tools</a></h3><p class="lvl lvl-simple">Turn a satellite number into its new lettered form and back, and take a TLE apart field by field. Everything runs in your browser.</p><p class="lvl lvl-technical">A strict Alpha-5 encoder/decoder checked against the specification vectors, and an interactive TLE anatomy with a paste box. Client-side only.</p></article>
+    <article class="card"><h3><a href="/library/">Library status</a></h3><p class="lvl lvl-simple">Every week we check whether two popular free libraries handle the new numbers yet.</p><p class="lvl lvl-technical">Weekly no-network reproducers against the latest PyPI python-sgp4 and Skyfield, with upstream links.</p></article>
+    <article class="card"><h3><a href="/about/">How it was built</a></h3><p class="lvl lvl-simple">Where the numbers come from, who checked them, and who is responsible.</p><p class="lvl lvl-technical">Provenance, the independent audit, AI assistance under human direction, NEOGY LLC and the maintainer.</p></article>
+  </div>
+</section>
+
+<section aria-labelledby="links-h">
+  <h2 id="links-h">The corpus</h2>
+  <ul>
+    <li><a href="{{ corpus.repo }}">gp-omm-conformance on GitHub</a> — version {{ corpus.version }}, MIT, audited before publication.</li>
+    <li>Concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a> (always the latest release); version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for exactly v{{ corpus.version }}.</li>
+    <li><a href="{{ corpus.issue_171 }}">python-sgp4 issue #171</a> — <span class="lvl lvl-simple">a bug we found and reported: the library crashes on records that have no international designator.</span><span class="lvl lvl-technical">an empty <code>&lt;OBJECT_ID/&gt;</code> in OMM XML makes <code>sgp4.omm.initialize</code> raise <code>TypeError</code>; reported from the corpus.</span></li>
+  </ul>
+</section>
+{% endblock %}

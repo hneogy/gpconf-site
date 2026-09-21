@@ -1,0 +1,23 @@
+{
+ "_provenance": "The GOES 9 lines are the CCSDS 502.0-B-3 annex G OMM example values rendered as a TLE by the corpus renderer (gpconf/tle.py, the renderer validated 304/304 against CelesTrak output); checksums verified. The SARAMAGO lines are the published derived Alpha-5 example from the corpus (derived/alpha5-tle/alpha5-A-100000-saramago-first.tle, v0.1.0; provenance sidecar: source gp-first.php?CATNR=100000&FORMAT=CSV, SHA-256 2a1913dc…, retrieved 2026-09-21T00:43:55Z). No other element set appears on this site.",
+ "goes9": {
+  "label": "CCSDS annex G example (GOES 9), rendered as a TLE",
+  "line0": "GOES 9                  ",
+  "line1": "1 23581U 95025A   20064.44075725 -.00000113  00000+0  10000-3 0  9254",
+  "line2": "2 23581   3.0539  81.7939 0005013 249.2363 150.1602  1.00273272 43169",
+  "omm": {
+   "OBJECT_NAME": "GOES 9", "OBJECT_ID": "1995-025A", "CENTER_NAME": "EARTH", "REF_FRAME": "TEME", "TIME_SYSTEM": "UTC", "MEAN_ELEMENT_THEORY": "SGP/SGP4",
+   "EPOCH": "2020-064T10:34:41.4264", "MEAN_MOTION": "1.00273272", "ECCENTRICITY": "0.0005013", "INCLINATION": "3.0539",
+   "RA_OF_ASC_NODE": "81.7939", "ARG_OF_PERICENTER": "249.2363", "MEAN_ANOMALY": "150.1602",
+   "EPHEMERIS_TYPE": "0", "CLASSIFICATION_TYPE": "U", "NORAD_CAT_ID": "23581", "ELEMENT_SET_NO": "0925", "REV_AT_EPOCH": "4316",
+   "BSTAR": "0.0001", "MEAN_MOTION_DOT": "-0.00000113", "MEAN_MOTION_DDOT": "0.0"
+  }
+ },
+ "saramago": {
+  "label": "Derived Alpha-5 example from the corpus (catalog 100000, SARAMAGO, first record)",
+  "line0": "SARAMAGO                ",
+  "line1": "1 A0000U 26067CY  26195.90649229  .00004770  00000+0  22159-3 0  9994",
+  "line2": "2 A0000  97.4593 154.0970 0005590 270.5113  89.5482 15.20467281 15911",
+  "source": "https://github.com/hneogy/gp-omm-conformance/blob/main/derived/alpha5-tle/alpha5-A-100000-saramago-first.tle"
+ }
+}

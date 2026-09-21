@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Findings{% endblock %}
+{% block description %}What broke when three parsers read today's catalog data: the corpus's results, the CelesTrak TLE 404, provider rendering differences and the upstream reports.{% endblock %}
+{% block content %}
+{% set g = examples.goes9 %}
+<article>
+<h1>Findings</h1>
+<p class="lede lvl lvl-simple">We fed today’s real catalog data to three programs: one written carelessly the way many older programs are, one written carefully from the format documents, and one popular free library. Here is what broke, in plain words, with a link to the evidence for each item.</p>
+<p class="lede lvl lvl-technical">Runner results for three adapters across the sixteen cases of corpus v{{ corpus.version }}, then each finding with its evidence and case. Statuses: <span class="badge pass">pass</span> exact, <span class="badge pass-tolerance">pass-tolerance</span> needed a documented tolerance (1e-12 relative for floats, 2 µs for epochs), <span class="badge fail">fail</span>, <span class="badge skip">skip</span> format unsupported by the parser.</p>
+
+<h2>Three parsers, sixteen cases</h2>
+<div class="lvl lvl-simple"><p><strong>Naive</strong> is the program most projects have: it assumes five digits, one date format, every column present. <strong>Reference</strong> is the corpus’s own careful reader, the control. <strong>python-sgp4</strong> is a widely used free library, version 2.27, used as-is.</p></div>
+<div class="lvl lvl-technical"><p>From <a href="{{ failures.url }}"><code>docs/FAILURES.md</code></a>: reference = the corpus’s readers (control, must be exact); naive = <code>int()</code> on five columns, one epoch format, classification assumed U, every column assumed present, strict <code>KEY = value</code> KVN; python-sgp4 2.27 through <code>sgp4.omm</code> and <code>twoline2rv</code>, no KVN reader.</p></div>
+<div class="table-wrap"><table>
+<thead><tr><th>case</th><th>reference</th><th>naive</th><th>python-sgp4</th></tr></thead>
+<tbody>
+{% for r in failures.rows %}
+<tr><td><a href="{{ corpus.tree }}/fixtures/{{ r[0] }}"><code>{{ r[0] }}</code></a></td>
+<td><span class="badge {{ r[1] }}">{{ r[1] }}</span></td>
+<td><span class="badge {{ r[3] }}">{{ r[3] }}</span>{% if r[4] %} <span class="muted small">{{ r[4] }} failing</span>{% endif %}</td>
+<td><span class="badge {{ r[5] }}">{{ r[5] }}</span>{% if r[6] %} <span class="muted small">{{ r[6] }} failing</span>{% endif %}</td></tr>
+{% endfor %}
+</tbody></table></div>
+<p class="small muted">Naive fails 14 of 16 cases; python-sgp4 fails 6, with 19 failing items in total; the reference passes all 16 exactly.</p>
+
+<h2>What broke, item by item</h2>
+
+<section class="finding" id="f-404">
+<h3>1. Ask CelesTrak for recent launches in the old format and you get “not found”</h3>
+<div class="lvl lvl-simple"><p>Every satellite launched since July 2026 has a six-digit number, and the old TLE format cannot hold it. CelesTrak leaves those objects out. When a whole group is six-digit, the answer is an HTTP 404. Old software that treats “not found” as “nothing new” goes quiet and misses every recent launch. The <a href="/tracker/">tracker</a> checks this every day.</p></div>
+<div class="lvl lvl-technical"><p>A TLE/3LE/2LE request returns only objects below 100000; when none qualify the response is HTTP 404 with the body <code>No GP data found</code>. At the snapshot the <code>last-30-days</code> group was 256 records in CSV, all six-digit, and 404 as TLE (captured twice). The count relation “TLE records = OMM records below 100000” holds for the analyst group (565 CSV, 219 TLE). Treat the 404 as “unrepresentable in this format”.</p>
+<p class="meta">Cases <a href="{{ corpus.tree }}/fixtures/tle-omits-six-digit-objects"><code>tle-omits-six-digit-objects</code></a>, <a href="{{ corpus.tree }}/fixtures/six-digit-omm-saramago"><code>six-digit-omm-saramago</code></a>; naive fails both (it also cannot parse the six-digit CSV).</p></div>
+</section>
+
+<section class="finding" id="f-nine">
+<h3>2. Nine-digit numbers are real, and a popular library cannot load them</h3>
+<div class="lvl lvl-simple"><p>For about a week after each Starlink launch, CelesTrak’s operator-supplied data uses nine-digit placeholder numbers. python-sgp4, and the Skyfield library built on it, refuse every such record with an error, in every format, because they store the number internally in the five-character lettered form, which tops out at 339999. This had already been reported by someone else; we tested the proposed fix and reported back.</p></div>
+<div class="lvl lvl-technical"><p>27 nine-digit ids (799501621–799501647) were in the full Starlink SupGP file at the snapshot. python-sgp4 2.27 <code>omm.initialize</code> and Skyfield 1.55 <code>EarthSatellite.from_omm</code> raise <code>ValueError: satellite number cannot exceed 339999</code> for each, because <code>sgp4init</code> stores the number through <code>to_alpha5</code>. Reported upstream independently as <a href="{{ corpus.issue_169 }}">#169</a>; <a href="{{ corpus.pr_170 }}">PR #170</a> at commit 5e4f308 adds two tests and no surviving library change, and the corpus’s local test found 0 fixed and 0 regressed across the sixteen cases (<a href="{{ corpus.pr_170_comment }}">report</a>). The <a href="/library/">library status</a> page re-runs the reproducer weekly.</p>
+<p class="meta">Case <a href="{{ corpus.tree }}/fixtures/nine-digit-supgp-launch-nominals"><code>nine-digit-supgp-launch-nominals</code></a> (perishable; reports “not exercised” when no launch is recent). SupGP element values are withheld from the public corpus; only ids and structure are published.</p></div>
+</section>
+
+<section class="finding" id="f-objectid">
+<h3>3. Objects with no launch designation crash the library’s XML reader</h3>
+<div class="lvl lvl-simple"><p>Some tracked objects have not been matched to a launch yet, so their “international designator” is empty. In the XML format, python-sgp4 turns that empty field into “nothing” and then crashes on it. We reported this as issue #171 with a fix.</p></div>
+<div class="lvl lvl-technical"><p>All 565 analyst objects at the snapshot carry <code>OBJECT_NAME</code> = <code>UNKNOWN</code> and 563 an empty <code>OBJECT_ID</code>. <code>sgp4.omm.parse_xml</code> returns <code>None</code> for the empty element and <code>initialize()</code> raises <code>TypeError</code>: 564 of 566 analyst XML records fail while the same records in CSV pass. Filed as <a href="{{ corpus.issue_171 }}">#171</a>, reproducer on CCSDS example values, patch prepared. CCSDS says an unknown designator “should be set to UNKNOWN”; CelesTrak writes it empty; the corpus records the ambiguity and expects the provider’s output.</p>
+<p class="meta">Case <a href="{{ corpus.tree }}/fixtures/analyst-objects"><code>analyst-objects</code></a>; naive fails in four formats (<code>int('')</code>, <code>None[...]</code>).</p></div>
+</section>
+
+<section class="finding" id="f-render">
+<h3>4. The two catalogs write the same TLE slightly differently</h3>
+<div class="lvl lvl-simple"><p>CelesTrak and Space-Track publish the same orbit with two tiny cosmetic differences in the old format: how a zero is spelled in one column, and whether a seven-digit value is cut off or rounded. The numbers mean the same thing, but software that compares text character by character sees a mismatch. The highlighted columns below show where, on the standard’s example line; no live values from either catalog are shown.</p></div>
+<div class="lvl lvl-technical"><p>Conventions, not values. On the CCSDS example rendered as a TLE: columns 45–52 (second derivative) hold the zero that CelesTrak writes <code> 00000+0</code> and Space-Track <code> 00000-0</code> (the sign at column 51); columns 27–33 (eccentricity) are the seven digits CelesTrak <em>truncates</em> and Space-Track <em>rounds</em>, so the last digit can differ by one; column 69 (checksum) then differs as a consequence. Observed in the maintainer’s Space-Track verification run: 8 of 21 same-epoch records differed at column 33 exactly where rounding and truncation disagree, and every line differed at column 51. CelesTrak also rounds the BSTAR and second-derivative mantissas half up (304/304 records); no document states either rule. python-sgp4’s <code>export_tle</code> follows Space-Track’s zero sign, which is a provider divergence, not a bug (corpus decision D-072).</p></div>
+<pre class="tle" aria-label="TLE line with provider-dependent columns highlighted">{{ g.line0 }}
+{{ g.line1[:44] }}<mark class="hl-b">{{ g.line1[44:52] }}</mark>{{ g.line1[52:68] }}<mark class="hl-c">{{ g.line1[68:] }}</mark>
+{{ g.line2[:26] }}<mark class="hl-a">{{ g.line2[26:33] }}</mark>{{ g.line2[33:68] }}<mark class="hl-c">{{ g.line2[68:] }}</mark></pre>
+<ul class="legend">
+  <li class="hl-b-key"><mark class="hl-b">columns 45–52</mark> zero second derivative: <code> 00000+0</code> (CelesTrak) vs <code> 00000-0</code> (Space-Track)</li>
+  <li><mark class="hl-a">columns 27–33</mark> eccentricity: truncated (CelesTrak) vs rounded (Space-Track)</li>
+  <li><mark class="hl-c">column 69</mark> checksum follows the bytes</li>
+</ul>
+<p class="meta lvl lvl-technical">Cases <a href="{{ corpus.tree }}/fixtures/tle-vs-omm-precision-loss"><code>tle-vs-omm-precision-loss</code></a>, <a href="{{ corpus.tree }}/fixtures/alpha5-tle-derived"><code>alpha5-tle-derived</code></a>; ambiguity <code>ecc-truncation-vs-mantissa-rounding</code> in the manifest.</p>
+</section>
+
+<section class="finding" id="f-lossy">
+<h3>5. The old format is a lossy copy of the new one</h3>
+<div class="lvl lvl-simple"><p>The old format has fewer digits than the new one, so converting new → old → new does not give back the same numbers. Software that expects a perfect round trip will report false differences.</p></div>
+<div class="lvl lvl-technical"><p>Eccentricity truncated to 7 digits; BSTAR and second-derivative mantissas rounded half up to 5 digits; supplemental epochs quantised to the TLE’s 864 µs resolution (86 µs differences observed). <code>MEAN_MOTION_DOT</code> in the OMM equals the TLE field as printed (the ndot/2 convention, 304/304), although CCSDS’s note could be read either way. The corpus compares TLE against OMM under these rules and reports tolerance-dependent passes separately.</p>
+<p class="meta">Cases <a href="{{ corpus.tree }}/fixtures/tle-vs-omm-precision-loss"><code>tle-vs-omm-precision-loss</code></a>, <a href="{{ corpus.tree }}/fixtures/mean-motion-derivative-convention"><code>mean-motion-derivative-convention</code></a>; naive fails both.</p></div>
+</section>
+
+<section class="finding" id="f-missing">
+<h3>6. CelesTrak’s CSV and JSON leave out fields the standard calls mandatory</h3>
+<div class="lvl lvl-simple"><p>Four fields that never change are simply omitted, along with the header. A program that insists on seeing them fails on every file.</p></div>
+<div class="lvl lvl-technical"><p><code>CENTER_NAME</code>, <code>REF_FRAME</code>, <code>TIME_SYSTEM</code> and <code>MEAN_ELEMENT_THEORY</code> are absent from CSV and JSON; XML and KVN carry them, with <code>SGP/SGP4</code> in KVN and <code>SGP4</code> in XML for the same record. Default them (EARTH, TEME, UTC, SGP4) and accept both spellings.</p>
+<p class="meta">Case <a href="{{ corpus.tree }}/fixtures/csv-json-omitted-mandatory-fields"><code>csv-json-omitted-mandatory-fields</code></a>; naive fails, python-sgp4 fails only through the nine-digit record in the same set.</p></div>
+</section>
+
+<section class="finding" id="f-class">
+<h3>7. A “classified” marker is silently reset, and the letter rules are applied loosely</h3>
+<div class="lvl lvl-simple"><p>CelesTrak’s operator-supplied records are marked C rather than U. python-sgp4 reads the C and then overwrites it with U. Separately, its lettered-number decoder accepts letters that the rules forbid (I, O, lowercase), so two programs can disagree about what a field means.</p></div>
+<div class="lvl lvl-technical"><p><code>omm.initialize</code> assigns <code>classification</code> and <code>sgp4init</code> resets it to <code>U</code>; the pure-Python <code>twoline2rv</code> does the same while the accelerated build keeps the C. <code>from_alpha5</code> accepts <code>I0000</code> (as 180000), <code>O1234</code>, lowercase and four-character input, all excluded by Space-Track’s definition; <code>to_alpha5(-1)</code> returns <code>-0001</code>. Low severity, documented in the corpus’s upstream notes.</p>
+<p class="meta">Cases <a href="{{ corpus.tree }}/fixtures/supgp-celestrak-classification-c"><code>supgp-celestrak-classification-c</code></a>, <a href="{{ corpus.tree }}/fixtures/alpha5-encoding-vectors"><code>alpha5-encoding-vectors</code></a>.</p></div>
+</section>
+
+<section class="finding" id="f-formats">
+<h3>8. Legal variations of the text formats trip strict readers</h3>
+<div class="lvl lvl-simple"><p>The standard allows several ways to write a date and a value; CelesTrak uses one, other producers use others. Programs that only know CelesTrak’s habits fail on perfectly valid files, and the library has no reader for the key = value format at all.</p></div>
+<div class="lvl lvl-technical"><p>Day-of-year epochs, no fraction, trailing Z, bracketed units, comment lines, leading zeros and signed integers are all CCSDS-legal KVN; the corpus’s six derived variants show naive failing four of them, and python-sgp4 skips the format. CelesTrak’s XML validates as NDM/XML 2.0 and fails the current 3.0/4.0.0 schema on the version attribute alone. python-sgp4’s epoch parser is hard-coded to one <code>strftime</code> pattern.</p>
+<p class="meta">Cases <a href="{{ corpus.tree }}/fixtures/kvn-syntax-variants"><code>kvn-syntax-variants</code></a>, <a href="{{ corpus.tree }}/fixtures/omm-xml-schema"><code>omm-xml-schema</code></a>; vectors <a href="{{ corpus.tree }}/vectors"><code>ccsds-epoch-strings.json</code></a>.</p></div>
+</section>
+
+<h2>Evidence and limits</h2>
+<div class="lvl lvl-simple"><p>Every statement above links to a case in the test kit, where the exact web address, time and fingerprint of the data are recorded. Some things could not be tested yet, for example lettered numbers beyond A and T, because no real satellite has them; those are stated as gaps, not guessed.</p></div>
+<div class="lvl lvl-technical"><p>Snapshot 2026-09-21; sources, hashes and per-case gaps in <a href="{{ corpus.blob }}/MANIFEST.md">MANIFEST.md</a>; library cross-check in <a href="{{ corpus.blob }}/docs/CROSSCHECK.md">CROSSCHECK.md</a>. Known gaps: only letters A and T occur in real data; no positive-exponent BSTAR observed; nine-digit ids are perishable; gp-first stability is assumed and now monitored weekly by the <a href="/tracker/">tracker</a>.</p></div>
+</article>
+{% endblock %}

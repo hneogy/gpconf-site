@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-level="simple">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}gpconf{% endblock %} · gpconf.neogy.dev</title>
+<meta name="description" content="{% block description %}A free test kit for satellite-data software crossing the 2026 catalog-number boundary.{% endblock %}">
+<link rel="canonical" href="{{ site_url }}{{ page_href }}">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css">
+<script src="/static/js/theme.js"></script>
+</head>
+<body class="page-{{ page_id }}">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">⌗</span> gpconf<span class="brand-tld">.neogy.dev</span></a>
+    <nav class="site-nav" aria-label="Site">
+      <ul>
+      {% for item in nav %}
+        <li><a href="{{ item.href }}"{% if item.id == page_id %} aria-current="page"{% endif %}>
+          {% if item.label %}{{ item.label }}{% else %}<span class="lvl lvl-simple">{{ item.simple }}</span><span class="lvl lvl-technical">{{ item.technical }}</span>{% endif %}
+        </a></li>
+      {% endfor %}
+      </ul>
+    </nav>
+    <div class="controls">
+      <div class="level-toggle" id="level-toggle" role="group" aria-label="Reading level">
+        <button type="button" data-set-level="simple" aria-pressed="true">Simple</button>
+        <button type="button" data-set-level="technical" aria-pressed="false">Technical</button>
+      </div>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Colour theme: automatic. Activate to switch.">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </div>
+  <noscript><div class="wrap noscript-note">Both reading levels are shown because scripts are off. Simple sections are marked “Simple”, technical ones “Technical”.</div></noscript>
+</header>
+<div class="sr-only" aria-live="polite" id="level-announcer"></div>
+<main id="main" class="wrap" tabindex="-1">
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p><strong>gpconf.neogy.dev</strong> is the public face of the <a href="{{ corpus.repo }}">gp-omm-conformance</a> corpus, version {{ corpus.version }}, concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a>.</p>
+      <p>Maintainer: Honorius Neogy, NEOGY LLC. Code and text MIT. Built with AI assistance under human direction; see <a href="/about/">How it was built</a>.</p>
+    </div>
+    <div>
+      <p>This site shows counts, yes/no states and timestamps only. It never displays element sets from CelesTrak, supplemental (SupGP) values or Space-Track data. Visitors never trigger requests to CelesTrak; scheduled jobs fetch at most ten URLs a day and the site serves their computed JSON.</p>
+      <p>Data source for the tracker: <a href="https://celestrak.org">CelesTrak</a> (Dr. T.S. Kelso). Standards: CCSDS 502.0-B-3, CCSDS 505.0-B-3. Alpha-5 definition: Space-Track. Page built {{ built_at | fmt_ts }}.</p>
+    </div>
+  </div>
+</footer>
+<script src="/static/js/site.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

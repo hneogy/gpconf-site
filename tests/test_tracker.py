@@ -154,7 +154,10 @@ class DailyRun(unittest.TestCase):
 
 class Drift(unittest.TestCase):
     def state(self):
-        return json.loads((ROOT / "data" / "tracker" / "drift.json").read_text())
+        st = json.loads((ROOT / "data" / "tracker" / "drift.json").read_text())
+        for s in st["sources"]:  # independent of whatever the live job has checked so far
+            s.update({"last_checked": None, "last_status": None, "last_http_status": None, "history": []})
+        return st
 
     def test_rotation_picks_oldest_first_and_caps(self):
         st = self.state()

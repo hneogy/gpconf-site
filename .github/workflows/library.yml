@@ -27,8 +27,8 @@ jobs:
         run: python jobs/library_status.py
       - name: Commit the results
         run: |
-          git config user.name "gpconf library check"
-          git config user.email "library@gpconf.neogy.dev"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/library/latest.json data/library/history.json
           git diff --cached --quiet && echo "no change" || git commit -m "library: $(date -u +%Y-%m-%d)"
           git push

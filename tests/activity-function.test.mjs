@@ -17,9 +17,9 @@ const fakeFetch = async (url, opts) => {
   throw new Error('unexpected url ' + url);
 };
 
-const data = await buildActivity({ GITHUB_TOKEN: 'ghp_FAKE_FOR_TEST' }, fakeFetch);
+const data = await buildActivity({ GITHUB_TOKEN: 'not-a-real-token-for-test' }, fakeFetch);
 assert.equal(calls.length, 7, 'seven REST calls per refresh');
-assert.ok(calls.every((c) => c.headers.authorization === 'Bearer ghp_FAKE_FOR_TEST'));
+assert.ok(calls.every((c) => c.headers.authorization === 'Bearer not-a-real-token-for-test'));
 assert.ok(calls.every((c) => c.headers['user-agent'].includes('gpconf.neogy.dev')));
 assert.equal(data.requests_per_refresh, 7);
 assert.equal(data.refresh_seconds, FRESH_SECONDS);
@@ -36,7 +36,7 @@ assert.equal(data.repos.site, null, 'a missing repository is null, not an error'
 assert.equal(data.rate_limit.remaining, 4990);
 const text = JSON.stringify(data);
 assert.ok(!text.includes('SECRET'), 'no title, body or notes text reaches the output');
-assert.ok(!text.includes('ghp_'), 'the token never reaches the output');
+assert.ok(!text.includes('not-a-real-token'), 'the token never reaches the output');
 assert.ok(!('title' in by['python-sgp4#169']));
 
 // a failing GitHub call rejects, so the function can fall back to the last good copy

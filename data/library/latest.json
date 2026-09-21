@@ -1,5 +1,5 @@
 {
- "checked_at": "2026-09-21T05:52:03Z",
+ "checked_at": "2026-09-21T20:49:15Z",
  "versions": {
   "python": "3.14.4",
   "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
@@ -41,6 +41,10 @@
     {
      "label": "issue #171",
      "url": "https://github.com/brandon-rhodes/python-sgp4/issues/171"
+    },
+    {
+     "label": "PR #172",
+     "url": "https://github.com/brandon-rhodes/python-sgp4/pull/172"
     }
    ],
    "result": "fail",

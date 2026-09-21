@@ -113,7 +113,7 @@ def check_sgp4():
                    {"label": "corpus test report on PR #170", "url": f"{UPSTREAM}/pull/170#issuecomment-5755703491"}], nine_digit),
         behaviour("sgp4-empty-object-id-xml", "Empty <OBJECT_ID/> in OMM XML loads through parse_xml and initialize", "python-sgp4",
                   "no exception; an empty OBJECT_ID is a legitimate CelesTrak value for analyst objects",
-                  [{"label": "issue #171", "url": f"{UPSTREAM}/issues/171"}], empty_object_id),
+                  [{"label": "issue #171", "url": f"{UPSTREAM}/issues/171"}, {"label": "PR #172", "url": f"{UPSTREAM}/pull/172"}], empty_object_id),
         behaviour("sgp4-classification-omm", "CLASSIFICATION_TYPE C survives sgp4.omm.initialize", "python-sgp4",
                   "sat.classification == 'C'",
                   [{"label": "corpus note", "url": f"{CORPUS}/blob/main/docs/upstream/python-sgp4-omm-initialize-drops-classification.md"}], classification_omm),

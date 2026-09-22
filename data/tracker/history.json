@@ -159,5 +159,84 @@
    "errors": 0,
    "bytes": 1956772
   }
+ },
+ {
+  "date": "2026-09-22",
+  "checked_at": "2026-09-22T06:44:43Z",
+  "kind": "scheduled",
+  "status": "failed",
+  "metrics": {
+   "last30": {
+    "ok": false,
+    "status": 500,
+    "checked_at": "2026-09-22T06:44:44Z",
+    "bytes": 1074,
+    "error": "HTTP 500"
+   },
+   "last30_tle": {
+    "ok": false,
+    "status": 500,
+    "checked_at": "2026-09-22T06:44:46Z",
+    "bytes": 1074,
+    "is_404": false,
+    "error": "HTTP 500"
+   },
+   "analyst": {
+    "ok": false,
+    "status": 500,
+    "checked_at": "2026-09-22T06:44:48Z",
+    "bytes": 1074,
+    "error": "HTTP 500"
+   },
+   "analyst_tle": {
+    "ok": false,
+    "status": 500,
+    "checked_at": "2026-09-22T06:44:50Z",
+    "bytes": 1074,
+    "is_404": false,
+    "error": "HTTP 500"
+   },
+   "supgp_starlink": {
+    "ok": false,
+    "status": 500,
+    "checked_at": "2026-09-22T06:44:53Z",
+    "bytes": 1074,
+    "error": "HTTP 500"
+   }
+  },
+  "relations": {
+   "last30_tle_equals_below_100000": null,
+   "analyst_tle_equals_below_100000": null
+  },
+  "drift": {
+   "checked": 4,
+   "results": [
+    {
+     "id": "gp-first-100000-XML",
+     "result": "drift",
+     "http_status": 500
+    },
+    {
+     "id": "gp-first-25544-2LE",
+     "result": "drift",
+     "http_status": 500
+    },
+    {
+     "id": "gp-first-25544-CSV",
+     "result": "drift",
+     "http_status": 500
+    },
+    {
+     "id": "gp-first-25544-JSON",
+     "result": "drift",
+     "http_status": 500
+    }
+   ]
+  },
+  "fetch": {
+   "requests": 9,
+   "errors": 9,
+   "bytes": 9666
+  }
  }
 ]

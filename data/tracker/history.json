@@ -213,22 +213,22 @@
    "results": [
     {
      "id": "gp-first-100000-XML",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     },
     {
      "id": "gp-first-25544-2LE",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     },
     {
      "id": "gp-first-25544-CSV",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     },
     {
      "id": "gp-first-25544-JSON",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     }
    ]

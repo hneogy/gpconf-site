@@ -27,17 +27,17 @@
    "bytes": 142,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:47Z",
-   "last_checked": "2026-09-22T06:44:57Z",
-   "last_status": "drift",
+   "last_checked": null,
+   "last_status": "error",
    "last_http_status": 500,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:57Z",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     }
    ],
-   "last_sha256": "e6d27d46a908d95c2b7a93ca5a1329dfb80eeea54a9c35ec0e150cf2f2623872"
+   "last_error_at": "2026-09-22T06:44:57Z"
   },
   {
    "id": "gp-first-25544-CSV",
@@ -47,17 +47,17 @@
    "bytes": 368,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:39Z",
-   "last_checked": "2026-09-22T06:44:59Z",
-   "last_status": "drift",
+   "last_checked": null,
+   "last_status": "error",
    "last_http_status": 500,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:59Z",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     }
    ],
-   "last_sha256": "e6d27d46a908d95c2b7a93ca5a1329dfb80eeea54a9c35ec0e150cf2f2623872"
+   "last_error_at": "2026-09-22T06:44:59Z"
   },
   {
    "id": "gp-first-25544-JSON",
@@ -67,17 +67,17 @@
    "bytes": 414,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:11:51Z",
-   "last_checked": "2026-09-22T06:45:01Z",
-   "last_status": "drift",
+   "last_checked": null,
+   "last_status": "error",
    "last_http_status": 500,
    "history": [
     {
      "checked_at": "2026-09-22T06:45:01Z",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     }
    ],
-   "last_sha256": "e6d27d46a908d95c2b7a93ca5a1329dfb80eeea54a9c35ec0e150cf2f2623872"
+   "last_error_at": "2026-09-22T06:45:01Z"
   },
   {
    "id": "gp-first-25544-JSON-PRETTY",
@@ -186,17 +186,17 @@
    "bytes": 1204,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:00Z",
-   "last_checked": "2026-09-22T06:44:55Z",
-   "last_status": "drift",
+   "last_checked": null,
+   "last_status": "error",
    "last_http_status": 500,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:55Z",
-     "result": "drift",
+     "result": "error",
      "http_status": 500
     }
    ],
-   "last_sha256": "e6d27d46a908d95c2b7a93ca5a1329dfb80eeea54a9c35ec0e150cf2f2623872"
+   "last_error_at": "2026-09-22T06:44:55Z"
   },
   {
    "id": "gp-first-100000-KVN",

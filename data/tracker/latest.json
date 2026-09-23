@@ -126,12 +126,12 @@
  },
  "drift": {
   "sources": 22,
-  "checked_in_last_8_days": 8,
+  "checked_in_last_8_days": 4,
   "match": 4,
-  "drift": 4,
-  "error": 0,
+  "drift": 0,
+  "error": 4,
   "never_checked": 14,
-  "last_check": "2026-09-22T06:45:01Z",
+  "last_check": "2026-09-21T05:52:01Z",
   "baseline": {
    "corpus_version": "0.1.0",
    "tag": "v0.1.0",
@@ -144,154 +144,176 @@
     "case": "epoch-year-19xx",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-25544-2LE",
     "case": "epoch-year-19xx",
-    "last_checked": "2026-09-22T06:44:57Z",
-    "last_status": "drift",
-    "last_http_status": 500
+    "last_checked": null,
+    "last_status": "error",
+    "last_http_status": 500,
+    "last_error_at": "2026-09-22T06:44:57Z"
    },
    {
     "id": "gp-first-25544-CSV",
     "case": "epoch-year-19xx",
-    "last_checked": "2026-09-22T06:44:59Z",
-    "last_status": "drift",
-    "last_http_status": 500
+    "last_checked": null,
+    "last_status": "error",
+    "last_http_status": 500,
+    "last_error_at": "2026-09-22T06:44:59Z"
    },
    {
     "id": "gp-first-25544-JSON",
     "case": "epoch-year-19xx",
-    "last_checked": "2026-09-22T06:45:01Z",
-    "last_status": "drift",
-    "last_http_status": 500
+    "last_checked": null,
+    "last_status": "error",
+    "last_http_status": 500,
+    "last_error_at": "2026-09-22T06:45:01Z"
    },
    {
     "id": "gp-first-25544-JSON-PRETTY",
     "case": "epoch-year-19xx",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-25544-XML",
     "case": "epoch-year-19xx",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-25544-KVN",
     "case": "epoch-year-19xx",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-100000-TLE",
     "case": "six-digit-omm-saramago",
     "last_checked": "2026-09-21T05:52:01Z",
     "last_status": "match",
-    "last_http_status": 404
+    "last_http_status": 404,
+    "last_error_at": null
    },
    {
     "id": "gp-first-100000-CSV",
     "case": "six-digit-omm-saramago",
     "last_checked": "2026-09-21T05:51:54Z",
     "last_status": "match",
-    "last_http_status": 200
+    "last_http_status": 200,
+    "last_error_at": null
    },
    {
     "id": "gp-first-100000-JSON",
     "case": "six-digit-omm-saramago",
     "last_checked": "2026-09-21T05:51:56Z",
     "last_status": "match",
-    "last_http_status": 200
+    "last_http_status": 200,
+    "last_error_at": null
    },
    {
     "id": "gp-first-100000-XML",
     "case": "six-digit-omm-saramago",
-    "last_checked": "2026-09-22T06:44:55Z",
-    "last_status": "drift",
-    "last_http_status": 500
+    "last_checked": null,
+    "last_status": "error",
+    "last_http_status": 500,
+    "last_error_at": "2026-09-22T06:44:55Z"
    },
    {
     "id": "gp-first-100000-KVN",
     "case": "six-digit-omm-saramago",
     "last_checked": "2026-09-21T05:51:59Z",
     "last_status": "match",
-    "last_http_status": 200
+    "last_http_status": 200,
+    "last_error_at": null
    },
    {
     "id": "gp-first-270449-TLE",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-270449-CSV",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-270449-JSON",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-270449-XML",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-270449-KVN",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-81011-TLE",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-81011-CSV",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-81011-JSON",
     "case": "analyst-objects",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-69999-TLE",
     "case": "bstar-and-derivative-forms",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    },
    {
     "id": "gp-first-69999-CSV",
     "case": "bstar-and-derivative-forms",
     "last_checked": null,
     "last_status": null,
-    "last_http_status": null
+    "last_http_status": null,
+    "last_error_at": null
    }
   ]
  },

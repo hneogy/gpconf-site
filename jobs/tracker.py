@@ -129,18 +129,32 @@ def due_drift_sources(drift_state: dict, now_iso: str, max_n: int) -> list[dict]
     return todo[:max_n]
 
 
+def classify_drift(status, error, sha256, source: dict) -> str:
+    """'match' or 'drift' only when CelesTrak answered the question: a 200, or the 404 recorded for the
+    two sources whose baseline is the 16-byte 'No GP data found' body. A 5xx, a 403 or 429, any other
+    status or a transport failure is an error page, not the source, and its hash is never compared
+    (on 2026-09-22 nine HTTP 500 pages were hashed and four stable sources were falsely marked drifted,
+    S-022). A 200 where 404 was recorded, or a 404 where 200 was recorded, is the provider's answer
+    changing, which is the alarm S-009 asks for: drift."""
+    if error or status not in (200, 404):
+        return "error"
+    if status != source["baseline_http_status"]:
+        return "drift"
+    return "match" if sha256 == source["sha256"] else "drift"
+
+
 def run_drift(fetcher: Fetcher, drift_state: dict, now_iso: str, max_n: int) -> list[dict]:
     checked = []
     for s in due_drift_sources(drift_state, now_iso, max_n):
         status, _body, rec = fetcher.get(s["url"], "drift-" + s["id"])
-        if rec["error"] or status is None:
-            result = "error"
-        else:
-            result = "match" if rec["sha256"] == s["sha256"] else "drift"
-        s["last_checked"] = rec["requested_at"]
+        result = classify_drift(status, rec["error"], rec["sha256"], s)
         s["last_status"] = result
         s["last_http_status"] = status
-        s["last_sha256"] = rec["sha256"]
+        if result == "error":
+            s["last_error_at"] = rec["requested_at"]  # last_checked stays as it was: the source remains due
+        else:
+            s["last_checked"] = rec["requested_at"]
+            s["last_sha256"] = rec["sha256"]
         s.setdefault("history", []).append({"checked_at": rec["requested_at"], "result": result, "http_status": status})
         s["history"] = s["history"][-12:]
         checked.append({"id": s["id"], "result": result, "http_status": status})
@@ -157,11 +171,12 @@ def drift_summary(drift_state: dict, now_iso: str) -> dict:
         "match": sum(s.get("last_status") == "match" for s in srcs),
         "drift": sum(s.get("last_status") == "drift" for s in srcs),
         "error": sum(s.get("last_status") == "error" for s in srcs),
-        "never_checked": sum(1 for s in srcs if not s.get("last_checked")),
+        "never_checked": sum(1 for s in srcs if not s.get("last_checked") and not s.get("last_error_at")),  # never attempted; an errored attempt counts under "error"
         "last_check": max((s["last_checked"] for s in srcs if s.get("last_checked")), default=None),
         "baseline": drift_state.get("baseline"),
         "per_source": [{"id": s["id"], "case": s["case"], "last_checked": s.get("last_checked"),
-                        "last_status": s.get("last_status"), "last_http_status": s.get("last_http_status")} for s in srcs],
+                        "last_status": s.get("last_status"), "last_http_status": s.get("last_http_status"),
+                        "last_error_at": s.get("last_error_at")} for s in srcs],
     }
 
 

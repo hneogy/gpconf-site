@@ -188,6 +188,40 @@ class Drift(unittest.TestCase):
         self.assertEqual((summ["match"], summ["drift"], summ["never_checked"]), (1, 1, 0))
 
 
+    def test_error_page_is_error_not_drift_and_stays_due(self):
+        """2026-09-22: CelesTrak answered HTTP 500 with an error page; the old code hashed the page and marked four
+        stable sources drifted. A non-answer must be 'error', must not touch last_checked, and must stay due."""
+        import hashlib
+        st = self.state()
+        st["sources"] = st["sources"][:4]
+        five, fourofour, was404, was200 = st["sources"]
+        for s in (five, was404, was200):
+            s["baseline_http_status"] = 200
+        fourofour["baseline_http_status"] = 404
+        fourofour["sha256"] = hashlib.sha256(b"No GP data found").hexdigest()
+        was200["last_checked"] = "2026-09-15T00:00:00Z"   # matched a week ago
+        error_page = b"<html>Internal Server Error</html>"
+        table = {five["url"]: (500, error_page), fourofour["url"]: (404, b"No GP data found"),
+                 was404["url"]: (404, b"No GP data found"), was200["url"]: (500, error_page)}
+        f = common.Fetcher(opener=FakeOpener(table), pause=0)
+        now = "2026-09-22T06:44:00Z"
+        checked = {c["id"]: c["result"] for c in tracker.run_drift(f, st, now, 4)}
+        self.assertEqual(checked, {five["id"]: "error", fourofour["id"]: "match", was404["id"]: "drift", was200["id"]: "error"})
+        self.assertIsNone(five["last_checked"])                       # untouched: never checked successfully
+        self.assertEqual(was200["last_checked"], "2026-09-15T00:00:00Z")  # untouched: last success stands
+        at = {r["label"]: r["requested_at"] for r in f.log}            # errors are stamped with the request time, like successes
+        self.assertEqual(five["last_error_at"], at["drift-" + five["id"]])
+        self.assertNotIn("last_sha256", five)                         # the error page's hash is not recorded as the source's
+        self.assertEqual(five["history"][-1], {"checked_at": at["drift-" + five["id"]], "result": "error", "http_status": 500})
+        due = {s["id"] for s in tracker.due_drift_sources(st, "2026-09-23T06:44:00Z", 10)}
+        self.assertIn(five["id"], due)                                # still due the next day
+        self.assertIn(was200["id"], due)
+        self.assertNotIn(fourofour["id"], due)                        # a real check consumed its weekly slot
+        summ = tracker.drift_summary(st, now)
+        self.assertEqual((summ["match"], summ["drift"], summ["error"], summ["never_checked"]), (1, 1, 2, 0))
+        self.assertEqual([p["last_error_at"] for p in summ["per_source"] if p["id"] == five["id"]], [at["drift-" + five["id"]]])
+
+
 class Outputs(unittest.TestCase):
     def test_rebuild_latest_from_seed(self):
         with tempfile.TemporaryDirectory() as d:

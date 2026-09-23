@@ -36,6 +36,18 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 - Corpus public export: the private README's "Upstream" section and updated upstream drafts are not yet in
   the public repository; that refresh needs the private build repository and a fresh authorisation to push.
 
+### Open questions
+
+Claims in DECISIONS.md that are labelled inferred or untested. Verify before building on one; the session
+that settles it removes the line here and appends the correcting entry to the log.
+
+- S-027 [untested]: does the `"type": "module"` declaration carry the activity test's import on Node 20.x
+  and 22.0–22.6, before module-syntax detection existed? Only Node 22.23.2 (CI) and 26.5 (local) were run.
+  Settled by one `node --test` on those versions (official Docker images, or a one-off matrix run of
+  `ci.yml`).
+- S-027 [untested]: does `node --test` pass on Node 24, the next LTS line, which CI moves to when Node 22
+  reaches end of life? Settled by one `ci.yml` run with `node-version: "24"`.
+
 ## Rules that must survive any handoff
 
 - Real data only. Every value traces to a recorded URL, retrieval time and SHA-256. Never invent element sets.
@@ -51,7 +63,8 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 ## Working conventions
 
 - Site: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`; tests
-  `.venv/bin/python -m unittest discover -s tests -t .` (23 tests, node needed for two); build `python build.py`;
+  `.venv/bin/python -m unittest discover -s tests -t .` (28 tests; the JavaScript tests run through `node --test`,
+  which the Python suite calls locally and `ci.yml` runs as its own step); build `python build.py`;
   local preview `python3 -m http.server -d dist 8765`; function emulation `npx wrangler pages dev dist --port 8788`.
 - Commits are authored by the maintainer and carry a `Co-Authored-By: Claude Fable 5.1` trailer when the
   assistant wrote them. The site's decision log uses S-numbers, the corpus's D-numbers.

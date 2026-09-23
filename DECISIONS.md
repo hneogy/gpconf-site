@@ -1,6 +1,8 @@
 # Decisions (gpconf-site)
 
 Append-only. Corrections are new entries. Numbered S-001… to keep them apart from the corpus's D-numbers.
+A claim not verified in the session carries [untested] or [inferred] inline and a line under "Open questions"
+in HANDOFF.md.
 
 **S-001 — Static site, Python build, no framework.** Seven pages of mostly prose with two reading levels each, plus small client-side tools and charts, do not need a JavaScript framework. The build is one Python script (`build.py`, Jinja2 templates, ~150 lines) producing plain HTML into `dist/`; the scheduled jobs are Python too, so the repository has one language. Jinja2 is the only dependency and is pinned in `requirements.txt`. Considered and rejected: Eleventy or Astro (a Node toolchain for template inheritance alone), hand-written HTML (seven pages × shared header, footer and toggle would drift), committing `dist/` (generated noise; Cloudflare Pages builds it).
 

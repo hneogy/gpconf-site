@@ -49,5 +49,14 @@
 {% for h in library_history | reverse %}<tr><td>{{ h.checked_at | fmt_ts }}</td><td>{{ h.versions.sgp4 }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td>{{ h.versions.skyfield }}</td><td class="num">{{ h.counts.pass }}</td><td class="num">{{ h.counts.fail }}</td></tr>
 {% endfor %}</tbody></table></div>
 {% endif %}
+
+<h2>Elsewhere in the ecosystem</h2>
+<p class="small muted lvl lvl-technical">Hand-maintained (<code>site/content/ecosystem.json</code>); each entry links to a public statement by the project. Statements, not results: nothing in this list has been run against the corpus.</p>
+<p class="lvl lvl-simple">Some software is not a library on PyPI, so the weekly check cannot reach it. Here is what its makers have said in public, with a link and a date.</p>
+<ul>
+{% for e in ecosystem.entries %}
+  <li><strong>{{ e.project }}</strong> <span class="badge {{ {'in progress': 'warn', 'supported': 'ok', 'not supported': 'bad'}.get(e.status, 'neutral') }}">{{ e.status }}</span><span class="lvl lvl-simple"> — {{ e.simple }}</span><span class="lvl lvl-technical"> — {{ e.technical }}</span> <a href="{{ e.url }}">{{ e.source }}, {{ e.date }}</a></li>
+{% endfor %}
+</ul>
 </article>
 {% endblock %}

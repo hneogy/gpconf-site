@@ -1,0 +1,10 @@
+{
+ "_provenance": "Hand-maintained by the site maintainer. Each entry records what a project has said in public about its own support for catalog numbers above 99999, with the link and the UTC date of the statement. Nothing in this file was tested by the corpus; the library table is the tested part.",
+ "entries": [
+  {"project": "SatNOGS", "status": "in progress", "date": "2026-09-22",
+   "url": "https://community.libre.space/t/the-catalog-passed-99-999-in-july-a-test-corpus-for-tle-omm-parsers/15354/2",
+   "source": "Fredy, SatNOGS maintainer, on the Libre Space forum",
+   "simple": "The open ground-station network. As of 22 September 2026 none of its parts handle satellite numbers above 99,999. Its makers say support for both the lettered numbers and the new OMM format is in progress, and will arrive in stages, one part of the network at a time.",
+   "technical": "No SatNOGS component supports NORAD ids above 99999 as of 2026-09-22. Support for Alpha-5 and OMM JSON is said to be in progress, with the level of support differing by sub-project. Not tested by the corpus."}
+ ]
+}

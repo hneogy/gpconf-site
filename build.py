@@ -122,6 +122,7 @@ def context() -> dict:
         "sources": load(ROOT / "jobs" / "sources.json"),
         "examples": load(SITE / "content" / "examples.json"),
         "failures": load(SITE / "content" / "failures.json"),
+        "ecosystem": load(SITE / "content" / "ecosystem.json", {"entries": []}),
         "alpha5_vectors": load(DATA / "vectors" / "alpha5.json"),
         "timeline": load(DATA / "timeline.json", {"events": []}),
     }

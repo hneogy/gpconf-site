@@ -1,6 +1,7 @@
 """Build the site into a temporary directory and check the page contract: every page has both
 reading levels, no external script/style/font, no inline event handlers, and the tools are
 client-side only. Also runs the JavaScript Alpha-5 vector test when node is available."""
+import json
 import re
 import shutil
 import subprocess
@@ -117,6 +118,39 @@ class FailedDayRendering(unittest.TestCase):
         bool_chart = js[js.index("function boolChart"):js.index("function table")]
         self.assertIn("spec.okPath", bool_chart)
         self.assertIn("v: ok ? get(e, spec.path) : null", bool_chart)
+
+
+class Ecosystem(unittest.TestCase):
+    """The hand-maintained ecosystem list: every entry is a linked, dated public statement, rendered
+    outside the job-generated library table and labelled as statements, not results."""
+    def test_entries_are_linked_and_dated(self):
+        data = json.loads((ROOT / "site/content/ecosystem.json").read_text(encoding="utf-8"))
+        self.assertIn("tested", data["_provenance"])
+        self.assertTrue(data["entries"])
+        for e in data["entries"]:
+            for key in ("project", "status", "date", "url", "source", "simple", "technical"):
+                self.assertTrue(e.get(key), f"{e.get('project')}: {key}")
+            self.assertRegex(e["date"], r"^\d{4}-\d{2}-\d{2}$")
+            self.assertTrue(e["url"].startswith("https://"), e["url"])
+            self.assertIn(e["status"], ("in progress", "supported", "not supported"))
+
+    def test_rendered_after_the_job_data_and_on_the_timeline(self):
+        import build
+        tmp = tempfile.mkdtemp()
+        try:
+            build.main(Path(tmp))
+            library = (Path(tmp) / "library/index.html").read_text(encoding="utf-8")
+            activity = (Path(tmp) / "activity/index.html").read_text(encoding="utf-8")
+        finally:
+            shutil.rmtree(tmp)
+        note = "Statements, not results: nothing in this list has been run against the corpus."
+        self.assertEqual(library.count(note), 1)
+        self.assertLess(library.index("Run history"), library.index("Elsewhere in the ecosystem"))
+        url = "https://community.libre.space/t/the-catalog-passed-99-999-in-july-a-test-corpus-for-tle-omm-parsers/15354/2"
+        self.assertIn(f'<a href="{url}">Fredy, SatNOGS maintainer, on the Libre Space forum, 2026-09-22</a>', library)
+        self.assertIn('<span class="badge warn">in progress</span>', library)
+        self.assertNotIn("within weeks", library + activity)
+        self.assertIn(f'<a href="{url}">SatNOGS: support above 99,999 in progress</a>', activity)
 
 
 class Activity(unittest.TestCase):

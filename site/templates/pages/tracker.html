@@ -44,7 +44,7 @@ The values below are the last successful ones for each measurement, with their o
   <figure class="chart"><figcaption>Nine-digit ids present (green) or not (red)</figcaption><div data-chart="ninebool">Loading…</div></figure>
 </div>
 <noscript><div class="table-wrap"><table><caption>History</caption><thead><tr><th>date</th><th>highest</th><th>six-digit</th><th>TLE 404</th><th>analyst CSV</th><th>analyst TLE</th><th>nine-digit</th></tr></thead><tbody>
-{% for e in tracker_history | reverse %}<tr><td>{{ e.date }}{% if e.kind == 'seed' %} (seed){% endif %}</td><td class="num">{{ e.metrics.last30.highest | fmt_int }}</td><td class="num">{{ e.metrics.last30.six_digit | fmt_int }}</td><td>{{ e.metrics.last30_tle.is_404 | yesno }}</td><td class="num">{{ e.metrics.analyst.records | fmt_int }}</td><td class="num">{{ e.metrics.analyst_tle.records | fmt_int }}</td><td class="num">{{ e.metrics.supgp_starlink.nine_digit | fmt_int }}</td></tr>
+{% for e in tracker_history | reverse %}<tr><td>{{ e.date }}{% if e.kind == 'seed' %} (seed){% endif %}{% if e.status and e.status != 'ok' %} ({{ e.status }}){% endif %}</td><td class="num">{{ e.metrics.last30.highest | fmt_int }}</td><td class="num">{{ e.metrics.last30.six_digit | fmt_int }}</td><td>{{ e.metrics.last30_tle.is_404 | yesno }}</td><td class="num">{{ e.metrics.analyst.records | fmt_int }}</td><td class="num">{{ e.metrics.analyst_tle.records | fmt_int }}</td><td class="num">{{ e.metrics.supgp_starlink.nine_digit | fmt_int }}</td></tr>
 {% endfor %}</tbody></table></div></noscript>
 
 <h2>Stable-source drift</h2>

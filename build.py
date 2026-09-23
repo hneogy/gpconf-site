@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, Undefined, select_autoescape
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "site"
@@ -81,7 +81,7 @@ def load(path: Path, default=None):
 
 
 def fmt_int(value):
-    if value is None:
+    if value is None or isinstance(value, Undefined):  # a metric absent from a failed day renders as a dash, not a crash
         return "—"
     try:
         return f"{int(value):,}"
@@ -100,6 +100,8 @@ def fmt_ts(value, with_time=True):
 
 
 def yesno(value):
+    if isinstance(value, Undefined):
+        return "unknown"
     return {True: "yes", False: "no"}.get(value, "unknown")
 
 

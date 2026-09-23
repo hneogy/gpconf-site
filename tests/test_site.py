@@ -73,6 +73,32 @@ class Build(unittest.TestCase):
             self.assertNotIn("space-track.org/basicspacedata", html.lower(), name)
 
 
+class FailedDayRendering(unittest.TestCase):
+    """A tracker day whose fetches failed has no numbers in its metrics (the 2026-09-22 run: nine HTTP 500s
+    from CelesTrak); the page must render it as a marked row with dashes, never crash the build."""
+
+    def test_helpers_treat_undefined_as_missing(self):
+        import build
+        from jinja2 import Undefined
+        self.assertEqual(build.fmt_int(Undefined(name="highest")), "—")
+        self.assertEqual(build.yesno(Undefined(name="is_404")), "unknown")
+        self.assertEqual(build.fmt_int(None), "—")
+        self.assertEqual(build.fmt_int(100789), "100,789")
+
+    def test_failed_day_is_marked_in_the_history_table(self):
+        import build
+        import json
+        history = json.loads((ROOT / "data" / "tracker" / "history.json").read_text())
+        failed = [e for e in history if e.get("status") and e["status"] != "ok"]
+        if not failed:
+            self.skipTest("no failed day in the tracker history")
+        tmp = tempfile.mkdtemp()
+        build.main(Path(tmp))
+        html = (Path(tmp) / "tracker" / "index.html").read_text()
+        for e in failed:
+            self.assertIn(f"{e['date']} ({e['status']})", html)
+
+
 class Activity(unittest.TestCase):
     def test_attributions_are_exact_and_no_thread_text(self):
         import build

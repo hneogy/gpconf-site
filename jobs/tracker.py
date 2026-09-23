@@ -64,10 +64,29 @@ def summarise_ids(ids: list[int]) -> dict:
     }
 
 
+def unexpected_body(body: bytes) -> str | None:
+    """Why a 200 body is not data (S-030): an HTML page (maintenance, challenge, error), the provider's empty-response
+    text under the wrong status, or nothing at all. None when the body may be data."""
+    head = body[:1024].lstrip().lower()
+    if not body.strip():
+        return "empty body"
+    if head.startswith(b"<!doctype") or head.startswith(b"<html") or b"<html" in head:
+        return "HTML document"
+    if body.strip().lower().startswith((b"no gp data found", b"no supgp data")):
+        return "the provider's no-data text under HTTP 200"
+    return None
+
+
 def fetch_csv_metrics(fetcher: Fetcher, src: dict) -> dict:
     status, body, rec = fetcher.get(src["url"], src["id"])
     m = {"ok": False, "status": status, "checked_at": rec["requested_at"], "bytes": rec["bytes"]}
     if status == 200:
+        why = unexpected_body(body)
+        if why is None and "NORAD_CAT_ID" not in (csv.DictReader(io.StringIO(body.decode("utf-8", "replace"))).fieldnames or []):
+            why = "no NORAD_CAT_ID column"
+        if why:  # a 200 that is not the endpoint's data is an error, never a measurement of zero (S-030)
+            m["error"] = f"unexpected body: {why}"
+            return m
         try:
             m.update(summarise_ids(csv_catnrs(body)))
             m["ok"] = True
@@ -83,13 +102,23 @@ def fetch_tle_metrics(fetcher: Fetcher, src: dict) -> dict:
     m = {"ok": False, "status": status, "checked_at": rec["requested_at"], "bytes": rec["bytes"],
          "is_404": status == 404}
     if status == 200:
-        m["records"] = tle_record_count(body)
-        m["ok"] = True
-    elif status == 404:  # a legitimate outcome for this format, not a failure of the check
-        m["records"] = 0
-        m["ok"] = True
+        why = unexpected_body(body)
+        n = tle_record_count(body) if why is None else 0
+        if why is None and n == 0:
+            why = "no TLE line 1 found (CelesTrak answers 404, not an empty 200, when nothing qualifies)"
+        if why:
+            m["error"] = f"unexpected body: {why}"
+        else:
+            m["records"] = n
+            m["ok"] = True
+    elif status == 404:  # a legitimate outcome for this format, when the body is the provider's no-data text
         head = body.strip().lower()
         m["body_is_no_gp_data"] = head.startswith(b"no gp data found") or head.startswith(b"no supgp data")
+        if m["body_is_no_gp_data"]:
+            m["records"] = 0
+            m["ok"] = True
+        else:  # some other 404 page: the endpoint moved, or a CDN answered; not the answer this check asks for (S-030)
+            m["error"] = "404 with unexpected body"
     else:
         m["error"] = rec["error"] or f"HTTP {status}"
     return m
@@ -225,6 +254,7 @@ def main(argv=None) -> int:
     ap.add_argument("--max-drift", type=int, default=DEFAULT_MAX_DRIFT)
     ap.add_argument("--pause", type=float, default=2.0)
     ap.add_argument("--rebuild-latest", action="store_true", help="no network: regenerate latest.json from history.json and drift.json")
+    ap.add_argument("--force", action="store_true", help="repeat today's requests although a scheduled entry for today exists (replaces it)")
     args = ap.parse_args(argv)
 
     data_dir = Path(args.data_dir)
@@ -236,6 +266,29 @@ def main(argv=None) -> int:
     if args.rebuild_latest:
         dump_json(data_dir / "latest.json", build_latest(history, drift_state, now))
         print(f"latest.json rebuilt from {len(history)} history entries; no request made")
+        return 0
+
+    today = now[:10]
+    scheduled = [e for e in history if e.get("kind") == "scheduled"]
+    if any(e["date"] == today for e in scheduled) and not args.force:
+        # a rerun on the same day (workflow_dispatch, "Re-run jobs") keeps the day's data and makes no request (S-030)
+        dump_json(data_dir / "latest.json", build_latest(history, drift_state, now))
+        print(f"POLICY: a scheduled entry for {today} exists; the day's data is kept and no request is made (pass --force to repeat the requests)")
+        return 0
+    previous = [e for e in scheduled if e["date"] < today]
+    prev = previous[-1] if previous else None
+    refused = prev and prev.get("status") == "failed" and any((g or {}).get("status") in (403, 429) for g in (prev.get("metrics") or {}).values())
+    if refused:
+        # the day after a refusal makes no request: repeating a refused request is what the usage policy forbids (S-030)
+        reason = (f"the previous run on {prev['date']} was refused with HTTP {sorted({g['status'] for g in prev['metrics'].values() if g.get('status') in (403, 429)})[0]}; "
+                  "no request was made today under the usage policy; requests resume the following day")
+        entry = {"date": today, "checked_at": now, "kind": "scheduled", "status": "skipped", "reason": reason,
+                 "metrics": {}, "relations": {}, "drift": {"checked": 0, "results": []}, "fetch": {"requests": 0, "errors": 0, "bytes": 0}}
+        history = history + [entry]
+        dump_json(data_dir / "history.json", history)
+        dump_json(data_dir / "drift.json", drift_state)
+        dump_json(data_dir / "latest.json", build_latest(history, drift_state, now))
+        print(f"{today} {now} status=skipped: {reason}")
         return 0
 
     fetcher = Fetcher(cache_dir=args.cache_dir, pause=args.pause)

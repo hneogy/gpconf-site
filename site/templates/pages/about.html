@@ -45,7 +45,7 @@
 <ul>
   <li>Static HTML built by a small Python script (Jinja2 templates), served from Cloudflare Pages; no framework, no external scripts, fonts or images; a strict Content-Security-Policy (<code>connect-src 'self'</code>, <code>form-action 'none'</code>) so the tools cannot send anything anywhere.</li>
   <li>The tracker and library data are produced by scheduled GitHub Actions jobs that commit computed JSON; the pages are rendered from that JSON at build time and work without JavaScript. Visitors never trigger a request to CelesTrak.</li>
-  <li>Fetch etiquette: at most ten CelesTrak requests per day (five daily endpoints plus at most four weekly drift checks), each URL once per run, a User-Agent naming the project and this site, no redirects, no retries, two seconds between requests. The policy is enforced in code and tested.</li>
+  <li>Fetch etiquette: at most ten CelesTrak requests per day (five daily endpoints plus at most four weekly drift checks), each URL once per run, a User-Agent naming the project and this site, no redirects, no retries, two seconds between requests; a rerun on the same day makes no request, and the day after a refused (HTTP 403) run makes none. The policy is enforced in code and tested.</li>
   <li>Shown data: counts, yes/no states, HTTP statuses, byte counts, hashes and timestamps. The only element sets on the site are the CCSDS annex G example and the corpus’s published derived Alpha-5 example.</li>
 </ul>
 <h2>Responsibility and licence</h2>

@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, Undefined, select_autoescape
+from jinja2 import ChainableUndefined, Environment, FileSystemLoader, Undefined, select_autoescape
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "site"
@@ -130,7 +130,7 @@ def context() -> dict:
 
 
 def main(out: Path = DIST) -> Path:
-    env = Environment(loader=FileSystemLoader(str(SITE / "templates")), autoescape=select_autoescape(["html"]),
+    env = Environment(loader=FileSystemLoader(str(SITE / "templates")), autoescape=select_autoescape(["html"]), undefined=ChainableUndefined,  # a missing metric group renders as a dash, not a crash (S-030)
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update({"fmt_int": fmt_int, "fmt_ts": fmt_ts, "yesno": yesno})
     ctx = context()

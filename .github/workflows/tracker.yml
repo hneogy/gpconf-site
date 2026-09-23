@@ -28,6 +28,7 @@ jobs:
           { echo '```'; cat tracker-run.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Preserve this run's data and log as an artifact, whatever the validation below decides
         uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
           name: tracker-run-${{ github.run_number }}
           path: |

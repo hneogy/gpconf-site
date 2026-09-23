@@ -10,7 +10,8 @@
 {% if not L %}
 <p class="callout warn">No library check has been recorded yet.</p>
 {% else %}
-<p class="callout {{ 'ok' if L.counts.fail == 0 else 'warn' }}">Last check {{ L.checked_at | fmt_ts }}: python-sgp4 <strong>{{ L.versions.sgp4 }}</strong>{% if L.versions.sgp4_accelerated is not none %} ({{ 'accelerated C++' if L.versions.sgp4_accelerated else 'pure Python' }} build){% endif %}, Skyfield <strong>{{ L.versions.skyfield }}</strong>, Python {{ L.versions.python }}. {{ L.counts.pass }} pass, {{ L.counts.fail }} fail.</p>
+{% set broken = L.group_errors or not L.behaviours %}
+<p class="callout {{ 'bad' if broken else ('ok' if L.counts.fail == 0 else 'warn') }}">Last check {{ L.checked_at | fmt_ts }}: python-sgp4 <strong>{{ L.versions.sgp4 or '—' }}</strong>{% if L.versions.sgp4_accelerated is not none %} ({{ 'accelerated C++' if L.versions.sgp4_accelerated else 'pure Python' }} build){% endif %}, Skyfield <strong>{{ L.versions.skyfield or '—' }}</strong>, Python {{ L.versions.python }}. {% if broken %}The check could not run{% if L.group_errors %} ({% for k, v in L.group_errors.items() %}{{ k }}: <code>{{ v }}</code>{{ '; ' if not loop.last }}{% endfor %}){% endif %}; this is a failure of the job's environment, not a result about the libraries, and the last results stand in the run history below.{% else %}{{ L.counts.pass }} pass, {{ L.counts.fail }} fail{% if L.counts.error %}, {{ L.counts.error }} could not run{% endif %}.{% endif %}</p>
 <div class="table-wrap"><table>
 <caption>Behaviours</caption>
 <thead><tr><th>result</th><th>behaviour</th><th>library</th><th class="lvl lvl-technical">detail</th><th>upstream</th></tr></thead>
@@ -46,7 +47,7 @@
 
 <h2>Run history</h2>
 <div class="table-wrap"><table><thead><tr><th>checked</th><th>python-sgp4</th><th>Skyfield</th><th class="num">pass</th><th class="num">fail</th></tr></thead><tbody>
-{% for h in library_history | reverse %}<tr><td>{{ h.checked_at | fmt_ts }}</td><td>{{ h.versions.sgp4 }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td>{{ h.versions.skyfield }}</td><td class="num">{{ h.counts.pass }}</td><td class="num">{{ h.counts.fail }}</td></tr>
+{% for h in library_history | reverse %}<tr><td>{{ h.checked_at | fmt_ts }}</td><td>{{ h.versions.sgp4 or '—' }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td>{{ h.versions.skyfield or '—' }}</td>{% if (h.counts.pass + h.counts.fail) == 0 %}<td class="num">—</td><td class="num">could not run</td>{% else %}<td class="num">{{ h.counts.pass }}</td><td class="num">{{ h.counts.fail }}</td>{% endif %}</tr>
 {% endfor %}</tbody></table></div>
 {% endif %}
 

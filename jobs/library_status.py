@@ -75,6 +75,10 @@ def behaviour(bid, title, library, expected, upstream, fn):
         passed, detail = fn()
         rec["result"] = "pass" if passed else "fail"
         rec["detail"] = detail
+    except (ImportError, AttributeError, NameError) as exc:  # the harness or the environment, not the library (S-030)
+        rec["result"] = "error"
+        rec["detail"] = _exc(exc)
+        rec["traceback_tail"] = traceback.format_exc().strip().splitlines()[-1][:200]
     except Exception as exc:  # the library raised: that is the finding
         rec["result"] = "fail"
         rec["detail"] = _exc(exc)
@@ -200,7 +204,8 @@ def run(vectors_path: Path = VECTORS) -> dict:
             errors[name] = _exc(exc)
     return {"checked_at": checked_at, "versions": versions(), "inputs": "CCSDS 502.0-B-3 annex G example values; corpus vectors/alpha5.json (v0.1.0)",
             "behaviours": results, "group_errors": errors,
-            "counts": {"pass": sum(r["result"] == "pass" for r in results), "fail": sum(r["result"] == "fail" for r in results)}}
+            "counts": {"pass": sum(r["result"] == "pass" for r in results), "fail": sum(r["result"] == "fail" for r in results),
+                       "error": sum(r["result"] == "error" for r in results)}}
 
 
 def main(argv=None) -> int:

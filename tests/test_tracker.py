@@ -223,16 +223,72 @@ class Drift(unittest.TestCase):
 
 
 class Outputs(unittest.TestCase):
-    def test_rebuild_latest_from_seed(self):
+    """--rebuild-latest over a fixture history built here, not the committed data: the committed values change
+    with every catalogued object, and a test that pinned them turned the validation gate red on the first new
+    day (S-028). Shape is asserted, never a live number."""
+
+    @staticmethod
+    def entry(date, kind, status, groups):
+        metrics = {}
+        for group, fields in tracker.METRIC_FIELDS.items():
+            g = groups.get(group)
+            if g is None:  # the fetch failed for this group that day: no answer, ok False
+                metrics[group] = {"ok": False, "status": 500, "error": "HTTP 500", "checked_at": f"{date}T06:44:00Z", **{f: None for f in fields}}
+            else:
+                metrics[group] = {"ok": True, "status": 200, "checked_at": f"{date}T06:44:00Z", **g}
+        return {"date": date, "checked_at": f"{date}T06:44:30Z", "kind": kind, "status": status, "metrics": metrics,
+                "relations": {}, "drift": {"results": []}, "fetch": {"requests": 5, "errors": 0}}
+
+    def test_rebuild_latest_from_fixture_history(self):
+        ok1 = {"last30": {"records": 10, "highest": 100010, "six_digit": 10, "nine_digit": 0, "below_100000": 0},
+               "last30_tle": {"status": 404, "is_404": True, "records": 0},
+               "analyst": {"records": 5, "six_digit": 3, "below_100000": 2},
+               "analyst_tle": {"status": 200, "is_404": False, "records": 2},
+               "supgp_starlink": {"records": None, "nine_digit": 4, "nine_digit_present": True}}
+        ok2 = {**ok1, "last30": {"records": 12, "highest": 100012, "six_digit": 12, "nine_digit": 0, "below_100000": 0}}
+        ok2.pop("supgp_starlink")  # that group failed on day 2: its last success stays the seed day's
+        history = [self.entry("2026-09-01", "seed", "ok", ok1),
+                   self.entry("2026-09-02", "scheduled", "ok", ok2),
+                   self.entry("2026-09-03", "scheduled", "failed", {})]
+        drift = {"baseline": {"corpus_version": "0.0.0"},
+                 "sources": [{"id": "a", "case": "c", "url": "https://example.invalid/a", "sha256": "0" * 64, "bytes": 1,
+                              "baseline_http_status": 200, "baseline_retrieved": "2026-09-01T00:00:00Z",
+                              "last_checked": "2026-09-02T06:44:00Z", "last_status": "match", "last_http_status": 200, "history": []},
+                             {"id": "b", "case": "c", "url": "https://example.invalid/b", "sha256": "1" * 64, "bytes": 1,
+                              "baseline_http_status": 200, "baseline_retrieved": "2026-09-01T00:00:00Z",
+                              "last_checked": None, "last_status": None, "last_http_status": None, "history": []}]}
         with tempfile.TemporaryDirectory() as d:
-            for name in ("history.json", "drift.json"):
-                (Path(d) / name).write_bytes((ROOT / "data" / "tracker" / name).read_bytes())
+            (Path(d) / "history.json").write_text(json.dumps(history))
+            (Path(d) / "drift.json").write_text(json.dumps(drift))
             self.assertEqual(tracker.main(["--data-dir", d, "--rebuild-latest"]), 0)
             latest = json.loads((Path(d) / "latest.json").read_text())
-            self.assertEqual(latest["last_successful"]["last30"]["highest"], 100789)
-            self.assertTrue(latest["last_successful"]["last30_tle"]["is_404"])
-            self.assertEqual(latest["last_successful"]["supgp_starlink"]["nine_digit"], 27)
-            self.assertEqual(latest["drift"]["sources"], 22)
+        for key in ("generated_at", "site", "latest", "last_successful", "drift", "history_entries", "fetch_log"):
+            self.assertIn(key, latest)
+        self.assertEqual(latest["latest"], history[-1])                 # the newest entry, even a failed one
+        self.assertEqual(latest["history_entries"], 3)
+        ls = latest["last_successful"]
+        self.assertEqual(set(ls), set(tracker.METRIC_FIELDS))           # every group has a last success
+        for group, fields in tracker.METRIC_FIELDS.items():
+            self.assertEqual(set(ls[group]), set(fields) | {"checked_at", "entry_date", "seed"}, group)
+        self.assertEqual(ls["last30"]["entry_date"], "2026-09-02")      # the latest ok day, not the failed one
+        self.assertEqual(ls["last30"]["highest"], 100012)               # a fixture value, not a live one
+        self.assertFalse(ls["last30"]["seed"])
+        self.assertEqual(ls["supgp_starlink"]["entry_date"], "2026-09-01")  # the group that failed on day 2 keeps day 1
+        self.assertTrue(ls["supgp_starlink"]["seed"])
+        self.assertTrue(ls["last30_tle"]["is_404"])
+        dr = latest["drift"]
+        self.assertEqual((dr["sources"], dr["match"], dr["drift"], dr["error"], dr["never_checked"]), (2, 1, 0, 0, 1))
+        self.assertEqual([p["id"] for p in dr["per_source"]], ["a", "b"])
+
+    def test_rebuild_latest_from_empty_history(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "history.json").write_text("[]")
+            (Path(d) / "drift.json").write_text(json.dumps({"baseline": {}, "sources": []}))
+            self.assertEqual(tracker.main(["--data-dir", d, "--rebuild-latest"]), 0)
+            latest = json.loads((Path(d) / "latest.json").read_text())
+        self.assertIsNone(latest["latest"])
+        self.assertEqual(latest["last_successful"], {})
+        self.assertEqual(latest["history_entries"], 0)
 
 
 if __name__ == "__main__":

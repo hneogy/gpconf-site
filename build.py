@@ -55,6 +55,7 @@ CORPUS = {
     "issue_169": "https://github.com/brandon-rhodes/python-sgp4/issues/169",
     "pr_170": "https://github.com/brandon-rhodes/python-sgp4/pull/170",
     "pr_170_comment": "https://github.com/brandon-rhodes/python-sgp4/pull/170#issuecomment-5755703491",
+    "pr_172": "https://github.com/brandon-rhodes/python-sgp4/pull/172",
     "site_repo": None,
 }
 HEADERS = """/*

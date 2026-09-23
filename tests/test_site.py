@@ -1,7 +1,8 @@
 """Build the site into a temporary directory and check the page contract: every page has both
 reading levels, no external script/style/font, no inline event handlers, and the tools are
-client-side only. Also runs the JavaScript Alpha-5 vector test when node is available."""
+client-side only. Also runs the JavaScript tests through `node --test` when node is available and not in CI."""
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -109,16 +110,6 @@ class FailedDayRendering(unittest.TestCase):
             elif not e["metrics"]["last30_tle"].get("ok"):
                 self.assertEqual(cells[2], "—", cells)
 
-    def test_bool_charts_treat_a_failed_day_as_no_data(self):
-        # charts.js runs in the browser (no node in CI); pin the contract textually: both boolean charts carry an
-        # okPath and boolChart consults it, so a failed day draws the 'no data' cell instead of an answer
-        js = (ROOT / "site/static/js/charts.js").read_text()
-        self.assertIn("okPath: 'metrics.last30_tle.ok'", js)
-        self.assertIn("okPath: 'metrics.supgp_starlink.ok'", js)
-        bool_chart = js[js.index("function boolChart"):js.index("function table")]
-        self.assertIn("spec.okPath", bool_chart)
-        self.assertIn("v: ok ? get(e, spec.path) : null", bool_chart)
-
 
 class Ecosystem(unittest.TestCase):
     """The hand-maintained ecosystem list: every entry is a linked, dated public statement, rendered
@@ -176,23 +167,19 @@ class Activity(unittest.TestCase):
             self.assertIn(repo, text)
         self.assertNotIn("title", text.split("// Only state")[1].split("export async function buildActivity")[0].replace("titles", ""))
 
-    def test_function_builder(self):
+
+class JavaScript(unittest.TestCase):
+    """Local convenience: the Node scripts (tests/*.test.js, *.test.mjs) through Node's built-in runner. Skipped
+    without node, and in CI, where ci.yml runs `node --test` as its own step so nothing runs twice (S-026)."""
+    def test_node_test_runner(self):
         node = shutil.which("node")
         if not node:
             self.skipTest("node not installed")
-        proc = subprocess.run([node, str(ROOT / "tests/activity-function.test.mjs")], capture_output=True, text=True)
+        if os.environ.get("CI"):
+            self.skipTest("run by the node --test step of the workflow")
+        proc = subprocess.run([node, "--test"], cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
-        self.assertIn('"ok":true', proc.stdout.replace(" ", ""))
-
-
-class Alpha5JavaScript(unittest.TestCase):
-    def test_vectors(self):
-        node = shutil.which("node")
-        if not node:
-            self.skipTest("node not installed")
-        proc = subprocess.run([node, str(ROOT / "tests/alpha5-vectors.test.js")], capture_output=True, text=True)
-        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
-        self.assertIn('"failed":0', proc.stdout.replace(" ", ""))
+        self.assertIn("fail 0", proc.stdout)
 
 
 if __name__ == "__main__":

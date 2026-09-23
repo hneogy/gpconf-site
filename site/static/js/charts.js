@@ -95,6 +95,8 @@
       (spec.kind === 'bool' ? boolChart : lineChart)(c, history, spec);
     });
   }
+  // loadable from node for tests/charts.test.js; in the browser `module` is undefined and the page code below runs
+  if (typeof module === 'object' && module.exports) { module.exports = { SPECS: SPECS, boolChart: boolChart, lineChart: lineChart }; return; }
   var mount = document.querySelector('[data-chart]');
   if (!mount) return;
   fetch('/data/tracker/history.json', { credentials: 'omit' }).then(function (r) { return r.json(); }).then(run).catch(function () {

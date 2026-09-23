@@ -45,7 +45,11 @@
   }
 
   function boolChart(container, entries, spec) {
-    var pts = entries.map(function (e) { return { date: e.date, v: get(e, spec.path), seed: e.kind === 'seed' }; });
+    // a day whose fetch failed has no answer: render it as 'no data', never as one of the two answers
+    var pts = entries.map(function (e) {
+      var ok = spec.okPath ? get(e, spec.okPath) !== false : true;
+      return { date: e.date, v: ok ? get(e, spec.path) : null, seed: e.kind === 'seed' };
+    });
     var W = 520, cell = Math.max(6, Math.min(24, Math.floor((W - 20) / Math.max(pts.length, 1)))), H = 60;
     var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': spec.title + ', ' + pts.length + ' days' });
     pts.forEach(function (p, i) {
@@ -76,11 +80,11 @@
   var SPECS = {
     highest: { kind: 'line', title: 'highest catalog number in the last-30-days group', path: 'metrics.last30.highest', okPath: 'metrics.last30.ok' },
     six: { kind: 'line', title: 'six-digit objects in the last-30-days group', path: 'metrics.last30.six_digit', okPath: 'metrics.last30.ok', zero: true },
-    tle404: { kind: 'bool', title: 'last-30-days TLE request returns 404', path: 'metrics.last30_tle.is_404', yes: '404 (no TLE)', no: 'TLE data returned' },
+    tle404: { kind: 'bool', title: 'last-30-days TLE request returns 404', path: 'metrics.last30_tle.is_404', okPath: 'metrics.last30_tle.ok', yes: '404 (no TLE)', no: 'TLE data returned' },
     analystcsv: { kind: 'line', title: 'analyst objects in CSV', path: 'metrics.analyst.records', okPath: 'metrics.analyst.ok', zero: true },
     analysttle: { kind: 'line', title: 'analyst objects in TLE', path: 'metrics.analyst_tle.records', okPath: 'metrics.analyst_tle.ok', zero: true },
     nine: { kind: 'line', title: 'nine-digit ids in the Starlink SupGP feed', path: 'metrics.supgp_starlink.nine_digit', okPath: 'metrics.supgp_starlink.ok', zero: true },
-    ninebool: { kind: 'bool', title: 'nine-digit ids present in the Starlink SupGP feed', path: 'metrics.supgp_starlink.nine_digit_present', yes: 'present', no: 'none' }
+    ninebool: { kind: 'bool', title: 'nine-digit ids present in the Starlink SupGP feed', path: 'metrics.supgp_starlink.nine_digit_present', okPath: 'metrics.supgp_starlink.ok', yes: 'present', no: 'none' }
   };
 
   function run(history) {

@@ -97,6 +97,26 @@ class FailedDayRendering(unittest.TestCase):
         html = (Path(tmp) / "tracker" / "index.html").read_text()
         for e in failed:
             self.assertIn(f"{e['date']} ({e['status']})", html)
+            # the noscript table: every column of a failed day is a dash, and the TLE-404 cell is never a "no"
+            # (is_404 is False on a 500, which is not "TLE data returned")
+            row = re.search(rf"<tr><td>{e['date']} \({e['status']}\)</td>(.*?)</tr>", html)
+            self.assertIsNotNone(row, e["date"])
+            cells = re.findall(r"<td[^>]*>(.*?)</td>", row.group(1))
+            self.assertEqual(len(cells), 6, cells)
+            if e["status"] == "failed":
+                self.assertEqual(cells, ["—"] * 6, cells)
+            elif not e["metrics"]["last30_tle"].get("ok"):
+                self.assertEqual(cells[2], "—", cells)
+
+    def test_bool_charts_treat_a_failed_day_as_no_data(self):
+        # charts.js runs in the browser (no node in CI); pin the contract textually: both boolean charts carry an
+        # okPath and boolChart consults it, so a failed day draws the 'no data' cell instead of an answer
+        js = (ROOT / "site/static/js/charts.js").read_text()
+        self.assertIn("okPath: 'metrics.last30_tle.ok'", js)
+        self.assertIn("okPath: 'metrics.supgp_starlink.ok'", js)
+        bool_chart = js[js.index("function boolChart"):js.index("function table")]
+        self.assertIn("spec.okPath", bool_chart)
+        self.assertIn("v: ok ? get(e, spec.path) : null", bool_chart)
 
 
 class Activity(unittest.TestCase):

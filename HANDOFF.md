@@ -6,7 +6,7 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 ## Start here
 
 1. Clone the two public repositories: `hneogy/gpconf-site` (this one) and `hneogy/gp-omm-conformance`
-   (the corpus, v0.1.0, MIT). Read `DECISIONS.md` in each (site: S-001 onward; corpus: D-001 onward,
+   (the corpus, v0.2.0, MIT). Read `DECISIONS.md` in each (site: S-001 onward; corpus: D-001 onward,
    append-only, corrections are new entries) and the corpus's `CLAUDE.md`, which is the decision policy:
    decide technical matters autonomously, log every non-trivial choice, and stop for anything involving
    terms of use, credentials, publishing, contacting people or spending.
@@ -16,25 +16,29 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 3. Every public action (push, release, issue, comment, pull request, deploy) needs the maintainer's
    explicit, per-action authorisation. Approval for one action does not carry to the next.
 
-## State on 2026-09-21
+## State on 2026-09-23
 
 | area | state |
 |---|---|
 | corpus | v0.2.0 published 2026-09-23 (seventeen cases: the writer-side case `tle-writer-alpha5` and `gpconf check-tle` added); concept DOI 10.5281/zenodo.22867654, version DOI 10.5281/zenodo.22906966 (v0.1.0: 10.5281/zenodo.22867655); independent audit in `AUDIT.md` covered v0.1.0 |
-| site | https://github.com/hneogy/gpconf-site, deployed by Cloudflare Pages at https://gpconf-site.pages.dev; custom domain gpconf.neogy.dev not yet attached; `GITHUB_TOKEN` secret not yet set (`/api/activity` reports `authenticated: false`) |
-| site jobs | GitHub Actions: `tracker.yml` daily 06:17 UTC (5 CelesTrak endpoints + at most 4 drift checks, hard cap 10), `library.yml` Mondays 07:23 UTC, `ci.yml` on push; workflow permissions set to write so the jobs can commit their JSON |
-| upstream | python-sgp4 #171 filed by the maintainer of this corpus; fix PR #172 opened at the library maintainer's invitation, awaiting review. #169 reported by another user; PR #170 (another contributor's fix) tested against the corpus, report posted on the PR. The library maintainer asked on #170 how large catalog numbers should be stored and what `.satnum_str` is used for; no reply has been drafted |
-| fork | https://github.com/hneogy/python-sgp4, branch `omm-empty-object-id` (PR #172's head) |
+| site | https://github.com/hneogy/gpconf-site, main at 83b34b2 (decisions to S-027), deployed by Cloudflare Pages at https://gpconf.neogy.dev (custom domain attached) and https://gpconf-site.pages.dev; `GITHUB_TOKEN` set (`/api/activity` reports `authenticated: true`); `ci.yml` runs the Python suite, `node --test` and the build on every push |
+| site jobs | GitHub Actions: `tracker.yml` daily 06:17 UTC (5 CelesTrak endpoints + at most 4 drift checks, hard cap 10), `library.yml` Mondays 07:23 UTC; since S-024 both validate (tests + build) before committing, keep each run's JSON and log as a 30-day artifact, and rebase before pushing; the run of 2026-09-23 is the first through these gates |
+| upstream | python-sgp4 #171 filed by the maintainer of this corpus; fix PR #172 reviewed by the library maintainer on 2026-09-22 with two suggestions; the head was amended to 9e8fc81 and pushed 2026-09-23 (slice suggestion taken, `or ''` kept for the None case, reasons given in the review threads); CI awaits the library maintainer's workflow approval. #169 reported by another user; PR #170 (another contributor's fix) tested against the corpus, report posted on the PR; the maintainer's design question on #170 is unanswered. strf hardening note filed as cbassa/strf#88 on 2026-09-23 |
+| fork | https://github.com/hneogy/python-sgp4, branch `omm-empty-object-id` (PR #172's head, 9e8fc81) |
+| ecosystem | SatNOGS listed on `/library/` as "in progress" from a maintainer's forum statement of 2026-09-22 (S-025); no other entries yet |
 
 ## Open items
 
-- Maintainer's Cloudflare steps: attach the custom domain to the Pages project; add `GITHUB_TOKEN`
-  (fine-grained, public repositories read-only, created and pasted by the maintainer, never through a
-  session) and redeploy; then confirm `https://gpconf.neogy.dev/api/activity` shows `"authenticated": true`.
-- PR #172: wait for review; respond only with authorisation.
+- PR #172: wait for the library maintainer's second look and workflow approval; if he prefers the `.get()`
+  default after the None argument, switch on the corpus maintainer's word. Post nothing without authorisation.
 - PR #170 design question: draft a reply only if asked; post only with authorisation.
-- Corpus public export: the private README's "Upstream" section and updated upstream drafts are not yet in
-  the public repository; that refresh needs the private build repository and a fresh authorisation to push.
+- strf #88: wait for a reply; it may settle the corpus's open questions about `rffit`.
+- Corpus public export: the public copies of the README, `docs/WRITERS.md` and the strf draft still say the
+  hardening note was "not sent"; that refresh needs the private build repository and a fresh authorisation to push.
+- SatNOGS: when support for ids above 99999 lands (Libre Space forum thread 15354), set the entry's status in
+  `site/content/ecosystem.json` to "supported" and add a dated timeline event; both need the maintainer's review.
+- Tracker run of 2026-09-23: first run through the S-022/S-024 gates; check the workflow run, the artifact and the
+  tracker page afterwards.
 
 ### Open questions
 
@@ -73,13 +77,19 @@ that settles it removes the line here and appends the correcting entry to the lo
 
 ## Memory seed for an assistant session
 
-Save these as three notes if the session keeps memory:
+Save these as notes if the session keeps memory:
 
-- **gp-omm-conformance corpus**: published v0.1.0 with DOIs; decisions to D-094; upstream #171 filed and fixed by
-  PR #172 (awaiting review); PR #170 tested and commented; every public action needs fresh authorisation;
-  CelesTrak: each URL once, cache, never loop; no Space-Track data ever.
+- **gp-omm-conformance corpus**: v0.2.0 published 2026-09-23 with version DOI 10.5281/zenodo.22906966 (concept
+  DOI 10.5281/zenodo.22867654); seventeen cases; decisions to D-108; upstream #171 filed and fixed by PR #172
+  (head 9e8fc81, awaiting the maintainer's second look); PR #170 tested and commented; strf note sent as
+  cbassa/strf#88; every public action needs fresh authorisation; CelesTrak: each URL once, cache, never loop;
+  no Space-Track data ever.
 - **CelesTrak usage policy** (gp-data-formats FAQ, updated 2026-03-26): data refreshes at most every 2 h; more
   than 50 HTTP errors in 2 h or ~100 MB/day from one address leads to a firewall entry; never repeat a 403/404;
   use celestrak.org, not .com.
-- **gpconf-site**: public repo, Cloudflare Pages, decisions to S-017; tracker daily, library weekly; Activity
-  function `/api/activity` with hourly edge cache; custom domain and `GITHUB_TOKEN` are the maintainer's steps.
+- **gpconf-site**: public repo, Cloudflare Pages at gpconf.neogy.dev, decisions to S-027; tracker daily, library
+  weekly, both validating before they commit; Activity function `/api/activity` with hourly edge cache;
+  hand-maintained ecosystem list on `/library/`; JavaScript tests through `node --test`.
+- **Unverified claims are open questions**: a decision-log entry labelled untested or inferred is an open
+  question, not a settled fact; verify before building on it; mark `[untested]`/`[inferred]` inline and list it
+  under "Open questions" in the handoff file (rule added 2026-09-23 after two such claims proved false).

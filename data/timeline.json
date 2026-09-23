@@ -27,6 +27,9 @@
    "technical": "Release v0.2.0 of gp-omm-conformance (tag on commit b54c3b8): 17 cases; adds the writer-side case tle-writer-alpha5 (does a tool that writes a TLE put a correct Alpha-5 catalog field on both lines, and does it refuse ids the field cannot represent) and the gpconf check-tle command for files a tool wrote; the sixteen v0.1.0 cases and their expected values are unchanged."},
   {"date": "2026-09-23", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.22906966",
    "simple": "The new version of the test kit received its own permanent citation number.",
-   "technical": "Version DOI 10.5281/zenodo.22906966 (v0.2.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
+   "technical": "Version DOI 10.5281/zenodo.22906966 (v0.2.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."},
+  {"date": "2026-09-23", "time": "2026-09-23T21:09:22Z", "title": "Corpus v0.2.1 published", "url": "https://github.com/hneogy/gp-omm-conformance/releases/tag/v0.2.1",
+   "simple": "A maintenance version fixes places where the test kit had reported a pass it had not actually checked; the seventeen tests are unchanged, and one new check was added for programs that write the old format.",
+   "technical": "Release v0.2.1 of gp-omm-conformance (tag on commit b1407a5): fixes to cases where the corpus reported a pass it had not checked (DECISIONS D-111 to D-115 and D-117 to D-119); the seventeen cases and their frozen expected values are unchanged; one writer check added (tle-writer-column-layout); naive and python-sgp4 results unchanged at 14 and 7 of 17 cases failing."}
  ]
 }

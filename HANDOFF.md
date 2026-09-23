@@ -1,12 +1,12 @@
 # Handoff: how to pick this project up on another computer
 
 For a Claude Code session (or a person) resuming work on the gp-omm-conformance corpus and this site.
-Public-safe by design: no provider data, no credentials, no private paths. Updated 2026-09-21.
+Public-safe by design: no provider data, no credentials, no private paths. Updated 2026-09-23.
 
 ## Start here
 
 1. Clone the two public repositories: `hneogy/gpconf-site` (this one) and `hneogy/gp-omm-conformance`
-   (the corpus, v0.2.0, MIT). Read `DECISIONS.md` in each (site: S-001 onward; corpus: D-001 onward,
+   (the corpus, v0.2.1, MIT). Read `DECISIONS.md` in each (site: S-001 onward; corpus: D-001 onward,
    append-only, corrections are new entries) and the corpus's `CLAUDE.md`, which is the decision policy:
    decide technical matters autonomously, log every non-trivial choice, and stop for anything involving
    terms of use, credentials, publishing, contacting people or spending.
@@ -20,8 +20,8 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 
 | area | state |
 |---|---|
-| corpus | v0.2.0 published 2026-09-23 (seventeen cases: the writer-side case `tle-writer-alpha5` and `gpconf check-tle` added); concept DOI 10.5281/zenodo.22867654, version DOI 10.5281/zenodo.22906966 (v0.1.0: 10.5281/zenodo.22867655); independent audit in `AUDIT.md` covered v0.1.0 |
-| site | https://github.com/hneogy/gpconf-site, main at 83b34b2 (decisions to S-027), deployed by Cloudflare Pages at https://gpconf.neogy.dev (custom domain attached) and https://gpconf-site.pages.dev; `GITHUB_TOKEN` set (`/api/activity` reports `authenticated: true`); `ci.yml` runs the Python suite, `node --test` and the build on every push |
+| corpus | v0.2.1 released 2026-09-23 (tag v0.2.1 on b1407a5, GitHub release published 21:09:22 UTC): fixes to cases where the corpus reported a pass it had not checked (D-111 to D-119); seventeen cases unchanged, one writer check added; its Zenodo version DOI is pending, so `build.py` still names v0.2.0's 10.5281/zenodo.22906966 and the pages say so. v0.2.0 published 2026-09-23 (the writer-side case `tle-writer-alpha5` and `gpconf check-tle`); concept DOI 10.5281/zenodo.22867654 (v0.1.0: 10.5281/zenodo.22867655); independent audit in `AUDIT.md` covered v0.1.0 only |
+| site | https://github.com/hneogy/gpconf-site, main at e25ef58 plus the S-031 commit (decisions to S-031), deployed by Cloudflare Pages at https://gpconf.neogy.dev (custom domain attached) and https://gpconf-site.pages.dev; `GITHUB_TOKEN` set (`/api/activity` reports `authenticated: true`); `ci.yml` runs the Python suite, `node --test` and the build on every push |
 | site jobs | GitHub Actions: `tracker.yml` daily 06:17 UTC (5 CelesTrak endpoints + at most 4 drift checks, hard cap 10), `library.yml` Mondays 07:23 UTC; since S-024 both validate (tests + build) before committing, keep each run's JSON and log as a 30-day artifact, and rebase before pushing; the run of 2026-09-23 is the first through these gates |
 | upstream | python-sgp4 #171 filed by the maintainer of this corpus; fix PR #172 reviewed by the library maintainer on 2026-09-22 with two suggestions; the head was amended to 9e8fc81 and pushed 2026-09-23 (slice suggestion taken, `or ''` kept for the None case, reasons given in the review threads); CI awaits the library maintainer's workflow approval. #169 reported by another user; PR #170 (another contributor's fix) tested against the corpus, report posted on the PR; the maintainer's design question on #170 is unanswered. strf hardening note filed as cbassa/strf#88 on 2026-09-23 |
 | fork | https://github.com/hneogy/python-sgp4, branch `omm-empty-object-id` (PR #172's head, 9e8fc81) |
@@ -33,8 +33,9 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
   default after the None argument, switch on the corpus maintainer's word. Post nothing without authorisation.
 - PR #170 design question: draft a reply only if asked; post only with authorisation.
 - strf #88: wait for a reply; it may settle the corpus's open questions about `rffit`.
-- Corpus public repository refreshed 2026-09-23 (main d192557): analyst count corrected to 563 of 565, upstream
-  reports recorded as filed. Nothing is waiting for export.
+- Corpus public repository at v0.2.1 (main b1407a5 = tag v0.2.1, CI green). When Zenodo mints the v0.2.1 version DOI,
+  set `version_doi`, `version_doi_url` and `version_doi_version` in `build.py` and add a dated "Zenodo DOI minted"
+  timeline event, both with the maintainer's review.
 - SatNOGS: when support for ids above 99999 lands (Libre Space forum thread 15354), set the entry's status in
   `site/content/ecosystem.json` to "supported" and add a dated timeline event; both need the maintainer's review.
 - Tracker run of 2026-09-23: first run through the S-022/S-024 gates; check the workflow run, the artifact and the
@@ -79,8 +80,8 @@ that settles it removes the line here and appends the correcting entry to the lo
 
 Save these as notes if the session keeps memory:
 
-- **gp-omm-conformance corpus**: v0.2.0 published 2026-09-23 with version DOI 10.5281/zenodo.22906966 (concept
-  DOI 10.5281/zenodo.22867654); seventeen cases; decisions to D-108; upstream #171 filed and fixed by PR #172
+- **gp-omm-conformance corpus**: v0.2.1 released 2026-09-23 (tag on b1407a5; version DOI pending; v0.2.0's is
+  10.5281/zenodo.22906966, concept DOI 10.5281/zenodo.22867654); seventeen cases; decisions to D-121; upstream #171 filed and fixed by PR #172
   (head 9e8fc81, awaiting the maintainer's second look); PR #170 tested and commented; strf note sent as
   cbassa/strf#88; every public action needs fresh authorisation; CelesTrak: each URL once, cache, never loop;
   no Space-Track data ever.

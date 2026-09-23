@@ -1,6 +1,6 @@
 {
- "_provenance": "docs/FAILURES.md of gp-omm-conformance v0.2.0 (tag v0.2.0; generated 2026-09-22T23:31:15Z by tools/make_failures.py; seventeen cases: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
- "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.2.0/docs/FAILURES.md",
+ "_provenance": "docs/FAILURES.md of gp-omm-conformance v0.2.1 (tag v0.2.1; generated 2026-09-23T20:55:40Z by tools/make_failures.py; seventeen cases, unchanged since v0.2.0: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5; every status and failing-item count is identical to v0.2.0's table); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
+ "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.2.1/docs/FAILURES.md",
  "rows": [
   ["epoch-year-19xx", "pass", 0, "pass", 0, "pass-tolerance", 0],
   ["baseline-iss-five-formats", "pass", 0, "pass", 0, "pass-tolerance", 0],

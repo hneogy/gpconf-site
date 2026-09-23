@@ -49,7 +49,7 @@ CORPUS = {
     "concept_doi_url": "https://doi.org/10.5281/zenodo.22867654",
     "version_doi": "10.5281/zenodo.22906966",
     "version_doi_url": "https://zenodo.org/records/22906966",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "version_doi_version": "0.2.0",  # the release the version DOI above belongs to; keep the three in step at each release
     "issue_171": "https://github.com/brandon-rhodes/python-sgp4/issues/171",
     "issue_169": "https://github.com/brandon-rhodes/python-sgp4/issues/169",

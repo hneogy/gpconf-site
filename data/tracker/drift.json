@@ -27,17 +27,23 @@
    "bytes": 142,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:47Z",
-   "last_checked": null,
-   "last_status": "error",
-   "last_http_status": 500,
+   "last_checked": "2026-09-23T06:45:21Z",
+   "last_status": "match",
+   "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:57Z",
      "result": "error",
      "http_status": 500
+    },
+    {
+     "checked_at": "2026-09-23T06:45:21Z",
+     "result": "match",
+     "http_status": 200
     }
    ],
-   "last_error_at": "2026-09-22T06:44:57Z"
+   "last_error_at": "2026-09-22T06:44:57Z",
+   "last_sha256": "a3c757af5751a3f2a6f468257af916fe0ce08f60810d23166f4b8b50348fbb9b"
   },
   {
    "id": "gp-first-25544-CSV",
@@ -47,17 +53,23 @@
    "bytes": 368,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:39Z",
-   "last_checked": null,
-   "last_status": "error",
-   "last_http_status": 500,
+   "last_checked": "2026-09-23T06:45:23Z",
+   "last_status": "match",
+   "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:59Z",
      "result": "error",
      "http_status": 500
+    },
+    {
+     "checked_at": "2026-09-23T06:45:23Z",
+     "result": "match",
+     "http_status": 200
     }
    ],
-   "last_error_at": "2026-09-22T06:44:59Z"
+   "last_error_at": "2026-09-22T06:44:59Z",
+   "last_sha256": "cbdd6a2e36b97d543654a12e6ff60767e1d570d7fcbd5248b0999d85a6292af5"
   },
   {
    "id": "gp-first-25544-JSON",
@@ -67,17 +79,23 @@
    "bytes": 414,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:11:51Z",
-   "last_checked": null,
-   "last_status": "error",
-   "last_http_status": 500,
+   "last_checked": "2026-09-23T06:45:26Z",
+   "last_status": "match",
+   "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-22T06:45:01Z",
      "result": "error",
      "http_status": 500
+    },
+    {
+     "checked_at": "2026-09-23T06:45:26Z",
+     "result": "match",
+     "http_status": 200
     }
    ],
-   "last_error_at": "2026-09-22T06:45:01Z"
+   "last_error_at": "2026-09-22T06:45:01Z",
+   "last_sha256": "e18ebbe14d38ae617b0506e79230d51df539704dbd0ff1fd9d6f9d8f15e13dd5"
   },
   {
    "id": "gp-first-25544-JSON-PRETTY",
@@ -186,17 +204,23 @@
    "bytes": 1204,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:00Z",
-   "last_checked": null,
-   "last_status": "error",
-   "last_http_status": 500,
+   "last_checked": "2026-09-23T06:45:18Z",
+   "last_status": "match",
+   "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-22T06:44:55Z",
      "result": "error",
      "http_status": 500
+    },
+    {
+     "checked_at": "2026-09-23T06:45:18Z",
+     "result": "match",
+     "http_status": 200
     }
    ],
-   "last_error_at": "2026-09-22T06:44:55Z"
+   "last_error_at": "2026-09-22T06:44:55Z",
+   "last_sha256": "c2523a59549f0e95e0573630b50626cc15089bfeb5d9486f033aa6d54702d71b"
   },
   {
    "id": "gp-first-100000-KVN",

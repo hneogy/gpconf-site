@@ -167,6 +167,13 @@ class Activity(unittest.TestCase):
             self.assertIn(repo, text)
         self.assertNotIn("title", text.split("// Only state")[1].split("export async function buildActivity")[0].replace("titles", ""))
 
+    def test_function_is_a_declared_es_module(self):
+        # tests/activity-function.test.mjs imports functions/api/activity.js, an ES module with a .js name. Node treats
+        # it as such because the nearest package.json, functions/package.json, declares "type": "module"; without that
+        # declaration Node would fall back to module-syntax detection (S-027). Fail loudly if the declaration goes.
+        pkg = json.loads((ROOT / "functions/package.json").read_text(encoding="utf-8"))
+        self.assertEqual(pkg.get("type"), "module", pkg)
+
 
 class JavaScript(unittest.TestCase):
     """Local convenience: the Node scripts (tests/*.test.js, *.test.mjs) through Node's built-in runner. Skipped

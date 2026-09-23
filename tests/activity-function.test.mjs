@@ -1,5 +1,7 @@
 // Unit test for the Pages Function's data builder with a fake GitHub. `node tests/activity-function.test.mjs`
 import assert from 'node:assert/strict';
+// activity.js is an ES module under a .js name; Node resolves it as one because functions/package.json declares
+// "type": "module" (guarded by tests/test_site.py, S-027), not because of module-syntax detection.
 import { buildActivity, ITEMS, REPOS, FRESH_SECONDS } from '../functions/api/activity.js';
 
 const calls = [];

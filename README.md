@@ -106,13 +106,13 @@ python3 jobs/tracker.py --cache-dir .cache/tracker      # cache is git-ignored; 
 python3 -m venv venv-lib && venv-lib/bin/pip install --upgrade sgp4 skyfield && venv-lib/bin/python jobs/library_status.py
 ```
 
-## Deploy (owner's steps, not yet done)
+## Deploy (owner's steps, done 2026-09-21; kept as the record)
 
 1. Create the GitHub repository and push. Actions need `contents: write` for the two data-committing
    workflows (repository setting "Workflow permissions: read and write").
 2. Cloudflare Pages → connect the repository; build command `pip install -r requirements.txt && python build.py`;
    output directory `dist`; `.python-version` selects Python 3.13 on the v3 build image.
-3. Custom domain `gpconf.neogy.dev` (the zone is already on Cloudflare).
+3. Custom domain `gpconf.neogy.dev` (attached; the zone was already on Cloudflare).
 
 ## Accessibility and performance
 

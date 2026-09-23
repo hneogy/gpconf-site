@@ -29,7 +29,7 @@
 <h2>What the rows mean</h2>
 <ul>
   <li><strong>Nine-digit id</strong>: can the library load a record whose catalog number has nine digits, as CelesTrak publishes for new Starlink launches? Today it refuses.</li>
-  <li><strong>Empty OBJECT_ID</strong>: can it read an XML record for an object with no launch designation? Today it crashes (our report #171; our fix, PR #172, is awaiting review).</li>
+  <li><strong>Empty OBJECT_ID</strong>: can it read an XML record for an object with no launch designation? Today it crashes (our report #171; our fix, PR #172, was amended after review and is awaiting merge).</li>
   <li><strong>Classification C</strong>: does it keep the “C” marker on operator-supplied records? Today it changes it to “U” in some paths.</li>
   <li><strong>Alpha-5 vectors</strong>: does it turn numbers into lettered fields and back exactly as the rules say, and refuse the forbidden letters? It encodes and decodes correctly but accepts letters it should refuse.</li>
 </ul>

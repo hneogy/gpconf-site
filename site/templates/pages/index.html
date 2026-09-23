@@ -57,7 +57,7 @@
     <li><a href="{{ corpus.repo }}">gp-omm-conformance on GitHub</a> — version {{ corpus.version }}, MIT, independently audited at v0.1.0.</li>
     <li>Concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a> (always the latest release); version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for exactly v{{ corpus.version_doi_version }}{% if corpus.version_doi_version != corpus.version %}; the DOI for v{{ corpus.version }} is added once Zenodo has archived the release{% endif %}.</li>
     <li><a href="{{ corpus.issue_171 }}">python-sgp4 issue #171</a> — <span class="lvl lvl-simple">a bug we found and reported: the library crashes on records that have no international designator.</span><span class="lvl lvl-technical">an empty <code>&lt;OBJECT_ID/&gt;</code> in OMM XML makes <code>sgp4.omm.initialize</code> raise <code>TypeError</code>; reported from the corpus.</span></li>
-    <li><a href="{{ corpus.pr_172 }}">python-sgp4 PR #172</a> — <span class="lvl lvl-simple">the fix for that bug, submitted at the maintainer’s invitation and awaiting review.</span><span class="lvl lvl-technical">the fix for #171 (two files, two tests), submitted at the maintainer’s invitation, awaiting review.</span></li>
+    <li><a href="{{ corpus.pr_172 }}">python-sgp4 PR #172</a> — <span class="lvl lvl-simple">the fix for that bug, submitted at the maintainer’s invitation, amended after review, and awaiting merge.</span><span class="lvl lvl-technical">the fix for #171 (two files, two tests), submitted at the maintainer’s invitation, amended after review, awaiting merge.</span></li>
   </ul>
 </section>
 {% endblock %}

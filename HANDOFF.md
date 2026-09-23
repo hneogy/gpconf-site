@@ -33,8 +33,8 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
   default after the None argument, switch on the corpus maintainer's word. Post nothing without authorisation.
 - PR #170 design question: draft a reply only if asked; post only with authorisation.
 - strf #88: wait for a reply; it may settle the corpus's open questions about `rffit`.
-- Corpus public export: the public copies of the README, `docs/WRITERS.md` and the strf draft still say the
-  hardening note was "not sent"; that refresh needs the private build repository and a fresh authorisation to push.
+- Corpus public repository refreshed 2026-09-23 (main d192557): analyst count corrected to 563 of 565, upstream
+  reports recorded as filed. Nothing is waiting for export.
 - SatNOGS: when support for ids above 99999 lands (Libre Space forum thread 15354), set the entry's status in
   `site/content/ecosystem.json` to "supported" and add a dated timeline event; both need the maintainer's review.
 - Tracker run of 2026-09-23: first run through the S-022/S-024 gates; check the workflow run, the artifact and the

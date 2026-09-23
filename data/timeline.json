@@ -18,6 +18,12 @@
    "technical": "brandon-rhodes/python-sgp4#171: an empty OBJECT_ID element in OMM XML makes sgp4.omm.initialize raise TypeError; reproducer on CCSDS example values."},
   {"date": "2026-09-21", "time": "2026-09-21T20:17:10Z", "title": "Pull request #172 opened", "url": "https://github.com/brandon-rhodes/python-sgp4/pull/172",
    "simple": "A fix for that bug was submitted to the library for review.",
-   "technical": "brandon-rhodes/python-sgp4#172 from hneogy:omm-empty-object-id, one commit, two files, two tests; 47 upstream tests pass on both builds."}
+   "technical": "brandon-rhodes/python-sgp4#172 from hneogy:omm-empty-object-id, one commit, two files, two tests; 47 upstream tests pass on both builds."},
+  {"date": "2026-09-23", "time": "2026-09-23T00:16:27Z", "title": "Corpus v0.2.0 published", "url": "https://github.com/hneogy/gp-omm-conformance/releases/tag/v0.2.0",
+   "simple": "A new version of the test kit adds a check for programs that write the old format, not only read it, and a command that checks a file such a program wrote.",
+   "technical": "Release v0.2.0 of gp-omm-conformance (tag on commit b54c3b8): 17 cases; adds the writer-side case tle-writer-alpha5 (does a tool that writes a TLE put a correct Alpha-5 catalog field on both lines, and does it refuse ids the field cannot represent) and the gpconf check-tle command for files a tool wrote; the sixteen v0.1.0 cases and their expected values are unchanged."},
+  {"date": "2026-09-23", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.22906966",
+   "simple": "The new version of the test kit received its own permanent citation number.",
+   "technical": "Version DOI 10.5281/zenodo.22906966 (v0.2.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
  ]
 }

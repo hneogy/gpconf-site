@@ -28,7 +28,7 @@
 <h2>What to do</h2>
 <ul>
   <li>If you <strong>use</strong> satellite software: ask whether it reads the new OMM formats and six-digit numbers. Check that satellites launched after July 2026 show up.</li>
-  <li>If you <strong>build</strong> it: run the <a href="{{ corpus.repo }}">free test kit</a>. It shows exactly which of sixteen real-world situations your code survives. The <a href="/findings/">findings</a> page shows what broke for three example programs.</li>
+  <li>If you <strong>build</strong> it: run the <a href="{{ corpus.repo }}">free test kit</a>. It shows exactly which of seventeen real-world situations your code survives, whether it reads the data or writes it. The <a href="/findings/">findings</a> page shows what broke for three example programs.</li>
 </ul>
 
 <h2>Old and new, side by side</h2>
@@ -60,7 +60,7 @@ NORAD_CAT_ID        = 23581
   <dt>Alpha-5</dt><dd>Space-Track’s trick of writing the first digit of a six-digit number as a letter so it still fits in five characters. Works up to 339999.</dd>
   <dt>CelesTrak</dt><dd>A non-profit site run by Dr. T.S. Kelso that republishes catalog data for free. Most open-source software reads it.</dd>
   <dt>Space-Track</dt><dd>The US Space Force’s official public catalog site. Requires an account; its terms forbid passing its data on, which is why nothing from it appears here.</dd>
-  <dt>Parser</dt><dd>The part of a program that reads a data format. The test kit tests parsers.</dd>
+  <dt>Parser</dt><dd>The part of a program that reads a data format. The test kit tests parsers, and one case tests the writing side.</dd>
   <dt>404</dt><dd>The web’s “not found” answer. CelesTrak gives it when a TLE request has nothing it can show.</dd>
   <dt>SupGP</dt><dd>Supplemental data CelesTrak publishes from satellite operators, such as SpaceX for Starlink. It is where nine-digit numbers appear, for a few days after each launch.</dd>
   <dt>Analyst object</dt><dd>An object tracked but not yet identified. Analyst objects have numbers in special ranges and often no name or launch designation.</dd>
@@ -157,7 +157,7 @@ MEAN_MOTION_DDOT    = {{ g.omm.MEAN_MOTION_DDOT }}</pre>
   <li>Tolerate unknown keys and non-<code>U</code> classifications; compare TLE and OMM under the precision rules; read <code>MEAN_MOTION_DOT</code> as the printed TLE field.</li>
   <li>Treat a TLE 404 as “unrepresentable in this format”, not as an outage, and prefer the OMM formats, which both providers say are the future.</li>
 </ul>
-<p>Then run the corpus against your parser: <a href="{{ corpus.repo }}#quick-start">quick start</a>.</p>
+<p>Then run the corpus against your parser: <a href="{{ corpus.repo }}#quick-start">quick start</a>. If your tool <em>writes</em> TLEs, point <code>python -m gpconf check-tle</code> at the file it wrote.</p>
 </div>
 </article>
 {% endblock %}

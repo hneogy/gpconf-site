@@ -39,7 +39,7 @@
 <h2>Upstream</h2>
 <ul>
   <li><a href="{{ corpus.issue_171 }}">python-sgp4 #171</a>: empty <code>&lt;OBJECT_ID/&gt;</code> import failure, filed from the corpus; the fix is <a href="{{ corpus.pr_172 }}">PR #172</a>, submitted at the maintainer’s invitation, awaiting review.</li>
-  <li><a href="{{ corpus.issue_169 }}">python-sgp4 #169</a> / <a href="{{ corpus.pr_170 }}">PR #170</a>: nine-digit ids, reported independently before the corpus existed; the corpus <a href="{{ corpus.pr_170_comment }}">tested the PR</a> across all sixteen cases and reported the result.</li>
+  <li><a href="{{ corpus.issue_169 }}">python-sgp4 #169</a> / <a href="{{ corpus.pr_170 }}">PR #170</a>: nine-digit ids, reported independently before the corpus existed; the corpus <a href="{{ corpus.pr_170_comment }}">tested the PR</a> across all sixteen cases the corpus had at the time and reported the result.</li>
 </ul>
 <h2>This site</h2>
 <ul>
@@ -49,7 +49,7 @@
   <li>Shown data: counts, yes/no states, HTTP statuses, byte counts, hashes and timestamps. The only element sets on the site are the CCSDS annex G example and the corpus’s published derived Alpha-5 example.</li>
 </ul>
 <h2>Responsibility and licence</h2>
-<p>Maintainer: Honorius Neogy. Publisher and copyright holder: NEOGY LLC. Code, text, vectors, derived files and expected values are MIT-licensed. Provider data is not included. To cite the corpus use its <code>CITATION.cff</code>: concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a>, version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for v{{ corpus.version }}.</p>
+<p>Maintainer: Honorius Neogy. Publisher and copyright holder: NEOGY LLC. Code, text, vectors, derived files and expected values are MIT-licensed. Provider data is not included. To cite the corpus use its <code>CITATION.cff</code>: concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a>, version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for v{{ corpus.version_doi_version }}{% if corpus.version_doi_version != corpus.version %} (the DOI for v{{ corpus.version }} is added once Zenodo has archived the release){% endif %}.</p>
 </div>
 </article>
 {% endblock %}

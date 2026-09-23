@@ -1,6 +1,6 @@
 {
- "_provenance": "docs/FAILURES.md of gp-omm-conformance v0.1.0 (generated 2026-09-21T03:16:37Z by tools/make_failures.py); parsers: reference = the corpus's own readers, naive = int() on five columns / one epoch format / U assumed / every column assumed present, python-sgp4 = 2.27 through sgp4.omm and twoline2rv (no KVN reader).",
- "url": "https://github.com/hneogy/gp-omm-conformance/blob/main/docs/FAILURES.md",
+ "_provenance": "docs/FAILURES.md of gp-omm-conformance v0.2.0 (tag v0.2.0; generated 2026-09-22T23:31:15Z by tools/make_failures.py; seventeen cases: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
+ "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.2.0/docs/FAILURES.md",
  "rows": [
   ["epoch-year-19xx", "pass", 0, "pass", 0, "pass-tolerance", 0],
   ["baseline-iss-five-formats", "pass", 0, "pass", 0, "pass-tolerance", 0],
@@ -17,6 +17,7 @@
   ["omm-xml-schema", "pass", 0, "fail", 6, "fail", 3],
   ["alpha5-encoding-vectors", "pass", 0, "fail", 4, "fail", 2],
   ["alpha5-tle-derived", "pass", 0, "fail", 4, "pass-tolerance", 0],
-  ["kvn-syntax-variants", "pass", 0, "fail", 4, "skip", 0]
+  ["kvn-syntax-variants", "pass", 0, "fail", 4, "skip", 0],
+  ["tle-writer-alpha5", "pass", 0, "fail", 3, "fail", 1]
  ]
 }

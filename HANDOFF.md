@@ -20,7 +20,7 @@ Public-safe by design: no provider data, no credentials, no private paths. Updat
 
 | area | state |
 |---|---|
-| corpus | v0.1.0 published; concept DOI 10.5281/zenodo.22867654, version DOI 10.5281/zenodo.22867655; independent audit in `AUDIT.md` |
+| corpus | v0.2.0 published 2026-09-23 (seventeen cases: the writer-side case `tle-writer-alpha5` and `gpconf check-tle` added); concept DOI 10.5281/zenodo.22867654, version DOI 10.5281/zenodo.22906966 (v0.1.0: 10.5281/zenodo.22867655); independent audit in `AUDIT.md` covered v0.1.0 |
 | site | https://github.com/hneogy/gpconf-site, deployed by Cloudflare Pages at https://gpconf-site.pages.dev; custom domain gpconf.neogy.dev not yet attached; `GITHUB_TOKEN` secret not yet set (`/api/activity` reports `authenticated: false`) |
 | site jobs | GitHub Actions: `tracker.yml` daily 06:17 UTC (5 CelesTrak endpoints + at most 4 drift checks, hard cap 10), `library.yml` Mondays 07:23 UTC, `ci.yml` on push; workflow permissions set to write so the jobs can commit their JSON |
 | upstream | python-sgp4 #171 filed by the maintainer of this corpus; fix PR #172 opened at the library maintainer's invitation, awaiting review. #169 reported by another user; PR #170 (another contributor's fix) tested against the corpus, report posted on the PR. The library maintainer asked on #170 how large catalog numbers should be stored and what `.satnum_str` is used for; no reply has been drafted |

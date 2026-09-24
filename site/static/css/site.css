@@ -98,7 +98,7 @@ li { margin: .25rem 0; }
 .badge.pass-tolerance { background: var(--info-bg); color: var(--link); }
 .badge.fail, .badge.bad, .badge.drift { background: var(--bad-bg); color: var(--bad); }
 .badge.skip, .badge.partial, .badge.warn, .badge.error, .badge.unknown { background: var(--warn-bg); color: var(--warn); }
-.badge.neutral { background: var(--code-bg); color: var(--fg-muted); }
+.badge.neutral, .badge.not-exercised { background: var(--code-bg); color: var(--fg-muted); }
 
 /* tables */
 .table-wrap { overflow-x: auto; margin: 1rem 0; -webkit-overflow-scrolling: touch; }

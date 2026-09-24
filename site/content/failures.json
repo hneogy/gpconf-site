@@ -1,6 +1,6 @@
 {
- "_provenance": "docs/FAILURES.md of gp-omm-conformance v0.2.1 (tag v0.2.1; generated 2026-09-23T20:55:40Z by tools/make_failures.py; seventeen cases, unchanged since v0.2.0: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5; every status and failing-item count is identical to v0.2.0's table); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
- "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.2.1/docs/FAILURES.md",
+ "_provenance": "docs/FAILURES.md of gp-omm-conformance main at 71cf3d5, after v0.2.1 (generated 2026-09-24T20:24:53Z by tools/make_failures.py; seventeen cases, sixteen exercised by a parser and one a data check: satcat-70000-cutoff is a check the runner makes on the legacy SATCAT file itself and reports as not-exercised for every parser since D-129 of 2026-09-24; every failing-item count is identical to v0.2.1's table, and the cases are unchanged since v0.2.0: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
+ "url": "https://github.com/hneogy/gp-omm-conformance/blob/71cf3d57e7b4f75ca70d01b3b73084b4b0d84705/docs/FAILURES.md",
  "rows": [
   ["epoch-year-19xx", "pass", 0, "pass", 0, "pass-tolerance", 0],
   ["baseline-iss-five-formats", "pass", 0, "pass", 0, "pass-tolerance", 0],
@@ -10,7 +10,7 @@
   ["nine-digit-supgp-launch-nominals", "pass", 0, "fail", 5, "fail", 4],
   ["supgp-celestrak-classification-c", "pass", 0, "fail", 5, "fail", 6],
   ["bstar-and-derivative-forms", "pass", 0, "fail", 1, "pass-tolerance", 0],
-  ["satcat-70000-cutoff", "pass", 0, "pass", 0, "pass", 0],
+  ["satcat-70000-cutoff", "not-exercised", 0, "not-exercised", 0, "not-exercised", 0],
   ["csv-json-omitted-mandatory-fields", "pass", 0, "fail", 8, "fail", 2],
   ["mean-motion-derivative-convention", "pass", 0, "fail", 7, "pass", 0],
   ["tle-vs-omm-precision-loss", "pass", 0, "fail", 7, "pass-tolerance", 0],

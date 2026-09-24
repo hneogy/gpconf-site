@@ -52,7 +52,7 @@ NORAD_CAT_ID        = 23581
 {{ s.line2 }}</pre>
 <p>Take either example apart field by field in the <a href="/tools/">tools</a>.</p>
 
-<h2>Glossary</h2>
+<h2 id="glossary">Glossary</h2>
 <dl class="glossary">
   <dt>Catalog number (NORAD id)</dt><dd>The unique number every tracked object gets, in order of cataloguing. The licence plate.</dd>
   <dt>TLE</dt><dd>Two-line element set. The 1960s-era text format for an orbit: two lines of 69 characters (often with a name line above). Five characters for the catalog number.</dd>
@@ -158,6 +158,7 @@ MEAN_MOTION_DDOT    = {{ g.omm.MEAN_MOTION_DDOT }}</pre>
   <li>Treat a TLE 404 as “unrepresentable in this format”, not as an outage, and prefer the OMM formats, which both providers say are the future.</li>
 </ul>
 <p>Then run the corpus against your parser: <a href="{{ corpus.repo }}#quick-start">quick start</a>. If your tool <em>writes</em> TLEs, point <code>python -m gpconf check-tle</code> at the file it wrote.</p>
+<p class="small muted">Plain-language definitions of the terms used here are in the <a href="#glossary" data-level-link="simple">glossary</a>, in the Simple version of this page.</p>
 </div>
 </article>
 {% endblock %}

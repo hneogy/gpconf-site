@@ -2,8 +2,8 @@
  "_provenance": "Hand-maintained by the site maintainer. Every entry links to a public record; dates are UTC; times are given where a public timestamp exists.",
  "events": [
   {"date": "2026-09-21", "title": "Independent audit completed", "url": "https://github.com/hneogy/gp-omm-conformance/blob/main/AUDIT.md",
-   "simple": "A separate reviewer re-checked every number in the test kit before it was published and found no wrong value.",
-   "technical": "Audit of the corpus at commit 4db7d2a before publication; 65,887 field-level comparisons agreed with the frozen expected values; documentation findings and their resolutions are recorded in AUDIT.md."},
+   "simple": "A separate reviewer re-checked every number in the first version of the test kit, v0.1.0, before it was published and found no wrong value.",
+   "technical": "Audit of the corpus at commit 4db7d2a, v0.1.0, before publication; 65,887 field-level comparisons agreed with the frozen expected values; documentation findings and their resolutions are recorded in AUDIT.md. The writer-side case of v0.2.0 and the fixes of v0.2.1 have not been separately audited."},
   {"date": "2026-09-21", "title": "Alpha-5 encoding verified against Space-Track", "url": "https://github.com/hneogy/gp-omm-conformance#verifying-the-derived-alpha-5-lines-against-space-track-yourself",
    "simple": "The maintainer checked the lettered catalog numbers against the official catalog using their own account; nothing from that catalog is published.",
    "technical": "Maintainer's run of tools/verify_against_spacetrack.py: 44 records, letters A and T, zero encoding defects; only verdicts were recorded and no Space-Track data entered the corpus."},

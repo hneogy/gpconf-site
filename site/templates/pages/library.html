@@ -26,6 +26,11 @@
 </tbody></table></div>
 {% if L.group_errors %}<p class="callout bad">Some groups could not run: {% for k, v in L.group_errors.items() %}{{ k }}: <code>{{ v }}</code>{{ '; ' if not loop.last }}{% endfor %}</p>{% endif %}
 
+<div class="callout next-step" id="next-python-sgp4">
+<p class="lvl lvl-simple"><strong>If you use python-sgp4 or Skyfield.</strong> Three rows in this table will bite you today: nine-digit placeholder numbers in the week after a Starlink launch make the library refuse the record; objects with no launch designation crash its XML reader; and the classification field is overwritten with “U” on the way in. Until the fixes land, read the CSV or JSON formats rather than XML, skip records whose number has nine digits, and do not rely on the classification field. <strong>Do this now:</strong> follow the <a href="{{ corpus.repo }}#quick-start">test kit’s quick start</a> (clone, fetch, run) with its built-in python-sgp4 adapter; it tells you which of the seventeen cases your installed version survives.</p>
+<p class="lvl lvl-technical"><strong>If you use python-sgp4 or Skyfield.</strong> Until <a href="{{ corpus.pr_172 }}">PR #172</a> is merged, <code>sgp4.omm.parse_xml</code> followed by <code>initialize</code> raises on an empty <code>&lt;OBJECT_ID/&gt;</code>: read CSV or JSON, where the same records load. Nine-digit SupGP ids raise <code>ValueError</code> in <code>initialize</code> and in <code>EarthSatellite.from_omm</code> (<a href="{{ corpus.issue_169 }}">issue #169</a>; <a href="{{ corpus.pr_170 }}">PR #170</a> adds tests only): filter <code>NORAD_CAT_ID &gt;= 100000000</code> before loading, or leave the launch-week SupGP files aside. <code>initialize</code> resets <code>classification</code> to <code>U</code>, as does the pure-Python <code>twoline2rv</code>: keep the source value yourself if you need it. <strong>Do this now:</strong> <code>git clone {{ corpus.repo }}.git &amp;&amp; cd gp-omm-conformance &amp;&amp; python3 tools/fetch.py &amp;&amp; python3 -m gpconf run --adapter tests.adapters.sgp4_adapter:Parser</code>. On 2.27 it fails 7 of 17 cases; the count is the thing to watch as fixes land.</p>
+</div>
+
 <div class="lvl lvl-simple">
 <h2>What the rows mean</h2>
 <ul>
@@ -56,7 +61,11 @@
 <p class="lvl lvl-simple">Some software is not a library on PyPI, so the weekly check cannot reach it. Here is what its makers have said in public, with a link and a date.</p>
 <ul>
 {% for e in ecosystem.entries %}
-  <li><strong>{{ e.project }}</strong> <span class="badge {{ {'in progress': 'warn', 'supported': 'ok', 'not supported': 'bad'}.get(e.status, 'neutral') }}">{{ e.status }}</span><span class="lvl lvl-simple"> — {{ e.simple }}</span><span class="lvl lvl-technical"> — {{ e.technical }}</span> <a href="{{ e.url }}">{{ e.source }}, {{ e.date }}</a></li>
+  <li><strong>{{ e.project }}</strong> <span class="badge {{ {'in progress': 'warn', 'supported': 'ok', 'not supported': 'bad'}.get(e.status, 'neutral') }}">{{ e.status }}</span><span class="lvl lvl-simple"> — {{ e.simple }}</span><span class="lvl lvl-technical"> — {{ e.technical }}</span> <a href="{{ e.url }}">{{ e.source }}, {{ e.date }}</a>
+  {% if e.project == "SatNOGS" %}<div class="callout next-step" id="next-satnogs">
+  <p class="lvl lvl-simple"><strong>If you run a ground station on SatNOGS.</strong> Every satellite launched since July 2026 has a number above 99,999, and as of 22 September 2026 its makers say no part of the network handles those numbers yet. So a newly launched satellite may simply be absent from what your station can be given to track. Support is being added one part at a time. <strong>Do this now:</strong> follow the forum thread linked above; this entry changes to “supported” when the network announces it.</p>
+  <p class="lvl lvl-technical"><strong>If you operate a SatNOGS station.</strong> No SatNOGS component supports NORAD ids above 99999 as of 2026-09-22, per its maintainer; Alpha-5 and OMM JSON support is in progress, at a level that differs by sub-project. CelesTrak serves objects above 99999 only in the OMM formats (its TLE output omits them); Space-Track’s TLEs carry them as Alpha-5 fields up to 339999. Until support lands such objects are outside what the network’s tooling handles; nothing here has been tested by the corpus. <strong>Do this now:</strong> follow the thread, and if you run your own tooling beside SatNOGS, feed it a line from the corpus’s <code>derived/alpha5-tle/</code> files, lettered TLEs rendered from real records. A correct reader reads the field <code>A0000</code> as 100000; a wrong one reports 0, or errors out.</p>
+  </div>{% endif %}</li>
 {% endfor %}
 </ul>
 </article>

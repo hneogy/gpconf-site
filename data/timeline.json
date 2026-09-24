@@ -33,6 +33,9 @@
    "technical": "Release v0.2.1 of gp-omm-conformance (tag on commit b1407a5): fixes to cases where the corpus reported a pass it had not checked (DECISIONS D-111 to D-115 and D-117 to D-119); the seventeen cases and their frozen expected values are unchanged; one writer check added (tle-writer-column-layout); naive and python-sgp4 results unchanged at 14 and 7 of 17 cases failing."},
   {"date": "2026-09-23", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.22926017",
    "simple": "The maintenance version of the test kit received its own permanent citation number.",
-   "technical": "Version DOI 10.5281/zenodo.22926017 (v0.2.1) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
+   "technical": "Version DOI 10.5281/zenodo.22926017 (v0.2.1) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."},
+  {"date": "2026-09-24", "time": "2026-09-24T12:58:27Z", "title": "Pull request #172 merged", "url": "https://github.com/brandon-rhodes/python-sgp4/pull/172",
+   "simple": "The library accepted the fix for the bug we reported; it reaches users with the library’s next release.",
+   "technical": "brandon-rhodes/python-sgp4#172 merged by the maintainer as 8126f77 on master; issue #171 closed as completed. No release carries the fix yet (latest 2.27, 2026-07-03), so the python-sgp4 result stays 7 of 17 cases against 2.27."}
  ]
 }

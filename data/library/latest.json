@@ -39,11 +39,11 @@
    "expected": "no exception; an empty OBJECT_ID is a legitimate CelesTrak value for analyst objects",
    "upstream": [
     {
-     "label": "issue #171",
+     "label": "issue #171 (closed 2026-09-24)",
      "url": "https://github.com/brandon-rhodes/python-sgp4/issues/171"
     },
     {
-     "label": "PR #172",
+     "label": "PR #172 (merged 2026-09-24; fixed in master, awaiting a release)",
      "url": "https://github.com/brandon-rhodes/python-sgp4/pull/172"
     }
    ],

@@ -47,10 +47,10 @@ CORPUS = {
     "tree": "https://github.com/hneogy/gp-omm-conformance/tree/main",
     "concept_doi": "10.5281/zenodo.22867654",
     "concept_doi_url": "https://doi.org/10.5281/zenodo.22867654",
-    "version_doi": "10.5281/zenodo.22906966",
-    "version_doi_url": "https://zenodo.org/records/22906966",
+    "version_doi": "10.5281/zenodo.22926017",
+    "version_doi_url": "https://zenodo.org/records/22926017",
     "version": "0.2.1",
-    "version_doi_version": "0.2.0",  # the release the version DOI above belongs to; keep the three in step at each release
+    "version_doi_version": "0.2.1",  # the release the version DOI above belongs to; keep the three in step at each release
     "issue_171": "https://github.com/brandon-rhodes/python-sgp4/issues/171",
     "issue_169": "https://github.com/brandon-rhodes/python-sgp4/issues/169",
     "pr_170": "https://github.com/brandon-rhodes/python-sgp4/pull/170",

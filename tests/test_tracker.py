@@ -155,8 +155,12 @@ class DailyRun(unittest.TestCase):
 class Drift(unittest.TestCase):
     def state(self):
         st = json.loads((ROOT / "data" / "tracker" / "drift.json").read_text())
-        for s in st["sources"]:  # independent of whatever the live job has checked so far
-            s.update({"last_checked": None, "last_status": None, "last_http_status": None, "history": []})
+        # The working tree's drift.json is rewritten by the real run earlier in the same job, so each source is
+        # rebuilt from its baseline keys only: a field the job adds later (last_sha256, last_error_at, ...) cannot
+        # leak into the fixture (S-045; the validation gate failed on 2026-09-24 and 2026-09-25 when it did).
+        baseline = ("id", "case", "url", "sha256", "bytes", "baseline_http_status", "baseline_retrieved")
+        st["sources"] = [{**{k: s[k] for k in baseline if k in s}, "last_checked": None, "last_status": None,
+                          "last_http_status": None, "history": []} for s in st["sources"]]
         return st
 
     def test_rotation_picks_oldest_first_and_caps(self):

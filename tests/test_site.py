@@ -69,6 +69,14 @@ class Build(unittest.TestCase):
         self.assertIn("so their users are not affected today", html)
         self.assertIn("HTTP 404", html)
         self.assertIn("Refused and dropped are not distinguished for these eight runs", html)  # corpus D-144 footnote
+        # Pull requests carry their state and date in the label, in the python-sgp4 row's shape (S-044).
+        for r in runs["runs"]:
+            for u in r["reports"]:
+                if u["label"].startswith("PR #"):
+                    self.assertRegex(u["label"], r"^PR #\d+ \((open|merged|closed) \d{4}-\d{2}-\d{2}; [^)]+\)$", f"{r['library']}: {u['label']}")
+        for url in ("https://github.com/shashwatak/satellite-js/pull/186", "https://github.com/shashwatak/satellite-js/pull/187",
+                    "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
+            self.assertIn(url, html)
 
     def test_no_external_resources(self):
         for name, html in self.pages.items():

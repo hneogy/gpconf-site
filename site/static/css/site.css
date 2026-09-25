@@ -148,6 +148,7 @@ label { font-weight: 600; display: block; margin: .8rem 0 .3rem; }
 .chart .dot.seed { fill: var(--warn); }
 .chart .lbl { fill: var(--fg-muted); font-size: 11px; font-family: var(--font); }
 .chart .bool-true { fill: var(--ok); } .chart .bool-false { fill: var(--bad); } .chart .bool-null { fill: var(--line); }
+.chart .bool-neutral { fill: var(--fg-muted); } /* a 'no' that is the normal state, e.g. no nine-digit ids outside a launch window (S-047) */
 .charts { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
 
 /* findings */

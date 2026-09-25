@@ -22,7 +22,7 @@ const history = [
 
 for (const key of Object.keys(charts.SPECS)) assert.ok(charts.SPECS[key].okPath, key + " carries an okPath");
 
-const expected = { tle404: ["bool-true", "bool-false", "bool-null"], ninebool: ["bool-false", "bool-true", "bool-null"] };
+const expected = { tle404: ["bool-true", "bool-false", "bool-null"], ninebool: ["bool-neutral", "bool-true", "bool-null"] };  // no nine-digit ids is a normal state, drawn neutral, never red (S-047)
 for (const key of Object.keys(expected)) {
   const c = node("div");
   charts.boolChart(c, history, charts.SPECS[key]);

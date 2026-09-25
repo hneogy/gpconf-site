@@ -68,6 +68,7 @@ class Build(unittest.TestCase):
         self.assertIn("reproduced on the library", html)
         self.assertIn("so their users are not affected today", html)
         self.assertIn("HTTP 404", html)
+        self.assertIn("Refused and dropped are not distinguished for these eight runs", html)  # corpus D-144 footnote
 
     def test_no_external_resources(self):
         for name, html in self.pages.items():

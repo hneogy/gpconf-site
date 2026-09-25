@@ -1,8 +1,26 @@
 {
- "_provenance": "Hand-maintained by the site maintainer from the corpus's Batch G Phase 2 runs of 2026-09-24: corpus v0.2.1, runner gpconf 0.2.1, all seventeen cases, one run per library at the version named, through a harness or adapter of the corpus's own over the library's unmodified parser. Recorded in the corpus decision log D-132 to D-141 (public main at d8ce693); the specifics of each finding are in the linked report, where the project's maintainer can see them. Counts are results for that version on that date, not verdicts on the project; skip means the library has no reader for the case's format; not exercised is the runner's own data check (D-129). Every finding was reproduced by running the library's own code before it was reported. PyEphem (D-128) is added when its report is filed.",
+ "_provenance": "Hand-maintained by the site maintainer from the corpus's Batch G Phase 2 runs of 2026-09-24: corpus v0.2.1, runner gpconf 0.2.1, all seventeen cases, one run per library at the version named, through a harness or adapter of the corpus's own over the library's unmodified parser. Recorded in the corpus decision log D-128 and D-132 to D-141 (public main at d8ce693); the specifics of each finding are in the linked report, where the project's maintainer can see them. Counts are results for that version on that date, not verdicts on the project; skip means the library has no reader for the case's format; not exercised is the runner's own data check (D-129). Every finding was reproduced by running the library's own code before it was reported. PyEphem (D-128) joined on 2026-09-25, when its report was filed.",
  "url": "https://github.com/hneogy/gp-omm-conformance/blob/d8ce6934c238c3601e4c41af4be537cc629e6cd8/DECISIONS.md",
  "corpus_version": "0.2.1",
  "runs": [
+  {
+   "library": "PyEphem",
+   "project_url": "https://github.com/brandon-rhodes/pyephem",
+   "version": "4.2.1",
+   "version_detail": "ephem 4.2.1 from PyPI (2026-02-28), bundling XEphem's libastro; Python 3.14",
+   "run_date": "2026-09-24",
+   "reads": "TLE (three-line, readtle)",
+   "failed": "6 of 17",
+   "breakdown": "0 pass, 6 fail, 10 skip, 1 not exercised (the runner of that day reported the SATCAT data check as a pass; not exercised for every parser since D-129)",
+   "finding": "Alpha-5 fields decode to catalog number 0, silently; the elements and the computed positions are unaffected.",
+   "reports": [
+    {
+     "label": "issue #296",
+     "url": "https://github.com/brandon-rhodes/pyephem/issues/296",
+     "date": "2026-09-25"
+    }
+   ]
+  },
   {
    "library": "satellite.js",
    "project_url": "https://github.com/shashwatak/satellite-js",

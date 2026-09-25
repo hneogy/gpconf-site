@@ -41,18 +41,18 @@ class Build(unittest.TestCase):
             self.assertIn('class="skip-link"', html, name)
 
     def test_library_runs_are_complete_and_rendered(self):
-        """Every hand-run row names a version, a date and at least one filed report; PyEphem is absent until
-        its report is filed (corpus D-134 convention); the page renders every row and both provenance sentences."""
+        """Every hand-run row names a version, a date and at least one filed report; every row links a filed
+        report (corpus D-134 convention: nothing unreported on the page); the page renders every row and both provenance sentences."""
         from markupsafe import escape
         runs = json.loads((ROOT / "site" / "content" / "library-runs.json").read_text(encoding="utf-8"))
         html = self.pages["library/index.html"]
-        self.assertGreaterEqual(len(runs["runs"]), 7)
+        self.assertGreaterEqual(len(runs["runs"]), 8)
+        self.assertIn("PyEphem", [r["library"] for r in runs["runs"]], "PyEphem joined the table when its report was filed (2026-09-25)")
         for r in runs["runs"]:
             for key in ("library", "project_url", "version", "version_detail", "run_date", "reads", "failed", "breakdown", "finding", "reports"):
                 self.assertTrue(r.get(key), f"{r.get('library')}: {key}")
             self.assertRegex(r["run_date"], r"^\d{4}-\d{2}-\d{2}$", r["library"])
             self.assertTrue(r["project_url"].startswith("https://"), r["library"])
-            self.assertNotEqual(r["library"].lower(), "pyephem", "PyEphem joins the table only when its report is filed")
             for u in r["reports"]:
                 self.assertTrue(u["url"].startswith("https://") or u["url"].startswith("#"), f"{r['library']}: {u}")
                 self.assertIn(u["url"], html, f"{r['library']}: report link not rendered")

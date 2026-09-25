@@ -40,6 +40,28 @@ class Build(unittest.TestCase):
             self.assertIn("<main", html, name)
             self.assertIn('class="skip-link"', html, name)
 
+    def test_library_runs_are_complete_and_rendered(self):
+        """Every hand-run row names a version, a date and at least one filed report; PyEphem is absent until
+        its report is filed (corpus D-134 convention); the page renders every row and both provenance sentences."""
+        from markupsafe import escape
+        runs = json.loads((ROOT / "site" / "content" / "library-runs.json").read_text(encoding="utf-8"))
+        html = self.pages["library/index.html"]
+        self.assertGreaterEqual(len(runs["runs"]), 7)
+        for r in runs["runs"]:
+            for key in ("library", "project_url", "version", "version_detail", "run_date", "reads", "failed", "breakdown", "finding", "reports"):
+                self.assertTrue(r.get(key), f"{r.get('library')}: {key}")
+            self.assertRegex(r["run_date"], r"^\d{4}-\d{2}-\d{2}$", r["library"])
+            self.assertTrue(r["project_url"].startswith("https://"), r["library"])
+            self.assertNotEqual(r["library"].lower(), "pyephem", "PyEphem joins the table only when its report is filed")
+            for u in r["reports"]:
+                self.assertTrue(u["url"].startswith("https://") or u["url"].startswith("#"), f"{r['library']}: {u}")
+                self.assertIn(u["url"], html, f"{r['library']}: report link not rendered")
+            self.assertIn(str(escape(r["finding"])), html, r["library"])  # the template autoescapes, e.g. the apostrophe in "master's"
+            self.assertIn(str(escape(r["failed"])), html, r["library"])
+        self.assertIn("not a verdict on the project", html)
+        self.assertIn("The counts do not rank the libraries", html)
+        self.assertIn("reproduced on the library", html)
+
     def test_no_external_resources(self):
         for name, html in self.pages.items():
             for m in re.finditer(r'<(script|link|img|iframe)\b[^>]*>', html):

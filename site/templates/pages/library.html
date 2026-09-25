@@ -7,6 +7,7 @@
 <h1>Library status</h1>
 <p class="lede lvl lvl-simple">Two popular free libraries do most of the orbit maths in open-source satellite software. Every week we install their newest versions and check, without touching the network, whether the problems the test kit found are fixed yet.</p>
 <p class="lede lvl lvl-technical">A weekly job installs the latest PyPI <code>sgp4</code> and <code>skyfield</code>, runs the corpus’s no-network reproducers (nine-digit id, empty <code>OBJECT_ID</code>, classification) built on the CCSDS 502.0-B-3 annex G example values, and runs the Alpha-5 vectors from corpus v{{ corpus.version }}. Pass means the behaviour the corpus expects; fail means the finding still stands.</p>
+<h2>Checked every week</h2>
 {% if not L %}
 <p class="callout warn">No library check has been recorded yet.</p>
 {% else %}
@@ -56,7 +57,24 @@
 {% endfor %}</tbody></table></div>
 {% endif %}
 
-<h2>Elsewhere in the ecosystem</h2>
+<h2 id="runs">Run once against the corpus</h2>
+<p class="lvl lvl-simple">Seven more pieces of satellite software were run against all seventeen cases by hand in September 2026, each at one pinned version, and every finding was reproduced by running that software’s own code before it was reported. A count is a result against that version on that date, not a verdict on the project, and it does not say how much a user is affected: some data feeds never carry the input that triggers the failure. The counts do not rank the libraries: one that reads fewer formats has fewer cases it can fail, and the skips are in the technical breakdown.</p>
+<p class="lvl lvl-technical">Hand-run (<code>site/content/library-runs.json</code>): corpus v{{ library_runs.corpus_version }}, runner gpconf {{ library_runs.corpus_version }}, one run per library on the date shown, through a harness or adapter of the corpus’s own over the library’s unmodified parser; recorded in the corpus <a href="{{ library_runs.url }}">decision log</a> (D-132 to D-141), the specifics in the linked reports. A row is a result for the version named at that date; skip means the library has no reader for the case’s format, not exercised is the runner’s data check. Every finding was reproduced on the library’s own code before it was reported. Rows are added as reports are filed, never before.</p>
+<div class="table-wrap"><table>
+<caption>Runs by hand</caption>
+<thead><tr><th>library</th><th>version run</th><th>date</th><th>cases failed</th><th>most serious finding</th><th>reported</th></tr></thead>
+<tbody>
+{% for r in library_runs.runs %}
+<tr><td><a href="{{ r.project_url }}">{{ r.library }}</a></td>
+<td>{{ r.version }}<div class="small muted lvl lvl-technical">{{ r.version_detail }}; reads {{ r.reads }}</div></td>
+<td>{{ r.run_date }}</td>
+<td><span class="badge neutral">{{ r.failed }}</span><div class="small muted lvl lvl-technical">{{ r.breakdown }}</div></td>
+<td>{{ r.finding }}</td>
+<td>{% for u in r.reports %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
+{% endfor %}
+</tbody></table></div>
+
+<h2 id="ecosystem">Elsewhere in the ecosystem</h2>
 <p class="small muted lvl lvl-technical">Hand-maintained (<code>site/content/ecosystem.json</code>); each entry links to a public statement by the project. Statements, not results: nothing in this list has been run against the corpus.</p>
 <p class="lvl lvl-simple">Some software is not a library on PyPI, so the weekly check cannot reach it. Here is what its makers have said in public, with a link and a date.</p>
 <ul>

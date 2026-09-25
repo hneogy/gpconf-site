@@ -1,0 +1,148 @@
+{
+ "_provenance": "Hand-maintained by the site maintainer from the corpus's Batch G Phase 2 runs of 2026-09-24: corpus v0.2.1, runner gpconf 0.2.1, all seventeen cases, one run per library at the version named, through a harness or adapter of the corpus's own over the library's unmodified parser. Recorded in the corpus decision log D-132 to D-141 (public main at d8ce693); the specifics of each finding are in the linked report, where the project's maintainer can see them. Counts are results for that version on that date, not verdicts on the project; skip means the library has no reader for the case's format; not exercised is the runner's own data check (D-129). Every finding was reproduced by running the library's own code before it was reported. PyEphem (D-128) is added when its report is filed.",
+ "url": "https://github.com/hneogy/gp-omm-conformance/blob/d8ce6934c238c3601e4c41af4be537cc629e6cd8/DECISIONS.md",
+ "corpus_version": "0.2.1",
+ "runs": [
+  {
+   "library": "satellite.js",
+   "project_url": "https://github.com/shashwatak/satellite-js",
+   "version": "7.1.0",
+   "version_detail": "npm 7.1.0, tag 7.1.0 of 2026-07-23; Node 26.5.0",
+   "run_date": "2026-09-24",
+   "reads": "TLE, 2LE, OMM JSON",
+   "failed": "7 of 17",
+   "breakdown": "1 pass, 1 within tolerance, 7 fail, 7 skip, 1 not exercised",
+   "finding": "OMM JSON epochs are truncated to milliseconds, and the TLE catalog field is returned as a string and never decoded.",
+   "reports": [
+    {
+     "label": "issue #185",
+     "url": "https://github.com/shashwatak/satellite-js/issues/185",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "Gpredict",
+   "project_url": "https://github.com/csete/gpredict",
+   "version": "2.6",
+   "version_detail": "the SGP4 module src/sgpsdp/ of release 2.6, compiled on its own; the GTK application was not built",
+   "run_date": "2026-09-24",
+   "reads": "TLE",
+   "failed": "6 of 17",
+   "breakdown": "0 pass, 6 fail, 10 skip, 1 not exercised",
+   "finding": "Alpha-5 fields become catalog number 0, and the mean motion loses its last digit on every record.",
+   "reports": [
+    {
+     "label": "issue #426 (mean motion)",
+     "url": "https://github.com/csete/gpredict/issues/426",
+     "date": "2026-09-24"
+    },
+    {
+     "label": "ecosystem entry below (Alpha-5)",
+     "url": "#ecosystem",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "gods-eye-view",
+   "project_url": "https://github.com/bilawalsidhu/gods-eye-view",
+   "version": "main ce671ce",
+   "version_detail": "main at ce671ce of 2026-09-24, the satellites ingestion layer over satellite.js 6.0.2, Cesium stood in",
+   "run_date": "2026-09-24",
+   "reads": "TLE",
+   "failed": "6 of 17",
+   "breakdown": "0 pass, 6 fail, 10 skip, 1 not exercised",
+   "finding": "Every Alpha-5 satellite collapses onto one catalog entry keyed NaN and the rest are dropped as duplicates.",
+   "reports": [
+    {
+     "label": "issue #751",
+     "url": "https://github.com/bilawalsidhu/gods-eye-view/issues/751",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "SatDump",
+   "project_url": "https://github.com/SatDump/SatDump",
+   "version": "1.2.2 and master",
+   "version_detail": "release 1.2.2 and master f3d82ad, tle.cpp and the bundled predict fork compiled on their own",
+   "run_date": "2026-09-24",
+   "reads": "TLE; master also CelesTrak CSV",
+   "failed": "3 of 17 (1.2.2), 5 of 17 (master)",
+   "breakdown": "1.2.2: 0 pass, 3 within tolerance, 3 fail, 10 skip, 1 not exercised; master: 4 pass, 3 within tolerance, 5 fail, 4 skip, 1 not exercised",
+   "finding": "The TLE registry silently drops every Alpha-5 set; master's CSV reader rejects CelesTrak SupGP files whole.",
+   "reports": [
+    {
+     "label": "issue #1221",
+     "url": "https://github.com/SatDump/SatDump/issues/1221",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "libsgp4",
+   "project_url": "https://github.com/dnwrnr/sgp4",
+   "version": "master and PR #42",
+   "version_detail": "master 661e057 (Version 2, 2026-07-26) and the head of the open PR #42 (2b8d141), compiled with clang",
+   "run_date": "2026-09-24",
+   "reads": "TLE, 2LE; master also CelesTrak CSV",
+   "failed": "6 of 17 (master), 5 of 17 (PR #42)",
+   "breakdown": "master: 7 pass, 6 fail, 3 skip, 1 not exercised; PR #42: 2 pass, 5 fail, 9 skip, 1 not exercised",
+   "finding": "Master refuses every Alpha-5 set; the open PR's letter table has no X and shifts Y and Z, a silent wrong answer above W.",
+   "reports": [
+    {
+     "label": "comment on PR #42",
+     "url": "https://github.com/dnwrnr/sgp4/pull/42#issuecomment-5824123874",
+     "date": "2026-09-24"
+    },
+    {
+     "label": "issue #45 (epoch)",
+     "url": "https://github.com/dnwrnr/sgp4/issues/45",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "tle.js",
+   "project_url": "https://github.com/davidcalhoun/tle.js",
+   "version": "5.0.3",
+   "version_detail": "npm 5.0.3 of 2026-07-21 over satellite.js 6.0.2; Node 26.5.0",
+   "run_date": "2026-09-24",
+   "reads": "TLE, 2LE",
+   "failed": "2 of 17",
+   "breakdown": "5 pass, 2 fail, 9 skip, 1 not exercised with the epoch read from the raw fields; 7 fail when taken from the millisecond timestamp API",
+   "finding": "Alpha-5 fields give NaN with no error, and two-digit epoch years pivot at 50 instead of 57.",
+   "reports": [
+    {
+     "label": "issue #62",
+     "url": "https://github.com/davidcalhoun/tle.js/issues/62",
+     "date": "2026-09-24"
+    }
+   ]
+  },
+  {
+   "library": "astroz",
+   "project_url": "https://github.com/ATTron/astroz",
+   "version": "main d558933",
+   "version_detail": "main at d558933 of 2026-04-23 (v0.12.0 plus two commits), Zig 0.16.0",
+   "run_date": "2026-09-24",
+   "reads": "TLE, 2LE, OMM JSON",
+   "failed": "9 of 17",
+   "breakdown": "1 pass, 9 fail, 6 skip, 1 not exercised; every values item fails on three fields the parser does not carry, the elements it does carry being exact",
+   "finding": "Alpha-5 fields decode without skipping I and O, wrong from J upward, and the public epoch field is off by hundreds of days.",
+   "reports": [
+    {
+     "label": "issue #97 (Alpha-5)",
+     "url": "https://github.com/ATTron/astroz/issues/97",
+     "date": "2026-09-25"
+    },
+    {
+     "label": "issue #98 (dates)",
+     "url": "https://github.com/ATTron/astroz/issues/98",
+     "date": "2026-09-25"
+    }
+   ]
+  }
+ ]
+}

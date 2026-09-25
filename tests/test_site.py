@@ -57,10 +57,17 @@ class Build(unittest.TestCase):
                 self.assertTrue(u["url"].startswith("https://") or u["url"].startswith("#"), f"{r['library']}: {u}")
                 self.assertIn(u["url"], html, f"{r['library']}: report link not rendered")
             self.assertIn(str(escape(r["finding"])), html, r["library"])  # the template autoescapes, e.g. the apostrophe in "master's"
+            self.assertTrue(r.get("gate", {}).get("short") and r["gate"].get("full"), f"{r['library']}: gate column (D-142)")
+            self.assertIn("snapshot 2026-09-21", r["gate"]["full"], r["library"])
+            self.assertIn(str(escape(r["gate"]["full"])), html, r["library"])
+            for word in ("LOADS", "PARTLY", "verdict"):
+                self.assertNotIn(word, r["gate"]["short"] + r["gate"]["full"], r["library"])
             self.assertIn(str(escape(r["failed"])), html, r["library"])
         self.assertIn("not a verdict on the project", html)
         self.assertIn("The counts do not rank the libraries", html)
         self.assertIn("reproduced on the library", html)
+        self.assertIn("so their users are not affected today", html)
+        self.assertIn("HTTP 404", html)
 
     def test_no_external_resources(self):
         for name, html in self.pages.items():

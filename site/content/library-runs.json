@@ -1,5 +1,5 @@
 {
- "_provenance": "Hand-maintained by the site maintainer from the corpus's Batch G Phase 2 runs of 2026-09-24: corpus v0.2.1, runner gpconf 0.2.1, all seventeen cases, one run per library at the version named, through a harness or adapter of the corpus's own over the library's unmodified parser. Recorded in the corpus decision log D-128 and D-132 to D-141 (public main at d8ce693); the specifics of each finding are in the linked report, where the project's maintainer can see them. Counts are results for that version on that date, not verdicts on the project; skip means the library has no reader for the case's format; not exercised is the runner's own data check (D-129). Every finding was reproduced by running the library's own code before it was reported. PyEphem (D-128) joined on 2026-09-25, when its report was filed.",
+ "_provenance": "Hand-maintained by the site maintainer from the corpus's Batch G Phase 2 runs of 2026-09-24: corpus v0.2.1, runner gpconf 0.2.1, all seventeen cases, one run per library at the version named, through a harness or adapter of the corpus's own over the library's unmodified parser. Recorded in the corpus decision log D-128 and D-132 to D-141 (public main at d8ce693); the specifics of each finding are in the linked report, where the project's maintainer can see them. Counts are results for that version on that date, not verdicts on the project; skip means the library has no reader for the case's format; not exercised is the runner's own data check (D-129). Every finding was reproduced by running the library's own code before it was reported. PyEphem (D-128) joined on 2026-09-25, when its report was filed. The gate column (corpus D-142) is read from the record counts each run recorded, not re-run: loaded means returned with the expected integer id, misidentified means returned as 0, NaN, a string or a wrong number, dropped means no record came back; its words name the behaviour, never grade the project.",
  "url": "https://github.com/hneogy/gp-omm-conformance/blob/d8ce6934c238c3601e4c41af4be537cc629e6cd8/DECISIONS.md",
  "corpus_version": "0.2.1",
  "runs": [
@@ -19,7 +19,11 @@
      "url": "https://github.com/brandon-rhodes/pyephem/issues/296",
      "date": "2026-09-25"
     }
-   ]
+   ],
+   "gate": {
+    "short": "nothing to load from this feed",
+    "full": "nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 256 misidentified, every catalog number read as 0; CSV (as CelesTrak serves them): not read [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "satellite.js",
@@ -37,7 +41,11 @@
      "url": "https://github.com/shashwatak/satellite-js/issues/185",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "nothing to load from this feed",
+    "full": "nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 256 misidentified, every catalog number returned as the raw string; CSV (as CelesTrak serves them): not read; OMM JSON: not in the snapshot [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "Gpredict",
@@ -60,7 +68,11 @@
      "url": "#ecosystem",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "nothing to load from this feed",
+    "full": "nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 256 misidentified, every catalog number read as 0; CSV (as CelesTrak serves them): not read [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "gods-eye-view",
@@ -78,7 +90,11 @@
      "url": "https://github.com/bilawalsidhu/gods-eye-view/issues/751",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "nothing to load from this feed",
+    "full": "nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 1 misidentified (kept under the key NaN), 255 dropped as duplicates of it; CSV (as CelesTrak serves them): not read [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "SatDump",
@@ -96,7 +112,11 @@
      "url": "https://github.com/SatDump/SatDump/issues/1221",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "1.2.2: nothing to load from this feed; master: only via CSV",
+    "full": "1.2.2: nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 256 dropped by the TLE registry; CSV (as CelesTrak serves them): not read. master: only via CSV: CSV (as CelesTrak serves them): 256 loaded; TLE (Alpha-5, as Space-Track serves them; rendered by the corpus from the CelesTrak CSV capture): 256 dropped [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "libsgp4",
@@ -119,7 +139,11 @@
      "url": "https://github.com/dnwrnr/sgp4/issues/45",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "master: only via CSV; PR #42: reads them",
+    "full": "master: only via CSV: CSV (as CelesTrak serves them): 256 loaded; TLE (Alpha-5, as Space-Track serves them; rendered by the corpus from the CelesTrak CSV capture): 256 dropped (every Alpha-5 set refused). PR #42: reads this month's launches in every format it reads here: TLE (Alpha-5, as Space-Track serves them; rendered by the corpus from the CelesTrak CSV capture): 256 loaded; CSV (as CelesTrak serves them): not read in that tree [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "tle.js",
@@ -137,7 +161,11 @@
      "url": "https://github.com/davidcalhoun/tle.js/issues/62",
      "date": "2026-09-24"
     }
-   ]
+   ],
+   "gate": {
+    "short": "nothing to load from this feed",
+    "full": "nothing to load from this feed: CelesTrak's TLE feed omits these objects (the group's TLE request answers HTTP 404), so a TLE-only parser on that feed has nothing to load; as Space-Track serves them (Alpha-5): 256 misidentified, every catalog number NaN; CSV (as CelesTrak serves them): not read [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   },
   {
    "library": "astroz",
@@ -160,7 +188,11 @@
      "url": "https://github.com/ATTron/astroz/issues/98",
      "date": "2026-09-25"
     }
-   ]
+   ],
+   "gate": {
+    "short": "reads them (letter A only)",
+    "full": "reads this month's launches in every format it reads here: TLE (Alpha-5, as Space-Track serves them; rendered by the corpus from the CelesTrak CSV capture): 256 loaded; CSV (as CelesTrak serves them): not read; OMM JSON: not in the snapshot. Caveat: its decoder is wrong from J upward, and every id in this snapshot begins with A, so the gate does not catch it here [snapshot 2026-09-21, 256 objects, ids 100404-100789, Alpha-5 fields beginning with A: a decoder wrong from J upward is not caught by this snapshot]"
+   }
   }
  ]
 }

@@ -22,7 +22,8 @@ const history = [
 
 for (const key of Object.keys(charts.SPECS)) assert.ok(charts.SPECS[key].okPath, key + " carries an okPath");
 
-const expected = { tle404: ["bool-true", "bool-false", "bool-null"], ninebool: ["bool-neutral", "bool-true", "bool-null"] };  // no nine-digit ids is a normal state, drawn neutral, never red (S-047)
+const expected = { tle404: ["bool-neutral", "bool-true", "bool-null"],  // a 404 is CelesTrak declining, a normal state: slate; data returned: green (S-048)
+  ninebool: ["bool-neutral", "bool-true", "bool-null"] };  // no nine-digit ids is a normal state, drawn neutral, never red (S-047)
 for (const key of Object.keys(expected)) {
   const c = node("div");
   charts.boolChart(c, history, charts.SPECS[key]);

@@ -53,8 +53,8 @@
     var W = 520, cell = Math.max(6, Math.min(24, Math.floor((W - 20) / Math.max(pts.length, 1)))), H = 60;
     var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': spec.title + ', ' + pts.length + ' days' });
     pts.forEach(function (p, i) {
-      // noClass: a spec whose 'no' is a normal state, not a fault, draws it neutral instead of red (S-047)
-      var cls = p.v === true ? 'bool-true' : (p.v === false ? (spec.noClass || 'bool-false') : 'bool-null');
+      // yesClass / noClass: an answer that is a normal state, not a fault, is drawn neutral; red is kept for faults (S-047, S-048)
+      var cls = p.v === true ? (spec.yesClass || 'bool-true') : (p.v === false ? (spec.noClass || 'bool-false') : 'bool-null');
       var r = el('rect', { x: 10 + i * cell, y: 8, width: cell - 2, height: 26, rx: 3, class: cls });
       r.appendChild(el('title', {}, p.date + ': ' + (p.v === true ? spec.yes : p.v === false ? spec.no : 'no data')));
       svg.appendChild(r);
@@ -81,7 +81,7 @@
   var SPECS = {
     highest: { kind: 'line', title: 'highest catalog number in the last-30-days group', path: 'metrics.last30.highest', okPath: 'metrics.last30.ok' },
     six: { kind: 'line', title: 'six-digit objects in the last-30-days group', path: 'metrics.last30.six_digit', okPath: 'metrics.last30.ok', zero: true },
-    tle404: { kind: 'bool', title: 'last-30-days TLE request returns 404', path: 'metrics.last30_tle.is_404', okPath: 'metrics.last30_tle.ok', yes: '404 (no TLE)', no: 'TLE data returned' },
+    tle404: { kind: 'bool', title: 'last-30-days TLE request returns 404', path: 'metrics.last30_tle.is_404', okPath: 'metrics.last30_tle.ok', yes: '404 (no TLE)', no: 'TLE data returned', yesClass: 'bool-neutral', noClass: 'bool-true' },
     analystcsv: { kind: 'line', title: 'analyst objects in CSV', path: 'metrics.analyst.records', okPath: 'metrics.analyst.ok', zero: true },
     analysttle: { kind: 'line', title: 'analyst objects in TLE', path: 'metrics.analyst_tle.records', okPath: 'metrics.analyst_tle.ok', zero: true },
     nine: { kind: 'line', title: 'nine-digit ids in the Starlink SupGP feed', path: 'metrics.supgp_starlink.nine_digit', okPath: 'metrics.supgp_starlink.ok', zero: true },

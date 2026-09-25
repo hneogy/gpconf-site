@@ -78,6 +78,16 @@ class Build(unittest.TestCase):
                     "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
             self.assertIn(url, html)
 
+    def test_tle_404_is_never_drawn_as_a_fault(self):
+        """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE
+        format: the tiles that show it carry no 'bad' class in either state, and the chart caption says slate (S-048)."""
+        for name, marker in (("tracker/index.html", "last-30-days TLE request"), ("index.html", "TLE request for that group")):
+            html = self.pages[name]
+            i = html.index(marker)
+            tile_open = html.rfind('<div class="tile', 0, i)
+            self.assertNotIn("bad", html[tile_open:html.index(">", tile_open)], name)
+        self.assertIn("404 (slate: CelesTrak declining", self.pages["tracker/index.html"])
+
     def test_no_external_resources(self):
         for name, html in self.pages.items():
             for m in re.finditer(r'<(script|link|img|iframe)\b[^>]*>', html):

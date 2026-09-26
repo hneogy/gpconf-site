@@ -100,6 +100,17 @@ class Build(unittest.TestCase):
         self.assertIn("661e057", lib["version_detail"])
         self.assertIn("released means a published release carries the fix", html)
         self.assertIn("the finding stands as run against the version named until a run of the release is published", html)
+        # astroz merged PR #99 on 2026-09-26, closed #97 and #98 and released v0.13.0 the same day: both reports say
+        # released, in the shape S-050 gave libsgp4, and the row stays as run against main d558933 (S-051).
+        az = next(r for r in runs["runs"] if r["library"] == "astroz")
+        labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in az["reports"]}
+        self.assertEqual(labels["97"], "issue #97 (released 2026-09-26; Alpha-5, fixed in v0.13.0 by #99)")
+        self.assertEqual(labels["98"], "issue #98 (released 2026-09-26; dates, fixed in v0.13.0 by #99)")
+        for u in az["reports"]:
+            self.assertRegex(u["label"], r"\((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$")
+            self.assertIn(str(escape(u["label"])), html)
+        self.assertEqual((az["version"], az["run_date"], az["failed"]), ("main d558933", "2026-09-24", "9 of 17"))
+        self.assertIn("d558933", az["version_detail"])
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE

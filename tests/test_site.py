@@ -73,7 +73,7 @@ class Build(unittest.TestCase):
         for r in runs["runs"]:
             for u in r["reports"]:
                 if u["label"].startswith("PR #"):
-                    self.assertRegex(u["label"], r"^PR #\d+ \((open|merged|closed) \d{4}-\d{2}-\d{2}; [^)]+\)$", f"{r['library']}: {u['label']}")
+                    self.assertRegex(u["label"], r"^PR #\d+ \((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$", f"{r['library']}: {u['label']}")
         for url in ("https://github.com/shashwatak/satellite-js/pull/186", "https://github.com/shashwatak/satellite-js/pull/187",
                     "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
             self.assertIn(url, html)
@@ -86,6 +86,20 @@ class Build(unittest.TestCase):
         self.assertEqual((sat["version"], sat["failed"]), ("7.1.0", "7 of 17"))
         self.assertIn(str(escape(labels["186"])), html)
         self.assertIn("merged means in the library’s source but in no release yet", html)
+        # libsgp4 released v3.0 on 2026-09-26 with an Alpha-5 decoder (the maintainer's own #46, not PR #42, which is still
+        # open), and #45 is open: the reports carry that state in the same shape, and the row stays as run against the
+        # commits the corpus tested (S-050).
+        lib = next(r for r in runs["runs"] if r["library"] == "libsgp4")
+        labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in lib["reports"]}
+        self.assertEqual(labels["42#issuecomment-5824123874"], "comment on PR #42 (released 2026-09-26; Alpha-5 decoding in v3.0 through #46, this PR still open)")
+        self.assertEqual(labels["45"], "issue #45 (open 2026-09-24; epoch, unresolved in v3.0)")
+        for u in lib["reports"]:
+            self.assertRegex(u["label"], r"\((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$")
+            self.assertIn(str(escape(u["label"])), html)
+        self.assertEqual((lib["version"], lib["run_date"], lib["failed"]), ("master and PR #42", "2026-09-24", "6 of 17 (master), 5 of 17 (PR #42)"))
+        self.assertIn("661e057", lib["version_detail"])
+        self.assertIn("released means a published release carries the fix", html)
+        self.assertIn("the finding stands as run against the version named until a run of the release is published", html)
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE

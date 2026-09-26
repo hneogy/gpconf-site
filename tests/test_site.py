@@ -77,6 +77,15 @@ class Build(unittest.TestCase):
         for url in ("https://github.com/shashwatak/satellite-js/pull/186", "https://github.com/shashwatak/satellite-js/pull/187",
                     "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
             self.assertIn(url, html)
+        # satellite.js PR #186 merged on 2026-09-26 into develop and is in no release: the label says so, #187 stays in
+        # review, and the row stays as run until a release ships the fix, as python-sgp4's did after #172 (S-036, S-049).
+        sat = next(r for r in runs["runs"] if r["library"] == "satellite.js")
+        labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in sat["reports"]}
+        self.assertEqual(labels["186"], "PR #186 (merged 2026-09-26; fixed in develop, awaiting a release)")
+        self.assertEqual(labels["187"], "PR #187 (open 2026-09-25; Alpha-5 decoder in review)")
+        self.assertEqual((sat["version"], sat["failed"]), ("7.1.0", "7 of 17"))
+        self.assertIn(str(escape(labels["186"])), html)
+        self.assertIn("merged means in the library’s source but in no release yet", html)
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE

@@ -52,6 +52,20 @@
   </div>
 </section>
 
+<section aria-labelledby="install-h">
+  <h2 id="install-h"><span class="lvl lvl-simple">Test your own software</span><span class="lvl lvl-technical">Install</span></h2>
+  <p class="lvl lvl-simple">If you have Python, the test kit installs with one command and comes with ready-made connectors for several popular libraries, so you can test one without writing any code. The third line downloads, once, the real satellite data it checks against.</p>
+  <p class="lvl lvl-technical">Since v0.3.0 the runner installs from <a href="{{ corpus.pypi }}">PyPI</a> with the corpus’s own files; the provider data is fetched once, under CelesTrak’s usage policy, into a per-user cache. Standard library only, Python 3.9 or later.</p>
+  <pre><code>pip install gpconf
+gpconf run --preset reference   # before any fetch: 4 cases run, 13 need provider data
+gpconf fetch                    # once: ~60 requests, 2 s apart, cached
+gpconf run --preset reference   # then all seventeen</code></pre>
+  <p class="lvl lvl-technical">A preset tests a library with no adapter written; <code>gpconf presets</code> lists them (reference, naive, sgp4, pyephem, satellite.js, tle.js, tle.js-api), and <a href="{{ corpus.blob }}/docs/ADAPTERS.md">the adapter guide</a> covers writing your own. In a GitHub Actions job, three lines run a preset against your library, offline and report-only:</p>
+  <pre class="lvl lvl-technical"><code>- uses: hneogy/gp-omm-conformance@v{{ corpus.version }}
+  with:
+    preset: sgp4</code></pre>
+</section>
+
 <section aria-labelledby="links-h">
   <h2 id="links-h">The corpus</h2>
   <ul>

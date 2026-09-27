@@ -36,6 +36,12 @@
    "technical": "Version DOI 10.5281/zenodo.22926017 (v0.2.1) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."},
   {"date": "2026-09-24", "time": "2026-09-24T12:58:27Z", "title": "Pull request #172 merged", "url": "https://github.com/brandon-rhodes/python-sgp4/pull/172",
    "simple": "The library accepted the fix for the bug we reported; it reaches users with the library’s next release.",
-   "technical": "brandon-rhodes/python-sgp4#172 merged by the maintainer as 8126f77 on master; issue #171 closed as completed. No release carries the fix yet (latest 2.27, 2026-07-03), so the python-sgp4 result stays 7 of 17 cases against 2.27."}
+   "technical": "brandon-rhodes/python-sgp4#172 merged by the maintainer as 8126f77 on master; issue #171 closed as completed. No release carries the fix yet (latest 2.27, 2026-07-03), so the python-sgp4 result stays 7 of 17 cases against 2.27."},
+  {"date": "2026-09-27", "time": "2026-09-27T03:37:39Z", "title": "Corpus v0.3.0 published", "url": "https://github.com/hneogy/gp-omm-conformance/releases/tag/v0.3.0",
+   "simple": "A new version of the test kit installs with one command and can test several popular libraries with no code written; the seventeen tests are unchanged.",
+   "technical": "Release v0.3.0 of gp-omm-conformance (tag on commit 627f66f), also on PyPI as gpconf 0.3.0: the runner and the corpus's own files install with pip, presets test a library with no adapter written, a GitHub Action runs it in CI, and the adapter protocol gains a refusal channel (DECISIONS D-142 to D-161 and D-165); no frozen expected value changed; naive and python-sgp4 still fail 14 and 7 of 17 cases."},
+  {"date": "2026-09-27", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.22986178",
+   "simple": "The new version of the test kit received its own permanent citation number.",
+   "technical": "Version DOI 10.5281/zenodo.22986178 (v0.3.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
  ]
 }

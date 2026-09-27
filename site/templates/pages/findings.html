@@ -22,7 +22,7 @@
 <td><span class="badge {{ r[5] }}">{{ r[5] }}</span>{% if r[6] %} <span class="muted small">{{ r[6] }} failing</span>{% endif %}</td></tr>
 {% endfor %}
 </tbody></table></div>
-<p class="small muted">Naive fails 14 of 17 cases; python-sgp4 fails 7, with 20 failing items in total, the last of them the writer case's synthetic &minus;1 input (it writes the Alpha-5 field correctly and refuses 340000 and nine-digit ids); the reference passes all sixteen cases a parser exercises exactly; the seventeenth, <code>satcat-70000-cutoff</code>, is a check the runner makes on the legacy SATCAT file itself and reports as not exercised for every parser.</p>
+<p class="small muted">Naive fails 14 of 17 cases; python-sgp4 fails 7, with 21 failing items in total, the last of them the writer case's synthetic &minus;1 input (it writes the Alpha-5 field correctly and refuses 340000 and nine-digit ids); the reference passes all sixteen cases a parser exercises exactly; the seventeenth, <code>satcat-70000-cutoff</code>, is a check the runner makes on the legacy SATCAT file itself and reports as not exercised for every parser.</p>
 
 <h2>What broke, item by item</h2>
 

@@ -128,6 +128,25 @@ class Build(unittest.TestCase):
             self.assertNotIn("bad", html[tile_open:html.index(">", tile_open)], name)
         self.assertIn("404 (slate: CelesTrak declining", self.pages["tracker/index.html"])
 
+    def test_the_site_is_at_corpus_v030_with_its_doi_and_an_install_section(self):
+        """S-053: corpus v0.3.0 with its version DOI, an install section on the home page that matches the README's
+        pip path and Action lines, and the findings table from the v0.3.0 FAILURES.md, whose totals the page states."""
+        home, findings = self.pages["index.html"], self.pages["findings/index.html"]
+        self.assertIn("version 0.3.0", home)
+        self.assertIn("10.5281/zenodo.22986178", home)
+        self.assertNotIn("is added once Zenodo has archived the release", home)  # DOI and version in step
+        for line in ("pip install gpconf", "gpconf fetch", "gpconf run --preset reference", "- uses: hneogy/gp-omm-conformance@v0.3.0"):
+            self.assertIn(line, home)
+        failures = json.loads((ROOT / "site" / "content" / "failures.json").read_text(encoding="utf-8"))
+        self.assertTrue(failures["url"].endswith("/blob/v0.3.0/docs/FAILURES.md"))
+        naive_failed = sum(1 for r in failures["rows"] if r[3] == "fail")
+        sgp4_failed, sgp4_items = sum(1 for r in failures["rows"] if r[5] == "fail"), sum(r[6] for r in failures["rows"])
+        self.assertEqual((naive_failed, sgp4_failed, sgp4_items), (14, 7, 21))
+        self.assertIn(f"Naive fails {naive_failed} of 17 cases; python-sgp4 fails {sgp4_failed}, with {sgp4_items} failing items", findings)
+        timeline = json.loads((ROOT / "data" / "timeline.json").read_text(encoding="utf-8"))["events"]
+        self.assertIn("Corpus v0.3.0 published", [e["title"] for e in timeline])
+        self.assertIn("https://doi.org/10.5281/zenodo.22986178", [e["url"] for e in timeline])
+
     def test_no_external_resources(self):
         for name, html in self.pages.items():
             for m in re.finditer(r'<(script|link|img|iframe)\b[^>]*>', html):

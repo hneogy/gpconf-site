@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # pinned (S-054): ubuntu-latest moves to Ubuntu 26 on 2026-10-19
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

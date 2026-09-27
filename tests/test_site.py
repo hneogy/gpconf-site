@@ -171,6 +171,19 @@ class Build(unittest.TestCase):
             self.assertNotIn("<style", html, name)
             self.assertNotIn(' style="', html, name)
 
+    def test_address_shaped_text_is_kept_from_cloudflare_obfuscation(self):
+        """S-058: the zone's email-address obfuscation rewrites address-shaped text in a served page (the Action line's
+        `gp-omm-conformance@v0.4.0` reached readers without JavaScript as "[email protected]") unless it sits between
+        <!--email_off--> and <!--/email_off-->. The rule lives in the pages, not in the Cloudflare dashboard, so that it
+        can be found from the repository."""
+        address = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
+        for name, html in self.pages.items():
+            outside = re.sub(r"<!--email_off-->.*?<!--/email_off-->", "", html, flags=re.S)
+            m = address.search(outside)
+            self.assertIsNone(m, f"{name}: {m and m.group(0)} would be obfuscated; wrap it in <!--email_off-->")
+        self.assertRegex(self.pages["index.html"],
+                         r"<!--email_off-->\s*<pre[^>]*><code>- uses: hneogy/gp-omm-conformance@v0\.4\.0\n")
+
     def test_headers_and_robots(self):
         headers = (Path(self.tmp) / "_headers").read_text()
         self.assertIn("Content-Security-Policy", headers)

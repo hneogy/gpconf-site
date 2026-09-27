@@ -61,9 +61,11 @@ gpconf run --preset reference   # before any fetch: 5 cases run, 13 need provide
 gpconf fetch                    # once: ~60 requests, 2 s apart, cached
 gpconf run --preset reference   # then all eighteen</code></pre>
   <p class="lvl lvl-technical">A preset tests a library with no adapter written; <code>gpconf presets</code> lists them (reference, naive, sgp4, pyephem, satellite.js, tle.js, tle.js-api), and <a href="{{ corpus.blob }}/docs/ADAPTERS.md">the adapter guide</a> covers writing your own. In a GitHub Actions job, three lines run a preset against your library, offline and report-only:</p>
+  <!--email_off-->
   <pre class="lvl lvl-technical"><code>- uses: hneogy/gp-omm-conformance@v{{ corpus.version }}
   with:
     preset: sgp4</code></pre>
+  <!--/email_off-->
 </section>
 
 <section aria-labelledby="links-h">

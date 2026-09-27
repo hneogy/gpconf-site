@@ -610,5 +610,98 @@
    "errors": 0,
    "bytes": 1948842
   }
+ },
+ {
+  "date": "2026-09-27",
+  "checked_at": "2026-09-27T06:43:51Z",
+  "kind": "scheduled",
+  "status": "ok",
+  "metrics": {
+   "last30": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-27T06:43:51Z",
+    "bytes": 28089,
+    "records": 183,
+    "highest": 100831,
+    "six_digit": 183,
+    "nine_digit": 0,
+    "below_100000": 0
+   },
+   "last30_tle": {
+    "ok": true,
+    "status": 404,
+    "checked_at": "2026-09-27T06:43:54Z",
+    "bytes": 16,
+    "is_404": true,
+    "body_is_no_gp_data": true,
+    "records": 0
+   },
+   "analyst": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-27T06:43:57Z",
+    "bytes": 81159,
+    "records": 596,
+    "highest": 290027,
+    "six_digit": 376,
+    "nine_digit": 0,
+    "below_100000": 220
+   },
+   "analyst_tle": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-27T06:43:59Z",
+    "bytes": 36960,
+    "is_404": false,
+    "records": 220
+   },
+   "supgp_starlink": {
+    "ok": true,
+    "status": 200,
+    "checked_at": "2026-09-27T06:44:01Z",
+    "bytes": 1800832,
+    "records": 11132,
+    "highest": 100779,
+    "six_digit": 446,
+    "nine_digit": 0,
+    "below_100000": 10686,
+    "nine_digit_present": false
+   }
+  },
+  "relations": {
+   "last30_tle_equals_below_100000": true,
+   "analyst_tle_equals_below_100000": true
+  },
+  "drift": {
+   "checked": 4,
+   "results": [
+    {
+     "id": "gp-first-270449-XML",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-69999-CSV",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-69999-TLE",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "id": "gp-first-81011-CSV",
+     "result": "match",
+     "http_status": 200
+    }
+   ]
+  },
+  "fetch": {
+   "requests": 9,
+   "errors": 0,
+   "bytes": 1949150
+  }
  }
 ]

@@ -338,10 +338,17 @@
    "bytes": 1193,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:15Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-27T06:44:05Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-27T06:44:05Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "94c54614780dbe36b3a6394f9b9ba8c01eb19e737e886a5f302e0a7ae4b01f02"
   },
   {
    "id": "gp-first-270449-KVN",
@@ -384,10 +391,17 @@
    "bytes": 357,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:23Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-27T06:44:12Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-27T06:44:12Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "339ed35b58d6300d12d42c66cc981d636ae9bfaee9df74f7c3d41f3f9a878703"
   },
   {
    "id": "gp-first-81011-JSON",
@@ -410,10 +424,17 @@
    "bytes": 168,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:29Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-27T06:44:09Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-27T06:44:09Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "b7f96c3912c2445c1ba94cd9a061e4b270f5f58bd4fb27fd188cc838c645700d"
   },
   {
    "id": "gp-first-69999-CSV",
@@ -423,10 +444,17 @@
    "bytes": 376,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:33Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-27T06:44:07Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-27T06:44:07Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "601736c2b121cea243ec864e2dd50383c404a0c4fabd110bb981652ad0ccb108"
   }
  ]
 }

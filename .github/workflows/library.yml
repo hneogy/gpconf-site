@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-24.04  # pinned (S-054): ubuntu-latest moves to Ubuntu 26 on 2026-10-19
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Install the latest python-sgp4 and Skyfield from PyPI
@@ -29,7 +29,7 @@ jobs:
           python jobs/library_status.py | tee library-run.log
           { echo '```'; cat library-run.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Preserve this run's data and log as an artifact, whatever the validation below decides
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: library-run-${{ github.run_number }}

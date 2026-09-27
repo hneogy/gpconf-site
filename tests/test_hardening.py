@@ -265,7 +265,7 @@ class Workflows(unittest.TestCase):
     def test_artifact_upload_runs_unless_cancelled(self):
         for name in ("tracker.yml", "library.yml"):
             text = (ROOT / ".github" / "workflows" / name).read_text()
-            i = text.index("actions/upload-artifact@v4")
+            i = text.index("actions/upload-artifact@")
             block = text[text.rfind("- name:", 0, i):text.index("- name:", i)]
             self.assertIn("if: ${{ !cancelled() }}", block, name)
 

@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-24.04  # pinned (S-054): ubuntu-latest moves to Ubuntu 26 on 2026-10-19
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: Run the tracker (at most 10 requests, each URL once, no retries)
@@ -27,7 +27,7 @@ jobs:
           python jobs/tracker.py | tee tracker-run.log
           { echo '```'; cat tracker-run.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Preserve this run's data and log as an artifact, whatever the validation below decides
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: tracker-run-${{ github.run_number }}

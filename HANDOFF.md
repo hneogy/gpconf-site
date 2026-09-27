@@ -83,9 +83,10 @@ that settles it removes the line here and appends the correcting entry to the lo
   local preview `python3 -m http.server -d dist 8765`; function emulation `npx wrangler pages dev dist --port 8788`.
   A step passes on its own exit code.
 - After a push, compare the pages Cloudflare serves with a local build of the same commit: they match but for the
-  "Page built" line. Cloudflare's email-address obfuscation is on for the zone and rewrites address-shaped text,
-  `name@v0.4.0` included; such text goes between `<!--email_off-->` and `<!--/email_off-->`, and the suite fails on
-  any outside that pair (S-058).
+  "Page built" line and, on the home page, the two `email_off` comments, which Cloudflare removes as it honours them.
+  Cloudflare's email-address obfuscation is on for the zone and rewrites address-shaped text, `name@v0.4.0` included;
+  such text goes between `<!--email_off-->` and `<!--/email_off-->`, and the suite fails on any outside that pair
+  (S-058).
 - At a corpus release the site takes, under its own S-decision (S-053, S-057): `build.py`'s version and
   version-DOI constants (the DOI once Zenodo mints it), the case counts on the pages, `site/content/failures.json`
   from the tag's `docs/FAILURES.md`, timeline events for the release and its DOI, the release literals in

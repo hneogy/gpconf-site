@@ -1,6 +1,6 @@
 {
- "_provenance": "docs/FAILURES.md of gp-omm-conformance at the v0.3.0 tag (generated 2026-09-27T01:12:01Z by tools/make_failures.py with gpconf 0.3.0; seventeen cases, sixteen exercised by a parser and one a data check: satcat-70000-cutoff is a check the runner makes on the legacy SATCAT file itself and reports as not-exercised for every parser since D-129 of 2026-09-24; every failing-item count is identical to v0.2.1's table but one: python-sgp4's nine-digit case has 5 failing items where it had 4, because since the refusal channel (corpus D-144) the adapter refuses the nine-digit records one by one, with the library's reason, instead of failing the file, so the three single-record files fail as records refused and the full Starlink file, whose other records now come back, fails on values and on classification C; the cases are unchanged since v0.2.0: the sixteen of v0.1.0 plus the writer-side case tle-writer-alpha5); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
- "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.3.0/docs/FAILURES.md",
+ "_provenance": "docs/FAILURES.md of gp-omm-conformance at the v0.4.0 tag (generated 2026-09-27T19:33:31Z by tools/make_failures.py with gpconf 0.4.0; eighteen cases, seventeen exercised by a parser and one a data check: satcat-70000-cutoff is a check the runner makes on the legacy SATCAT file itself and reports as not-exercised for every parser since D-129 of 2026-09-24; every status and failing-item count of the seventeen earlier cases is identical to v0.3.0's table; the eighteenth, corrupt-input (corpus D-171), passes for the reference and fails for naive and python-sgp4 with 3 failing items each; the cases are the sixteen of v0.1.0, the writer-side case tle-writer-alpha5 of v0.2.0 and corrupt-input of v0.4.0); parsers: reference = the corpus's own readers and renderer, naive = int() on five columns / one epoch format / U assumed / every column assumed present / the catalog number written through an integer format, python-sgp4 = 2.27 through sgp4.omm, twoline2rv and export_tle (no KVN reader). python-sgp4's one writer-case failure is the synthetic -1 input; it passes every real record and refuses 340000 and nine-digit ids.",
+ "url": "https://github.com/hneogy/gp-omm-conformance/blob/v0.4.0/docs/FAILURES.md",
  "rows": [
   ["epoch-year-19xx", "pass", 0, "pass", 0, "pass-tolerance", 0],
   ["baseline-iss-five-formats", "pass", 0, "pass", 0, "pass-tolerance", 0],
@@ -18,6 +18,7 @@
   ["alpha5-encoding-vectors", "pass", 0, "fail", 4, "fail", 2],
   ["alpha5-tle-derived", "pass", 0, "fail", 4, "pass-tolerance", 0],
   ["kvn-syntax-variants", "pass", 0, "fail", 4, "skip", 0],
-  ["tle-writer-alpha5", "pass", 0, "fail", 3, "fail", 1]
+  ["tle-writer-alpha5", "pass", 0, "fail", 3, "fail", 1],
+  ["corrupt-input", "pass", 0, "fail", 3, "fail", 3]
  ]
 }

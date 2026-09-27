@@ -68,7 +68,19 @@ class Build(unittest.TestCase):
         self.assertIn("reproduced on the library", html)
         self.assertIn("so their users are not affected today", html)
         self.assertIn("HTTP 404", html)
-        self.assertIn("Refused and dropped are not distinguished for these eight runs", html)  # corpus D-144 footnote
+        self.assertIn("Refused and dropped are not distinguished for the first-round runs", html)  # corpus D-144 footnote
+        # S-056, S-057: libsgp4 and astroz report the second round (corpus v0.4.0); the other six rows stay at the first round
+        # (corpus v0.2.1) until each library's second-round report is filed. A row moves only with the entry that links its report.
+        for r in runs["runs"]:
+            if r["library"] in ("libsgp4", "astroz"):
+                self.assertEqual(r["corpus_version"], "0.4.0", r["library"])
+                self.assertTrue(r["failed"].endswith(" of 18"), r["library"])
+            else:
+                self.assertEqual(r["corpus_version"], "0.2.1", r["library"])
+                self.assertIn(" of 17", r["failed"], r["library"])
+        self.assertNotIn("corpus_version", runs)  # a version per row, none for the table
+        self.assertIn("corpus 0.2.1", html)
+        self.assertIn("corpus 0.4.0", html)
         # Pull requests carry their state and date in the label, in the python-sgp4 row's shape (S-044).
         for r in runs["runs"]:
             for u in r["reports"]:
@@ -87,17 +99,18 @@ class Build(unittest.TestCase):
         self.assertIn(str(escape(labels["186"])), html)
         self.assertIn("merged means in the library’s source but in no release yet", html)
         # libsgp4 released v3.0 on 2026-09-26 with an Alpha-5 decoder (the maintainer's own #46, not PR #42, which is still
-        # open), and #45 is open: the reports carry that state in the same shape, and the row stays as run against the
-        # commits the corpus tested (S-050).
+        # open), and #45 is open: the reports carry that state in the same shape (S-050). The row reports the corpus's run of
+        # release v3.0 against v0.4.0 (corpus D-182, D-183; S-056, S-057).
         lib = next(r for r in runs["runs"] if r["library"] == "libsgp4")
         labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in lib["reports"]}
         self.assertEqual(labels["42#issuecomment-5824123874"], "comment on PR #42 (released 2026-09-26; Alpha-5 decoding in v3.0 through #46, this PR still open)")
-        self.assertEqual(labels["45"], "issue #45 (open 2026-09-24; epoch, unresolved in v3.0)")
+        self.assertEqual(labels["45"], "issue #45 (open 2026-09-24; epoch and SupGP CSV, both unresolved in v3.0)")
+        self.assertEqual(labels["44#issuecomment-5848881779"], "comment on issue #44 (released 2026-09-26; v3.0 decodes every Alpha-5 vector in the corpus)")
         for u in lib["reports"]:
             self.assertRegex(u["label"], r"\((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$")
             self.assertIn(str(escape(u["label"])), html)
-        self.assertEqual((lib["version"], lib["run_date"], lib["failed"]), ("master and PR #42", "2026-09-24", "6 of 17 (master), 5 of 17 (PR #42)"))
-        self.assertIn("661e057", lib["version_detail"])
+        self.assertEqual((lib["version"], lib["run_date"], lib["failed"]), ("3.0", "2026-09-27", "9 of 18"))
+        self.assertIn("c6ebb90", lib["version_detail"])
         self.assertIn("released means a published release carries the fix", html)
         self.assertIn("the finding stands as run against the version named until a run of the release is published", html)
         # astroz merged PR #99 on 2026-09-26, closed #97 and #98 and released v0.13.0 the same day: both reports say
@@ -110,13 +123,13 @@ class Build(unittest.TestCase):
         for u in az["reports"]:
             self.assertRegex(u["label"], r"\((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$")
             self.assertIn(str(escape(u["label"])), html)
-        # The row reports a run of release v0.14.0 (owner decision, S-052), recorded in corpus D-166: the same count
-        # as at d558933, and a gate with no caveat, since the decoder is right from J upward.
-        self.assertEqual((az["version"], az["run_date"], az["failed"]), ("0.14.0", "2026-09-27", "9 of 17"))
+        # The row reports the second round's run of release v0.14.0 against corpus v0.4.0 (corpus D-185; S-056, S-057),
+        # and a gate with no caveat, since the decoder is right from J upward.
+        self.assertEqual((az["version"], az["run_date"], az["failed"]), ("0.14.0", "2026-09-27", "10 of 18"))
         self.assertIn("67ca74c", az["version_detail"])
         self.assertEqual(az["gate"]["short"], "reads them")
         self.assertNotIn("Caveat", az["gate"]["full"])
-        self.assertIn("astroz’s run of release v0.14.0, D-166", html)
+        self.assertIn("the second round’s libsgp4 and astroz, D-182 and D-185", html)
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE
@@ -128,24 +141,24 @@ class Build(unittest.TestCase):
             self.assertNotIn("bad", html[tile_open:html.index(">", tile_open)], name)
         self.assertIn("404 (slate: CelesTrak declining", self.pages["tracker/index.html"])
 
-    def test_the_site_is_at_corpus_v030_with_its_doi_and_an_install_section(self):
-        """S-053: corpus v0.3.0 with its version DOI, an install section on the home page that matches the README's
-        pip path and Action lines, and the findings table from the v0.3.0 FAILURES.md, whose totals the page states."""
+    def test_the_site_is_at_corpus_v040_with_its_doi_and_an_install_section(self):
+        """S-053, S-057: corpus v0.4.0 with its version DOI, an install section on the home page that matches the README's
+        pip path and Action lines, and the findings table from the v0.4.0 FAILURES.md, whose totals the page states."""
         home, findings = self.pages["index.html"], self.pages["findings/index.html"]
-        self.assertIn("version 0.3.0", home)
-        self.assertIn("10.5281/zenodo.22986178", home)
+        self.assertIn("version 0.4.0", home)
+        self.assertIn("10.5281/zenodo.23002261", home)
         self.assertNotIn("is added once Zenodo has archived the release", home)  # DOI and version in step
-        for line in ("pip install gpconf", "gpconf fetch", "gpconf run --preset reference", "- uses: hneogy/gp-omm-conformance@v0.3.0"):
+        for line in ("pip install gpconf", "gpconf fetch", "gpconf run --preset reference", "- uses: hneogy/gp-omm-conformance@v0.4.0"):
             self.assertIn(line, home)
         failures = json.loads((ROOT / "site" / "content" / "failures.json").read_text(encoding="utf-8"))
-        self.assertTrue(failures["url"].endswith("/blob/v0.3.0/docs/FAILURES.md"))
+        self.assertTrue(failures["url"].endswith("/blob/v0.4.0/docs/FAILURES.md"))
         naive_failed = sum(1 for r in failures["rows"] if r[3] == "fail")
         sgp4_failed, sgp4_items = sum(1 for r in failures["rows"] if r[5] == "fail"), sum(r[6] for r in failures["rows"])
-        self.assertEqual((naive_failed, sgp4_failed, sgp4_items), (14, 7, 21))
-        self.assertIn(f"Naive fails {naive_failed} of 17 cases; python-sgp4 fails {sgp4_failed}, with {sgp4_items} failing items", findings)
+        self.assertEqual((naive_failed, sgp4_failed, sgp4_items), (15, 8, 24))
+        self.assertIn(f"Naive fails {naive_failed} of 18 cases; python-sgp4 fails {sgp4_failed}, with {sgp4_items} failing items", findings)
         timeline = json.loads((ROOT / "data" / "timeline.json").read_text(encoding="utf-8"))["events"]
-        self.assertIn("Corpus v0.3.0 published", [e["title"] for e in timeline])
-        self.assertIn("https://doi.org/10.5281/zenodo.22986178", [e["url"] for e in timeline])
+        self.assertIn("Corpus v0.4.0 published", [e["title"] for e in timeline])
+        self.assertIn("https://doi.org/10.5281/zenodo.23002261", [e["url"] for e in timeline])
 
     def test_no_external_resources(self):
         for name, html in self.pages.items():

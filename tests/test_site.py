@@ -69,10 +69,10 @@ class Build(unittest.TestCase):
         self.assertIn("so their users are not affected today", html)
         self.assertIn("HTTP 404", html)
         self.assertIn("Refused and dropped are not distinguished for the first-round runs", html)  # corpus D-144 footnote
-        # S-056, S-057, S-059: PyEphem, libsgp4 and astroz report the second round (corpus v0.4.0); the other five rows stay at the first round
+        # S-056, S-057, S-059, S-060: PyEphem, Gpredict, libsgp4 and astroz report the second round (corpus v0.4.0); the other four rows stay at the first round
         # (corpus v0.2.1) until each library's second-round report is filed. A row moves only with the entry that links its report.
         for r in runs["runs"]:
-            if r["library"] in ("PyEphem", "libsgp4", "astroz"):
+            if r["library"] in ("PyEphem", "Gpredict", "libsgp4", "astroz"):
                 self.assertEqual(r["corpus_version"], "0.4.0", r["library"])
                 self.assertTrue(r["failed"].endswith(" of 18"), r["library"])
             else:
@@ -129,7 +129,7 @@ class Build(unittest.TestCase):
         self.assertIn("67ca74c", az["version_detail"])
         self.assertEqual(az["gate"]["short"], "reads them")
         self.assertNotIn("Caveat", az["gate"]["full"])
-        self.assertIn("the second round’s PyEphem, libsgp4 and astroz, D-174, D-182 and D-185", html)
+        self.assertIn("the second round’s PyEphem, Gpredict, libsgp4 and astroz, D-174, D-178, D-182 and D-185", html)
         # S-059: the PyEphem row reports the second round (corpus D-174, D-175, D-183) once its second-round report was filed
         # (#297, corpus D-193); the gate text stays as S-042 wrote it, which the second-round run measures again.
         pe = next(r for r in runs["runs"] if r["library"] == "PyEphem")
@@ -140,6 +140,15 @@ class Build(unittest.TestCase):
         self.assertIn("(#297)", pe["finding"])
         self.assertIn("every catalog number read as 0", pe["gate"]["full"])
         self.assertTrue(runs["url"].endswith("/blob/63454b1/DECISIONS.md"))  # D-174 and D-178 carry their links there
+        # S-060: the Gpredict row reports the second round (corpus D-178, D-183) once its second-round report was filed
+        # (#427, corpus D-193); the gate text stays, for the reason in S-059.
+        gp = next(r for r in runs["runs"] if r["library"] == "Gpredict")
+        self.assertEqual((gp["version"], gp["run_date"], gp["failed"]), ("2.6", "2026-09-27", "7 of 18"))
+        labels = {u["url"].rsplit("/", 1)[-1]: u["label"] for u in gp["reports"]}
+        self.assertEqual(labels, {"426": "issue #426 (open 2026-09-24; mean motion)", "#ecosystem": "ecosystem entry below (Alpha-5)",
+                                  "427": "issue #427 (open 2026-09-28; a letter in the epoch field)"})
+        self.assertIn("(#427)", gp["finding"])
+        self.assertIn("every catalog number read as 0", gp["gate"]["full"])
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE

@@ -192,12 +192,17 @@
    "bytes": 374,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:55Z",
-   "last_checked": "2026-09-21T05:51:54Z",
+   "last_checked": "2026-09-28T07:01:38Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-21T05:51:54Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-09-28T07:01:38Z",
      "result": "match",
      "http_status": 200
     }
@@ -212,12 +217,17 @@
    "bytes": 420,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:58Z",
-   "last_checked": "2026-09-21T05:51:56Z",
+   "last_checked": "2026-09-28T07:01:41Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-21T05:51:56Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-09-28T07:01:41Z",
      "result": "match",
      "http_status": 200
     }
@@ -378,10 +388,17 @@
    "bytes": 168,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:20Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-28T07:01:34Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-28T07:01:34Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "f06539e94675d87b1b5f4958e7b918ffb67cf10204da1f3bb966acb529c004e2"
   },
   {
    "id": "gp-first-81011-CSV",
@@ -411,10 +428,17 @@
    "bytes": 402,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:26Z",
-   "last_checked": null,
-   "last_status": null,
-   "last_http_status": null,
-   "history": []
+   "last_checked": "2026-09-28T07:01:31Z",
+   "last_status": "match",
+   "last_http_status": 200,
+   "history": [
+    {
+     "checked_at": "2026-09-28T07:01:31Z",
+     "result": "match",
+     "http_status": 200
+    }
+   ],
+   "last_sha256": "742bd531a42360d694b5d99603fa66e8686ed3ecdae18c02e7d42485ee031906"
   },
   {
    "id": "gp-first-69999-TLE",

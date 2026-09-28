@@ -7,6 +7,14 @@
 <h1>Live tracker</h1>
 <p class="lede lvl lvl-simple">Once a day a small job asks CelesTrak five questions and writes down the answers as numbers and yes/no. Nothing you do on this page contacts CelesTrak.</p>
 <p class="lede lvl lvl-technical">Daily counts from five CelesTrak endpoints and a weekly hash check of the corpus’s 22 stable sources, computed by a scheduled job and served as static JSON. Derived measurements only: no element values are stored or shown.</p>
+{% if tracker %}
+<figure class="chart lead">
+<figcaption><span class="lvl lvl-simple">Highest satellite number among recent launches</span><span class="lvl lvl-technical">Highest catalog number in the <span class="nowrap">last-30-days</span> group</span></figcaption>
+<p class="small muted lvl lvl-simple">One point per day. The dashed line is 100,000, the first number with six digits. The first point, marked in amber, comes from the test kit’s own data collection on 21 September 2026.</p>
+<p class="small muted lvl lvl-technical">One entry per day from <code>/data/tracker/history.json</code>; dashed, 100000, the first catalog number past five digits; the seed entry (amber) is the corpus’s Phase 2 fetch of 2026-09-21.</p>
+<div data-chart="highest">Loading…</div>
+</figure>
+{% endif %}
 {% if not tracker %}
 <p class="callout warn">No tracker data has been built yet.</p>
 {% else %}
@@ -39,10 +47,9 @@ The values below are the last successful ones for each measurement, with their o
 {% endif %}
 
 <h2>History</h2>
-<p class="lvl lvl-simple">One point per day. The first point, marked in amber, comes from the test kit’s own data collection on 21 September 2026.</p>
-<p class="lvl lvl-technical">One entry per day from <code>/data/tracker/history.json</code>; the seed entry (amber) is the corpus’s Phase 2 fetch of 2026-09-21. Each chart has a data table for screen readers and for scripts-off browsing.</p>
+<p class="lvl lvl-simple">The other daily answers, one point per day, the first in amber as above.</p>
+<p class="lvl lvl-technical">The other daily measurements, the seed entry in amber. Each chart has a data table for screen readers; with scripts off, the whole history is one table.</p>
 <div class="charts">
-  <figure class="chart"><figcaption>Highest catalog number in the last-30-days group</figcaption><div data-chart="highest">Loading…</div></figure>
   <figure class="chart"><figcaption>Six-digit objects in the last-30-days group</figcaption><div data-chart="six">Loading…</div></figure>
   <figure class="chart"><figcaption>last-30-days TLE request: 404 (slate: CelesTrak declining to serve objects above 99999 in the TLE format, the normal state) or TLE data returned (green)</figcaption><div data-chart="tle404">Loading…</div></figure>
   <figure class="chart"><figcaption>Analyst objects in CSV</figcaption><div data-chart="analystcsv">Loading…</div></figure>

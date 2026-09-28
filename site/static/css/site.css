@@ -245,19 +245,28 @@ label { font-weight: 600; display: block; margin: .8rem 0 .3rem; }
 .result.ok { color: var(--ok); } .result.bad { color: var(--bad); }
 .glossary dt { font-weight: 700; margin-top: .7rem; } .glossary dd { margin: 0 0 .3rem; }
 
-/* charts */
-.chart { border: 1px solid var(--line); border-radius: var(--radius); padding: .6rem .8rem .2rem; background: var(--bg); margin: 1rem 0; }
-.chart svg { width: 100%; height: auto; display: block; }
-.chart figcaption { font-size: .9rem; color: var(--fg-muted); padding: .3rem 0 .6rem; }
-.chart details { font-size: .85rem; margin-bottom: .6rem; }
-.chart .axis { stroke: var(--line); }
+/* charts: drawn by charts.js at their own width, one SVG unit to one CSS pixel, so labels are at text size (S-068).
+   Report figures, not boxes: a caption above, the drawing, a data table below. The tracker page leads with one. */
+.chart { margin: 1.5rem 0 2rem; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart figcaption { font-weight: 600; color: var(--fg); padding: 0 0 .6rem; }
+.chart details { font-size: .875rem; margin: .5rem 0 0; }
+.chart .axis { stroke: var(--rule); }
+.chart .ref { stroke: var(--fg-muted); stroke-width: 1; stroke-dasharray: 5 5; }
 .chart .series { fill: none; stroke: var(--accent); stroke-width: 2; }
 .chart .dot { fill: var(--accent); }
 .chart .dot.seed { fill: var(--warn); }
-.chart .lbl { fill: var(--fg-muted); font-size: 11px; font-family: var(--font); }
+.chart .lbl { fill: var(--fg-muted); font-size: 14px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.chart .lbl.val { fill: var(--fg); font-weight: 600; }
 .chart .bool-true { fill: var(--ok); } .chart .bool-false { fill: var(--bad); } .chart .bool-null { fill: var(--line); }
 .chart .bool-neutral { fill: var(--fg-muted); } /* a 'no' that is the normal state, e.g. no nine-digit ids outside a launch window (S-047) */
-.charts { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+.chart.lead { margin: 2rem 0 2.5rem; }
+.chart.lead figcaption { font-size: clamp(1.1875rem, 1rem + .6vw, 1.3125rem); letter-spacing: -.01em; }
+.chart.lead .series { stroke-width: 2.5; }
+.chart.lead .lbl.val { font-size: 16px; }
+.charts { display: grid; gap: 0 2rem; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+.charts .chart { margin: 1rem 0 1.5rem; }
+html.no-js .chart { display: none; } /* the charts need scripts; with scripts off the history is the table that follows them */
 
 /* findings */
 .finding { border-top: 1px solid var(--rule); padding: 1.25rem 0 0; margin: 2rem 0; }

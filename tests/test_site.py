@@ -153,8 +153,9 @@ class Build(unittest.TestCase):
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE
-        format: the tiles that show it carry no 'bad' class in either state, and the chart caption says slate (S-048)."""
-        for name, marker in (("tracker/index.html", "last-30-days TLE request"), ("index.html", "TLE request for that group")):
+        format: the tile that shows it carries no 'bad' class in either state, and the chart caption says slate (S-048).
+        The home page carried the tile too until S-070 took the tracker's figures off it."""
+        for name, marker in (("tracker/index.html", "last-30-days TLE request"),):
             html = self.pages[name]
             i = html.index(marker)
             tile_open = html.rfind('<div class="tile', 0, i)

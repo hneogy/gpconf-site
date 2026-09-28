@@ -1,27 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Satellite numbers outgrew their format{% endblock %}
+{% block title %}The satellite catalog passed 99,999{% endblock %}
 {% block content %}
 {% set ls = tracker.last_successful if tracker else {} %}
 <section class="hero">
-  <div class="lvl lvl-simple">
-    <h1>The world ran out of <span class="nowrap">five-digit</span> satellite numbers. Does your software know?</h1>
-    <p class="lede">On 11 July 2026 the satellite catalog reached number 100000. Much older software can quietly lose every satellite catalogued since. This is a free test kit that shows developers exactly where their code breaks.</p>
-    <ul class="links">
-      <li><a href="/migration/" data-level-link="simple">Read the story</a></li>
-      <li><a href="/tools/">Try the tools</a></li>
-      <li><a href="{{ corpus.repo }}#quick-start">Test your software</a></li>
-      <li><a href="/tracker/">See the live tracker</a></li>
-    </ul>
+  <h1>The satellite catalog passed 99,999. <span class="q">Does your software know?</span></h1>
+  <p class="lede lvl lvl-simple">On 11 July 2026 the satellite catalog reached number 100000, and much older software can quietly lose every satellite catalogued since. gpconf is a free test kit of eighteen cases, built from real catalog data, that shows where a program goes wrong. Below is what it found in eight libraries, each finding reported to the library’s makers.</p>
+  <p class="lede lvl lvl-technical">Since 2026-07-11 the catalog has numbers above 99999. gpconf is a conformance corpus for TLE and OMM parsers at the <span class="nowrap">five-digit</span> boundary. It has eighteen cases, covering Alpha-5 TLEs, six- and nine-digit <code>NORAD_CAT_ID</code>, and OMM in CSV, JSON, XML and KVN. Every expected value traces to a recorded URL, retrieval time and SHA-256.</p>
+  <div class="hero-row">
+    <div class="demo">
+      <pre><code>pip install gpconf
+gpconf fetch
+gpconf run --preset reference</code></pre>
+      <p class="small muted">The fetch runs once: about 60 requests to CelesTrak, cached. Then name your library’s preset (sgp4, pyephem, satellite.js, tle.js) or point the runner at your own parser.</p>
+    </div>
+    {% if ls and ls.last30 and ls.last30.highest %}
+    <p class="live-figure"><span class="label"><span class="lvl lvl-simple">Highest satellite number among recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days group</span></span><span class="value">{{ ls.last30.highest | fmt_int }}</span><span class="sub">{{ ls.last30.checked_at | fmt_ts }}{% if ls.last30.seed %} · seeded from the corpus{% endif %} · <a href="/tracker/">the tracker</a></span></p>
+    {% endif %}
   </div>
-  <div class="lvl lvl-technical">
-    <h1>A conformance corpus for parsers crossing the <span class="nowrap">five-digit</span> <span class="nowrap">catalog-number</span> boundary</h1>
-    <p class="lede">Eighteen cases built from real CelesTrak responses and published specification vectors: Alpha-5 TLEs, six- and nine-digit <code>NORAD_CAT_ID</code>s, CCSDS OMM in CSV, JSON, XML and KVN, one writer-side case for tools that produce TLEs, and one that hands a parser corrupt input. Every expected value traces to a recorded URL, retrieval time and SHA-256. Point the runner at your parser, or at the TLEs your tool writes; it tells you, case by case, what breaks and why.</p>
-    <ul class="links">
-      <li><a href="/migration/" data-level-link="technical">Read the migration</a></li>
-      <li><a href="/findings/">Findings</a></li>
-      <li><a href="{{ corpus.repo }}">Corpus on GitHub</a></li>
-    </ul>
-  </div>
+  <p class="cta"><a class="primary" href="{{ corpus.repo }}#quick-start">Test your software</a><a href="/migration/">Read the story</a></p>
+</section>
+
+<section class="trust" aria-label="Provenance">
+  <ul class="facts">
+    <li>Archived on Zenodo: <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a>, always the latest; v{{ corpus.version_doi_version }} is <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a>{% if corpus.version_doi_version != corpus.version %}; the DOI for v{{ corpus.version }} is added once Zenodo has archived the release{% endif %}.</li>
+    <li>Audited independently at v0.1.0: no wrong expected value in 65,887 field-level comparisons (<a href="{{ corpus.blob }}/AUDIT.md">the audit</a>).</li>
+    <li>Fixes merged upstream: python-sgp4 <a href="{{ corpus.pr_172 }}">#172</a>, and satellite.js <a href="https://github.com/shashwatak/satellite-js/pull/186">#186</a> and <a href="https://github.com/shashwatak/satellite-js/pull/187">#187</a>, all from this project and not yet released; astroz <a href="https://github.com/ATTron/astroz/pull/99">#99</a>, by its maintainer after our reports, released in v0.13.0.</li>
+    <li>MIT licence; version {{ corpus.version }} on <a href="{{ corpus.pypi }}">PyPI</a>.</li>
+  </ul>
 </section>
 
 <section aria-labelledby="runs-h">
@@ -40,57 +45,14 @@
   <p class="small muted">A count is a result for the version named, on the date named, not a verdict on the project, and the counts do not rank the libraries: one that reads fewer formats has fewer cases it can fail. The reports, the corpus version of each run and whether each can load this month’s launches are on <a href="/library/#runs">the library page</a>.</p>
 </section>
 
-<section aria-labelledby="snap-h">
-  <h2 id="snap-h"><span class="lvl lvl-simple">What the catalog looks like today</span><span class="lvl lvl-technical">Tracker snapshot</span></h2>
-  {% if ls %}
-  <div class="grid figures">
-    <div class="tile"><p class="label"><span class="lvl lvl-simple">Highest satellite number seen in recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days group</span></p><p class="value">{{ ls.last30.highest | fmt_int }}</p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}{% if ls.last30.seed %} · seeded from the corpus{% endif %}</p></div>
-    <div class="tile"><p class="label"><span class="lvl lvl-simple">Recent satellites with six-digit numbers</span><span class="lvl lvl-technical">Six-digit objects in that group</span></p><p class="value">{{ ls.last30.six_digit | fmt_int }}<span class="muted small"> of {{ ls.last30.records | fmt_int }}</span></p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
-    <div class="tile{{ '' if ls.last30_tle.is_404 else (' ok' if ls.last30_tle is defined else '') }}"><p class="label"><span class="lvl lvl-simple">Old format asked for recent satellites</span><span class="lvl lvl-technical">TLE request for that group</span></p><p class="value">{% if ls.last30_tle.is_404 %}404{% else %}{{ ls.last30_tle.records | fmt_int }} records{% endif %}</p><p class="sub"><span class="lvl lvl-simple">{% if ls.last30_tle.is_404 %}“not found”: none of them fit{% else %}some still fit the old format{% endif %}</span><span class="lvl lvl-technical">{% if ls.last30_tle.is_404 %}No GP data found{% else %}objects below 100000 present{% endif %}</span> · {{ ls.last30_tle.checked_at | fmt_ts }}</p></div>
-    <div class="tile"><p class="label"><span class="lvl lvl-simple">Nine-digit numbers in Starlink launch data</span><span class="lvl lvl-technical">Nine-digit ids in the Starlink SupGP feed</span></p><p class="value">{{ ls.supgp_starlink.nine_digit_present | yesno }}<span class="muted small"> ({{ ls.supgp_starlink.nine_digit | fmt_int }})</span></p><p class="sub">{{ ls.supgp_starlink.checked_at | fmt_ts }}</p></div>
-  </div>
-  <p class="small muted">Counts and yes/no states only, computed once a day by a scheduled job; this page never contacts CelesTrak. <a href="/tracker/">Full tracker with history</a>.</p>
-  {% else %}
-  <p class="callout warn">No tracker data has been built yet.</p>
-  {% endif %}
-</section>
-
-<section aria-labelledby="entry-h">
-  <h2 id="entry-h">Where to go next</h2>
-  <ul class="contents">
-    <li><a href="/migration/" data-level-link="simple">The story</a><p class="lvl lvl-simple">Licence plates, a satellite called SARAMAGO, and why old software goes quiet. No jargon, with a glossary.</p><p class="lvl lvl-technical">The plain-language version of the migration, for colleagues who do not parse TLEs for a living.</p></li>
-    <li><a href="/migration/" data-level-link="technical">The migration</a><p class="lvl lvl-simple">The full technical version: formats, column layouts, the Alpha-5 letter table and what CelesTrak actually returns.</p><p class="lvl lvl-technical">Alpha-5, OMM, what CelesTrak serves, a TLE-versus-OMM side-by-side on the CCSDS example, and what to change.</p></li>
-    <li><a href="/findings/">Findings</a><p class="lvl lvl-simple">What broke when three different programs read today’s data. One bug we found and reported to a popular free library, with a fix we submitted; a second bug, reported by someone else, whose pending fix by another contributor we tested against the corpus.</p><p class="lvl lvl-technical">Naive versus reference versus python-sgp4 across eighteen cases, the CelesTrak TLE 404, provider rendering differences and the upstream reports.</p></li>
-    <li><a href="/tools/">Tools</a><p class="lvl lvl-simple">Turn a satellite number into its new lettered form and back, and take a TLE apart field by field. Everything runs in your browser.</p><p class="lvl lvl-technical">A strict Alpha-5 encoder/decoder checked against the specification vectors, and an interactive TLE anatomy with a paste box. Client-side only.</p></li>
-    <li><a href="/library/">Library status</a><p class="lvl lvl-simple">Eight programs run by hand against the test kit, with their reports, and a weekly check of whether two popular free libraries handle the new numbers yet.</p><p class="lvl lvl-technical">Eight third-party parsers run by hand, with their reports, and weekly no-network reproducers against the latest PyPI python-sgp4 and Skyfield, with upstream links.</p></li>
-    <li><a href="/activity/">Activity</a><p class="lvl lvl-simple">The bug reports and fixes sent to the python-sgp4 library, the test kit’s releases, and a timeline of milestones.</p><p class="lvl lvl-technical">Upstream issue and pull-request state from the GitHub API (edge-cached hourly), the corpus's latest release, and a hand-maintained timeline.</p></li>
-    <li><a href="/about/">How it was built</a><p class="lvl lvl-simple">Where the numbers come from, who checked them, and who is responsible.</p><p class="lvl lvl-technical">Provenance, the independent audit, AI assistance under human direction, NEOGY LLC and the maintainer.</p></li>
-  </ul>
-</section>
-
-<section aria-labelledby="install-h">
-  <h2 id="install-h"><span class="lvl lvl-simple">Test your own software</span><span class="lvl lvl-technical">Install</span></h2>
-  <p class="lvl lvl-simple">If you have Python, the test kit installs with one command and comes with ready-made connectors for several popular libraries, so you can test one without writing any code. The third line downloads, once, the real satellite data it checks against.</p>
-  <p class="lvl lvl-technical">Since v0.3.0 the runner installs from <a href="{{ corpus.pypi }}">PyPI</a> with the corpus’s own files; the provider data is fetched once, under CelesTrak’s usage policy, into a per-user cache. Standard library only, Python 3.9 or later.</p>
-  <pre><code>pip install gpconf
-gpconf run --preset reference   # before any fetch: 5 cases run, 13 need provider data
-gpconf fetch                    # once: ~60 requests, 2 s apart, cached
-gpconf run --preset reference   # then all eighteen</code></pre>
-  <p class="lvl lvl-technical">A preset tests a library with no adapter written; <code>gpconf presets</code> lists them (reference, naive, sgp4, pyephem, satellite.js, tle.js, tle.js-api), and <a href="{{ corpus.blob }}/docs/ADAPTERS.md">the adapter guide</a> covers writing your own. In a GitHub Actions job, three lines run a preset against your library, offline and report-only:</p>
+<section aria-labelledby="ci-h">
+  <h2 id="ci-h"><span class="lvl lvl-simple">Run it on every change</span><span class="lvl lvl-technical">In CI</span></h2>
+  <p class="lvl lvl-simple">In a GitHub Actions workflow, three lines run the test kit against a library on every change, offline and report-only.</p>
+  <p class="lvl lvl-technical">Three lines run a preset against your library in a GitHub Actions job, offline and report-only; <code>gpconf presets</code> lists the presets, and <a href="{{ corpus.blob }}/docs/ADAPTERS.md">the adapter guide</a> covers writing your own.</p>
   <!--email_off-->
-  <pre class="lvl lvl-technical"><code>- uses: hneogy/gp-omm-conformance@v{{ corpus.version }}
+  <pre><code>- uses: hneogy/gp-omm-conformance@v{{ corpus.version }}
   with:
     preset: sgp4</code></pre>
   <!--/email_off-->
-</section>
-
-<section aria-labelledby="links-h">
-  <h2 id="links-h">The corpus</h2>
-  <ul>
-    <li><a href="{{ corpus.repo }}">gp-omm-conformance on GitHub</a> — version {{ corpus.version }}, MIT, independently audited at v0.1.0.</li>
-    <li>Concept DOI <a href="{{ corpus.concept_doi_url }}">{{ corpus.concept_doi }}</a> (always the latest release); version DOI <a href="{{ corpus.version_doi_url }}">{{ corpus.version_doi }}</a> for exactly v{{ corpus.version_doi_version }}{% if corpus.version_doi_version != corpus.version %}; the DOI for v{{ corpus.version }} is added once Zenodo has archived the release{% endif %}.</li>
-    <li><a href="{{ corpus.issue_171 }}">python-sgp4 issue #171</a> — <span class="lvl lvl-simple">a bug we found and reported: the library crashes on records that have no international designator.</span><span class="lvl lvl-technical">an empty <code>&lt;OBJECT_ID/&gt;</code> in OMM XML makes <code>sgp4.omm.initialize</code> raise <code>TypeError</code>; reported from the corpus.</span></li>
-    <li><a href="{{ corpus.pr_172 }}">python-sgp4 PR #172</a> — <span class="lvl lvl-simple">the fix for that bug, submitted at the maintainer’s invitation and merged into the library on 24 September 2026; it reaches users with the library’s next release.</span><span class="lvl lvl-technical">the fix for #171 (two files, two tests), submitted at the maintainer’s invitation, amended after review, merged 2026-09-24 as 8126f77; not yet in a release (latest 2.27).</span></li>
-  </ul>
 </section>
 {% endblock %}

@@ -102,10 +102,24 @@ p, ul, ol, dl { margin: .75rem 0 1rem; }
 li { margin: .3rem 0; }
 main :is(p, ul, ol, dl, h1, h2, h3, .callout, details) { max-width: var(--measure); }
 .lede { font-size: clamp(1.1875rem, 1rem + .9vw, 1.375rem); line-height: 1.5; color: var(--fg-muted); }
-.hero h1 { font-size: clamp(2.125rem, 1.25rem + 3.6vw, 3rem); line-height: 1.08; letter-spacing: -.02em; }
-/* onward links are words, not buttons */
-main .links { list-style: none; padding: 0; margin: 1.75rem 0 0; display: flex; flex-wrap: wrap; gap: .5rem 2rem; font-weight: 600; }
-.links li { margin: 0; }
+main .hero h1 { font-size: clamp(2.125rem, 1.25rem + 3.6vw, 3rem); line-height: 1.08; letter-spacing: -.02em; max-width: 52rem; }
+.hero h1 .q { display: block; } /* the fact on its line, the question on the next */
+/* the home page's hero: the claim, the three-line demo, and the one figure on the site that changes every day */
+.hero-row { display: grid; gap: 1.25rem 3rem; align-items: start; margin: 1.75rem 0 0; }
+@media (min-width: 60.01rem) { .hero-row { grid-template-columns: minmax(0, 34rem) minmax(12rem, 1fr); } }
+.demo pre { width: 100%; min-width: 0; margin: 0 0 .6rem; }
+.demo p { margin: 0; }
+.live-figure { margin: 0; display: flex; flex-direction: column; gap: .2rem; }
+.live-figure .label { font-size: .875rem; font-weight: 600; color: var(--fg-muted); }
+.live-figure .value { font-size: clamp(2.25rem, 1.75rem + 2vw, 3rem); font-weight: 600; line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.live-figure .sub { font-size: .875rem; color: var(--fg-muted); }
+/* two ways on, one primary: an outlined rectangle in the link blue, no fill; the secondary a plain link */
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.75rem; margin: 1.75rem 0 0; }
+.cta a.primary { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem; border: 1px solid var(--link); border-radius: var(--radius); font-weight: 600; text-decoration: none; }
+.cta a.primary:hover { text-decoration: underline; }
+/* provenance, in the first screen: four ruled lines a reader can check */
+main .facts { list-style: none; padding: 0; margin: 2.25rem 0 0; max-width: 48rem; border-top: 1px solid var(--rule); }
+.facts li { margin: 0; padding: .6rem 0; border-bottom: 1px solid var(--rule); font-size: .9375rem; }
 .btn { display: inline-block; padding: .5rem 1rem; border-radius: var(--radius); text-decoration: none; font-weight: 600; border: 1px solid var(--accent); color: var(--accent); background: transparent; font: inherit; cursor: pointer; }
 .btn.primary { background: var(--accent); color: var(--accent-fg); }
 .btn:hover { filter: brightness(1.08); }
@@ -119,12 +133,6 @@ main .links { list-style: none; padding: 0; margin: 1.75rem 0 0; display: flex; 
 .tile .value { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; text-align: right; white-space: nowrap; font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem); font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
 .tile .sub { grid-column: 1; margin: .2rem 0 0; font-size: .875rem; color: var(--fg-muted); }
 .tile.ok .value { color: var(--ok); } .tile.bad .value { color: var(--bad); } .tile.warn .value { color: var(--warn); }
-/* where to go next: a ruled list of pages, each with a line on what it holds */
-main .contents { list-style: none; padding: 0; margin: 1.25rem 0; max-width: 56rem; border-top: 2px solid var(--fg); }
-.contents li { display: grid; grid-template-columns: 11rem minmax(0, 1fr); column-gap: 2rem; margin: 0; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
-.contents a { font-weight: 600; }
-.contents p { grid-column: 2; margin: 0; color: var(--fg-muted); }
-@media (max-width: 40rem) { .contents li { grid-template-columns: minmax(0, 1fr); } .contents p { grid-column: 1; margin-top: .25rem; } }
 /* notes and callouts: a thin rule at the side, in a result's colour only when they report a result; no tinted boxes */
 .note, .callout { border-left: 3px solid var(--fg-muted); padding: .1rem 0 .1rem 1.1rem; margin: 1.5rem 0; }
 .callout.warn { border-color: var(--warn); }

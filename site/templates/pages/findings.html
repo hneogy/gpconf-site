@@ -12,14 +12,14 @@
 <div class="lvl lvl-simple"><p><strong>Naive</strong> is the program most projects have: it assumes five digits, one date format, every column present. <strong>Reference</strong> is the corpus’s own careful reader, the control. <strong>python-sgp4</strong> is a widely used free library, version 2.27, used as-is. The seventeenth case turns the question around: does a program that <em>writes</em> the old format put the right lettered plate on it, and does it refuse numbers the plate cannot hold? The eighteenth slips one damaged record in among good ones: the right answer is to refuse it, say why, and keep reading the rest.</p>
 <p class="small">In the table, <span class="badge pass">pass</span> means every value matched exactly; <span class="badge pass-tolerance">pass-tolerance</span> means it matched within a documented allowance; <span class="badge fail">fail</span> means something broke; <span class="badge skip">skip</span> means the program cannot read that format at all; <span class="badge not-exercised">not-exercised</span> means the check never reached the program: one case checks a data file itself, and the nine-digit case needs data that exists only in the days after a launch.</p></div>
 <div class="lvl lvl-technical"><p>From <a href="{{ failures.url }}"><code>docs/FAILURES.md</code></a>: reference = the corpus’s readers (control, must be exact); naive = <code>int()</code> on five columns, one epoch format, classification assumed U, every column assumed present, strict <code>KEY = value</code> KVN, the catalog number written through an integer format; python-sgp4 2.27 through <code>sgp4.omm</code>, <code>twoline2rv</code> and <code>export_tle</code>, no KVN reader. The writer-side case <code>tle-writer-alpha5</code> checks a tool that writes a TLE: a correct Alpha-5 catalog field on both lines, and a refusal for ids the field cannot represent, which counts as a pass. The eighteenth case, <code>corrupt-input</code>, hands a parser one corrupt input between valid records: a refusal with a reason passes, and the records around it must load as they do without it.</p></div>
-<div class="table-wrap"><table>
+<div class="table-wrap"><table class="records">
 <thead><tr><th>case</th><th>reference</th><th>naive</th><th>python-sgp4</th></tr></thead>
 <tbody>
 {% for r in failures.rows %}
-<tr><td><a href="{{ corpus.tree }}/fixtures/{{ r[0] }}"><code>{{ r[0] }}</code></a></td>
-<td><span class="badge {{ r[1] }}">{{ r[1] }}</span></td>
-<td><span class="badge {{ r[3] }}">{{ r[3] }}</span>{% if r[4] %} <span class="muted small">{{ r[4] }} failing</span>{% endif %}</td>
-<td><span class="badge {{ r[5] }}">{{ r[5] }}</span>{% if r[6] %} <span class="muted small">{{ r[6] }} failing</span>{% endif %}</td></tr>
+<tr><td class="key"><a href="{{ corpus.tree }}/fixtures/{{ r[0] }}"><code>{{ r[0] }}</code></a></td>
+<td class="inline" data-label="reference"><span class="badge {{ r[1] }}">{{ r[1] }}</span></td>
+<td class="inline" data-label="naive"><span class="badge {{ r[3] }}">{{ r[3] }}</span>{% if r[4] %} <span class="muted small">{{ r[4] }} failing</span>{% endif %}</td>
+<td class="inline" data-label="python-sgp4"><span class="badge {{ r[5] }}">{{ r[5] }}</span>{% if r[6] %} <span class="muted small">{{ r[6] }} failing</span>{% endif %}</td></tr>
 {% endfor %}
 </tbody></table></div>
 <p class="small muted">Naive fails 15 of 18 cases; python-sgp4 fails 8, with 24 failing items in total; its one writer-case failure is the synthetic &minus;1 input (it writes the Alpha-5 field correctly and refuses 340000 and nine-digit ids); the reference passes all seventeen cases a parser exercises exactly; the eighteenth, <code>satcat-70000-cutoff</code>, is a check the runner makes on the legacy SATCAT file itself and reports as not exercised for every parser.</p>

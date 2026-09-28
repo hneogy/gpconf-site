@@ -4,30 +4,46 @@
 {% set ls = tracker.last_successful if tracker else {} %}
 <section class="hero">
   <div class="lvl lvl-simple">
-    <h1>The world ran out of five-digit satellite numbers. Does your software know?</h1>
+    <h1>The world ran out of <span class="nowrap">five-digit</span> satellite numbers. Does your software know?</h1>
     <p class="lede">On 11 July 2026 the satellite catalog reached number 100000. Much older software can quietly lose every satellite catalogued since. This is a free test kit that shows developers exactly where their code breaks.</p>
-    <div class="actions">
-      <a class="btn primary" href="/migration/" data-level-link="simple">Read the story</a>
-      <a class="btn" href="/tools/">Try the tools</a>
-      <a class="btn" href="{{ corpus.repo }}#quick-start">Test your software</a>
-      <a class="btn" href="/tracker/">See the live tracker</a>
-    </div>
+    <ul class="links">
+      <li><a href="/migration/" data-level-link="simple">Read the story</a></li>
+      <li><a href="/tools/">Try the tools</a></li>
+      <li><a href="{{ corpus.repo }}#quick-start">Test your software</a></li>
+      <li><a href="/tracker/">See the live tracker</a></li>
+    </ul>
   </div>
   <div class="lvl lvl-technical">
-    <h1>A conformance corpus for parsers crossing the five-digit catalog-number boundary</h1>
+    <h1>A conformance corpus for parsers crossing the <span class="nowrap">five-digit</span> <span class="nowrap">catalog-number</span> boundary</h1>
     <p class="lede">Eighteen cases built from real CelesTrak responses and published specification vectors: Alpha-5 TLEs, six- and nine-digit <code>NORAD_CAT_ID</code>s, CCSDS OMM in CSV, JSON, XML and KVN, one writer-side case for tools that produce TLEs, and one that hands a parser corrupt input. Every expected value traces to a recorded URL, retrieval time and SHA-256. Point the runner at your parser, or at the TLEs your tool writes; it tells you, case by case, what breaks and why.</p>
-    <div class="actions">
-      <a class="btn primary" href="/migration/" data-level-link="technical">Read the migration</a>
-      <a class="btn" href="/findings/">Findings</a>
-      <a class="btn" href="{{ corpus.repo }}">Corpus on GitHub</a>
-    </div>
+    <ul class="links">
+      <li><a href="/migration/" data-level-link="technical">Read the migration</a></li>
+      <li><a href="/findings/">Findings</a></li>
+      <li><a href="{{ corpus.repo }}">Corpus on GitHub</a></li>
+    </ul>
   </div>
+</section>
+
+<section aria-labelledby="runs-h">
+  <h2 id="runs-h"><span class="lvl lvl-simple">Eight pieces of satellite software, run by hand</span><span class="lvl lvl-technical">Runs by hand</span></h2>
+  <p class="lvl lvl-simple">Each was run at one pinned version in September 2026, and every finding was reproduced on that software’s own code before it was reported.</p>
+  <p class="lvl lvl-technical">Eight third-party parsers, each run once at a pinned version through a harness of the corpus’s own over the unmodified parser; every finding reproduced on the library’s own code before it was reported.</p>
+  <div class="table-wrap narrow"><table class="records runs compact" aria-labelledby="runs-h">
+  <thead><tr><th>library</th><th>cases failed</th><th>most serious finding</th></tr></thead>
+  <tbody>
+  {% for r in library_runs.runs %}
+  <tr class="run"><td class="key"><a href="/library/#run-{{ r.library|lower|replace('.', '')|replace(' ', '-') }}">{{ r.library }}</a><div class="meta">version {{ r.version }}</div><div class="meta">run {{ r.run_date }}</div></td>
+  <td class="inline" data-label="cases failed"><span class="count{{ ' long' if r.failed|length > 8 }}">{{ r.failed }}</span></td>
+  <td data-label="most serious finding">{{ r.finding }}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  <p class="small muted">A count is a result for the version named, on the date named, not a verdict on the project, and the counts do not rank the libraries: one that reads fewer formats has fewer cases it can fail. The reports, the corpus version of each run and whether each can load this month’s launches are on <a href="/library/#runs">the library page</a>.</p>
 </section>
 
 <section aria-labelledby="snap-h">
   <h2 id="snap-h"><span class="lvl lvl-simple">What the catalog looks like today</span><span class="lvl lvl-technical">Tracker snapshot</span></h2>
   {% if ls %}
-  <div class="grid">
+  <div class="grid figures">
     <div class="tile"><p class="label"><span class="lvl lvl-simple">Highest satellite number seen in recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days group</span></p><p class="value">{{ ls.last30.highest | fmt_int }}</p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}{% if ls.last30.seed %} · seeded from the corpus{% endif %}</p></div>
     <div class="tile"><p class="label"><span class="lvl lvl-simple">Recent satellites with six-digit numbers</span><span class="lvl lvl-technical">Six-digit objects in that group</span></p><p class="value">{{ ls.last30.six_digit | fmt_int }}<span class="muted small"> of {{ ls.last30.records | fmt_int }}</span></p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
     <div class="tile{{ '' if ls.last30_tle.is_404 else (' ok' if ls.last30_tle is defined else '') }}"><p class="label"><span class="lvl lvl-simple">Old format asked for recent satellites</span><span class="lvl lvl-technical">TLE request for that group</span></p><p class="value">{% if ls.last30_tle.is_404 %}404{% else %}{{ ls.last30_tle.records | fmt_int }} records{% endif %}</p><p class="sub"><span class="lvl lvl-simple">{% if ls.last30_tle.is_404 %}“not found”: none of them fit{% else %}some still fit the old format{% endif %}</span><span class="lvl lvl-technical">{% if ls.last30_tle.is_404 %}No GP data found{% else %}objects below 100000 present{% endif %}</span> · {{ ls.last30_tle.checked_at | fmt_ts }}</p></div>
@@ -41,15 +57,15 @@
 
 <section aria-labelledby="entry-h">
   <h2 id="entry-h">Where to go next</h2>
-  <div class="grid">
-    <article class="card"><h3><a href="/migration/" data-level-link="simple">The story</a></h3><p class="lvl lvl-simple">Licence plates, a satellite called SARAMAGO, and why old software goes quiet. No jargon, with a glossary.</p><p class="lvl lvl-technical">The plain-language version of the migration, for colleagues who do not parse TLEs for a living.</p></article>
-    <article class="card"><h3><a href="/migration/" data-level-link="technical">The migration</a></h3><p class="lvl lvl-simple">The full technical version: formats, column layouts, the Alpha-5 letter table and what CelesTrak actually returns.</p><p class="lvl lvl-technical">Alpha-5, OMM, what CelesTrak serves, a TLE-versus-OMM side-by-side on the CCSDS example, and what to change.</p></article>
-    <article class="card"><h3><a href="/findings/">Findings</a></h3><p class="lvl lvl-simple">What broke when three different programs read today’s data. One bug we found and reported to a popular free library, with a fix we submitted; a second bug, reported by someone else, whose pending fix by another contributor we tested against the corpus.</p><p class="lvl lvl-technical">Naive versus reference versus python-sgp4 across eighteen cases, the CelesTrak TLE 404, provider rendering differences and the upstream reports.</p></article>
-    <article class="card"><h3><a href="/tools/">Tools</a></h3><p class="lvl lvl-simple">Turn a satellite number into its new lettered form and back, and take a TLE apart field by field. Everything runs in your browser.</p><p class="lvl lvl-technical">A strict Alpha-5 encoder/decoder checked against the specification vectors, and an interactive TLE anatomy with a paste box. Client-side only.</p></article>
-    <article class="card"><h3><a href="/library/">Library status</a></h3><p class="lvl lvl-simple">Every week we check whether two popular free libraries handle the new numbers yet.</p><p class="lvl lvl-technical">Weekly no-network reproducers against the latest PyPI python-sgp4 and Skyfield, with upstream links.</p></article>
-    <article class="card"><h3><a href="/activity/">Activity</a></h3><p class="lvl lvl-simple">The bug reports and fixes sent to the python-sgp4 library, the test kit’s releases, and a timeline of milestones.</p><p class="lvl lvl-technical">Upstream issue and pull-request state from the GitHub API (edge-cached hourly), the corpus's latest release, and a hand-maintained timeline.</p></article>
-    <article class="card"><h3><a href="/about/">How it was built</a></h3><p class="lvl lvl-simple">Where the numbers come from, who checked them, and who is responsible.</p><p class="lvl lvl-technical">Provenance, the independent audit, AI assistance under human direction, NEOGY LLC and the maintainer.</p></article>
-  </div>
+  <ul class="contents">
+    <li><a href="/migration/" data-level-link="simple">The story</a><p class="lvl lvl-simple">Licence plates, a satellite called SARAMAGO, and why old software goes quiet. No jargon, with a glossary.</p><p class="lvl lvl-technical">The plain-language version of the migration, for colleagues who do not parse TLEs for a living.</p></li>
+    <li><a href="/migration/" data-level-link="technical">The migration</a><p class="lvl lvl-simple">The full technical version: formats, column layouts, the Alpha-5 letter table and what CelesTrak actually returns.</p><p class="lvl lvl-technical">Alpha-5, OMM, what CelesTrak serves, a TLE-versus-OMM side-by-side on the CCSDS example, and what to change.</p></li>
+    <li><a href="/findings/">Findings</a><p class="lvl lvl-simple">What broke when three different programs read today’s data. One bug we found and reported to a popular free library, with a fix we submitted; a second bug, reported by someone else, whose pending fix by another contributor we tested against the corpus.</p><p class="lvl lvl-technical">Naive versus reference versus python-sgp4 across eighteen cases, the CelesTrak TLE 404, provider rendering differences and the upstream reports.</p></li>
+    <li><a href="/tools/">Tools</a><p class="lvl lvl-simple">Turn a satellite number into its new lettered form and back, and take a TLE apart field by field. Everything runs in your browser.</p><p class="lvl lvl-technical">A strict Alpha-5 encoder/decoder checked against the specification vectors, and an interactive TLE anatomy with a paste box. Client-side only.</p></li>
+    <li><a href="/library/">Library status</a><p class="lvl lvl-simple">Eight programs run by hand against the test kit, with their reports, and a weekly check of whether two popular free libraries handle the new numbers yet.</p><p class="lvl lvl-technical">Eight third-party parsers run by hand, with their reports, and weekly no-network reproducers against the latest PyPI python-sgp4 and Skyfield, with upstream links.</p></li>
+    <li><a href="/activity/">Activity</a><p class="lvl lvl-simple">The bug reports and fixes sent to the python-sgp4 library, the test kit’s releases, and a timeline of milestones.</p><p class="lvl lvl-technical">Upstream issue and pull-request state from the GitHub API (edge-cached hourly), the corpus's latest release, and a hand-maintained timeline.</p></li>
+    <li><a href="/about/">How it was built</a><p class="lvl lvl-simple">Where the numbers come from, who checked them, and who is responsible.</p><p class="lvl lvl-technical">Provenance, the independent audit, AI assistance under human direction, NEOGY LLC and the maintainer.</p></li>
+  </ul>
 </section>
 
 <section aria-labelledby="install-h">

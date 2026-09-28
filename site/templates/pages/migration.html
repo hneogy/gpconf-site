@@ -77,8 +77,8 @@ NORAD_CAT_ID        = 23581
 
 <h2>Alpha-5 (Space-Track only)</h2>
 <p>Space-Track’s definition: replace the first digit of the five-character field with a letter, A=10 … Z=33, skipping I and O, capitals only. 100000 becomes <code>A0000</code>, 339999 becomes <code>Z9999</code>, and nothing above 339999 has a TLE form. Only the TLE and 3LE formats show Alpha-5; the other formats carry integers up to 999,999,999. Its legacy API classes stay five-digit. In the checksum a letter counts 0, like a blank.</p>
-<div class="table-wrap"><table><caption>The Alpha-5 letter table</caption><thead><tr><th>letter</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
-<tbody><tr><th scope="row">value</th><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td>32</td><td>33</td></tr></tbody></table></div>
+<div class="table-wrap wide"><table class="pairs"><caption>The Alpha-5 letter table</caption><thead><tr><th>letter</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
+<tbody><tr><th scope="row">value</th><td data-label="A">10</td><td data-label="B">11</td><td data-label="C">12</td><td data-label="D">13</td><td data-label="E">14</td><td data-label="F">15</td><td data-label="G">16</td><td data-label="H">17</td><td data-label="J">18</td><td data-label="K">19</td><td data-label="L">20</td><td data-label="M">21</td><td data-label="N">22</td><td data-label="P">23</td><td data-label="Q">24</td><td data-label="R">25</td><td data-label="S">26</td><td data-label="T">27</td><td data-label="U">28</td><td data-label="V">29</td><td data-label="W">30</td><td data-label="X">31</td><td data-label="Y">32</td><td data-label="Z">33</td></tr></tbody></table></div>
 <p>Real catalog numbers so far exist only for letters A (100000–100789 at the corpus snapshot) and T (270000–270449, Space Fence analyst objects); every other letter is covered by vectors only. The corpus’s <a href="{{ corpus.tree }}/derived/alpha5-tle">derived Alpha-5 lines</a> are rendered from CelesTrak OMM records, because CelesTrak emits no Alpha-5; their encoding was corroborated by the maintainer against Space-Track output (44 records, letters A and T, zero defects; corpus decision D-070) without redistributing any of it.</p>
 
 <h2>OMM (CCSDS 502.0-B-3)</h2>
@@ -122,28 +122,28 @@ BSTAR               = {{ g.omm.BSTAR }}
 MEAN_MOTION_DOT     = {{ g.omm.MEAN_MOTION_DOT }}
 MEAN_MOTION_DDOT    = {{ g.omm.MEAN_MOTION_DDOT }}</pre>
 </div>
-<div class="table-wrap"><table>
+<div class="table-wrap"><table class="records">
 <caption>Field map (header keywords omitted)</caption>
 <thead><tr><th>TLE columns</th><th>OMM keyword</th><th>example</th><th>notes</th></tr></thead>
 <tbody>
-<tr><td>line 0</td><td><code>OBJECT_NAME</code></td><td>GOES 9</td><td>TLE name line is padded or cut to 24 characters</td></tr>
-<tr><td>1: 3–7, 2: 3–7</td><td><code>NORAD_CAT_ID</code></td><td>23581</td><td>five characters or Alpha-5 in the TLE; integer up to nine digits in the OMM</td></tr>
-<tr><td>1: 8</td><td><code>CLASSIFICATION_TYPE</code></td><td>U</td><td>C in CelesTrak supplemental data</td></tr>
-<tr><td>1: 10–17</td><td><code>OBJECT_ID</code></td><td>95025A ↔ 1995-025A</td><td>two-digit launch year in the TLE; may be empty (analyst objects)</td></tr>
-<tr><td>1: 19–32</td><td><code>EPOCH</code></td><td>20064.44075725 ↔ 2020-064T10:34:41.4264</td><td>two-digit year (57 pivot) and day of year; OMM allows calendar or day-of-year, optional fraction and Z; TLE resolution 864 µs</td></tr>
-<tr><td>1: 34–43</td><td><code>MEAN_MOTION_DOT</code></td><td>-.00000113</td><td>the OMM carries the TLE field as printed (ndot/2), 304/304 records</td></tr>
-<tr><td>1: 45–52</td><td><code>MEAN_MOTION_DDOT</code></td><td>00000+0 ↔ 0.0</td><td>implied decimal and exponent; mantissa rounded half up to 5 digits by CelesTrak</td></tr>
-<tr><td>1: 54–61</td><td><code>BSTAR</code></td><td>10000-3 ↔ 0.0001</td><td>implied decimal and exponent; same rounding rule</td></tr>
-<tr><td>1: 63</td><td><code>EPHEMERIS_TYPE</code></td><td>0</td><td></td></tr>
-<tr><td>1: 65–68</td><td><code>ELEMENT_SET_NO</code></td><td>925 ↔ 0925</td><td>leading zero legal in KVN; may be 0 in supplemental data</td></tr>
-<tr><td>2: 9–16</td><td><code>INCLINATION</code></td><td>3.0539</td><td>degrees</td></tr>
-<tr><td>2: 18–25</td><td><code>RA_OF_ASC_NODE</code></td><td>81.7939</td><td>degrees</td></tr>
-<tr><td>2: 27–33</td><td><code>ECCENTRICITY</code></td><td>0005013 ↔ 0.0005013</td><td>implied leading decimal; CelesTrak truncates to 7 digits, Space-Track rounds</td></tr>
-<tr><td>2: 35–42</td><td><code>ARG_OF_PERICENTER</code></td><td>249.2363</td><td>degrees</td></tr>
-<tr><td>2: 44–51</td><td><code>MEAN_ANOMALY</code></td><td>150.1602</td><td>degrees</td></tr>
-<tr><td>2: 53–63</td><td><code>MEAN_MOTION</code></td><td>1.00273272</td><td>rev/day</td></tr>
-<tr><td>2: 64–68</td><td><code>REV_AT_EPOCH</code></td><td>4316</td><td>may be 0 or 1 in supplemental data</td></tr>
-<tr><td>1: 69, 2: 69</td><td>—</td><td>4, 9</td><td>modulo-10 checksum: digits count their value, minus signs 1, everything else 0</td></tr>
+<tr><td class="key">line 0</td><td class="inline" data-label="OMM keyword"><code>OBJECT_NAME</code></td><td class="inline" data-label="example">GOES 9</td><td data-label="notes">TLE name line is padded or cut to 24 characters</td></tr>
+<tr><td class="key">1: 3–7, 2: 3–7</td><td class="inline" data-label="OMM keyword"><code>NORAD_CAT_ID</code></td><td class="inline" data-label="example">23581</td><td data-label="notes">five characters or Alpha-5 in the TLE; integer up to nine digits in the OMM</td></tr>
+<tr><td class="key">1: 8</td><td class="inline" data-label="OMM keyword"><code>CLASSIFICATION_TYPE</code></td><td class="inline" data-label="example">U</td><td data-label="notes">C in CelesTrak supplemental data</td></tr>
+<tr><td class="key">1: 10–17</td><td class="inline" data-label="OMM keyword"><code>OBJECT_ID</code></td><td class="inline" data-label="example">95025A ↔ 1995-025A</td><td data-label="notes">two-digit launch year in the TLE; may be empty (analyst objects)</td></tr>
+<tr><td class="key">1: 19–32</td><td class="inline" data-label="OMM keyword"><code>EPOCH</code></td><td class="inline" data-label="example">20064.44075725 ↔ 2020-064T10:34:41.4264</td><td data-label="notes">two-digit year (57 pivot) and day of year; OMM allows calendar or day-of-year, optional fraction and Z; TLE resolution 864 µs</td></tr>
+<tr><td class="key">1: 34–43</td><td class="inline" data-label="OMM keyword"><code>MEAN_MOTION_DOT</code></td><td class="inline" data-label="example">-.00000113</td><td data-label="notes">the OMM carries the TLE field as printed (ndot/2), 304/304 records</td></tr>
+<tr><td class="key">1: 45–52</td><td class="inline" data-label="OMM keyword"><code>MEAN_MOTION_DDOT</code></td><td class="inline" data-label="example">00000+0 ↔ 0.0</td><td data-label="notes">implied decimal and exponent; mantissa rounded half up to 5 digits by CelesTrak</td></tr>
+<tr><td class="key">1: 54–61</td><td class="inline" data-label="OMM keyword"><code>BSTAR</code></td><td class="inline" data-label="example">10000-3 ↔ 0.0001</td><td data-label="notes">implied decimal and exponent; same rounding rule</td></tr>
+<tr><td class="key">1: 63</td><td class="inline" data-label="OMM keyword"><code>EPHEMERIS_TYPE</code></td><td class="inline" data-label="example">0</td><td data-label="notes"></td></tr>
+<tr><td class="key">1: 65–68</td><td class="inline" data-label="OMM keyword"><code>ELEMENT_SET_NO</code></td><td class="inline" data-label="example">925 ↔ 0925</td><td data-label="notes">leading zero legal in KVN; may be 0 in supplemental data</td></tr>
+<tr><td class="key">2: 9–16</td><td class="inline" data-label="OMM keyword"><code>INCLINATION</code></td><td class="inline" data-label="example">3.0539</td><td data-label="notes">degrees</td></tr>
+<tr><td class="key">2: 18–25</td><td class="inline" data-label="OMM keyword"><code>RA_OF_ASC_NODE</code></td><td class="inline" data-label="example">81.7939</td><td data-label="notes">degrees</td></tr>
+<tr><td class="key">2: 27–33</td><td class="inline" data-label="OMM keyword"><code>ECCENTRICITY</code></td><td class="inline" data-label="example">0005013 ↔ 0.0005013</td><td data-label="notes">implied leading decimal; CelesTrak truncates to 7 digits, Space-Track rounds</td></tr>
+<tr><td class="key">2: 35–42</td><td class="inline" data-label="OMM keyword"><code>ARG_OF_PERICENTER</code></td><td class="inline" data-label="example">249.2363</td><td data-label="notes">degrees</td></tr>
+<tr><td class="key">2: 44–51</td><td class="inline" data-label="OMM keyword"><code>MEAN_ANOMALY</code></td><td class="inline" data-label="example">150.1602</td><td data-label="notes">degrees</td></tr>
+<tr><td class="key">2: 53–63</td><td class="inline" data-label="OMM keyword"><code>MEAN_MOTION</code></td><td class="inline" data-label="example">1.00273272</td><td data-label="notes">rev/day</td></tr>
+<tr><td class="key">2: 64–68</td><td class="inline" data-label="OMM keyword"><code>REV_AT_EPOCH</code></td><td class="inline" data-label="example">4316</td><td data-label="notes">may be 0 or 1 in supplemental data</td></tr>
+<tr><td class="key">1: 69, 2: 69</td><td class="inline" data-label="OMM keyword">—</td><td class="inline" data-label="example">4, 9</td><td data-label="notes">modulo-10 checksum: digits count their value, minus signs 1, everything else 0</td></tr>
 </tbody></table></div>
 <p>Because the TLE is the lossy side, OMM → TLE → OMM does not round-trip: eccentricity is truncated, the two exponent-form mantissas are rounded, and supplemental epochs are quantised to the TLE’s resolution (86 µs differences observed). The corpus compares TLE against OMM under those rules and reports a check that needed a tolerance separately from an exact pass.</p>
 

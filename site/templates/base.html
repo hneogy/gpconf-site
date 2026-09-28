@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-level="simple">
+<html lang="en" class="no-js" data-level="simple">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,15 +20,15 @@
       <ul>
       {% for item in nav %}
         <li><a href="{{ item.href }}"{% if item.id == page_id %} aria-current="page"{% endif %}>
-          {% if item.label %}{{ item.label }}{% else %}<span class="lvl lvl-simple">{{ item.simple }}</span><span class="lvl lvl-technical">{{ item.technical }}</span>{% endif %}
+          {{ item.label }}
         </a></li>
       {% endfor %}
       </ul>
     </nav>
     <div class="controls">
-      <div class="level-toggle" id="level-toggle" role="group" aria-label="Reading level">
-        <button type="button" data-set-level="simple" aria-pressed="true">Simple</button>
-        <button type="button" data-set-level="technical" aria-pressed="false">Technical</button>
+      <div class="level-toggle" id="level-toggle" role="group" aria-labelledby="level-label">
+        <span class="level-label" id="level-label">Reading level</span>
+        <button type="button" data-set-level="simple" aria-pressed="true">Simple</button><span class="sep" aria-hidden="true">·</span><button type="button" data-set-level="technical" aria-pressed="false">Technical</button>
       </div>
       <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Colour theme: automatic. Activate to switch.">
         <span class="theme-icon" aria-hidden="true">◐</span>

@@ -33,7 +33,7 @@ PAGES = [
     ("404", "404.html", "/404.html"),
 ]
 NAV = [
-    {"id": "migration", "href": "/migration/", "simple": "The story", "technical": "The migration"},
+    {"id": "migration", "href": "/migration/", "label": "The story"},  # one name per page, whatever the reading level
     {"id": "findings", "href": "/findings/", "label": "Findings"},
     {"id": "tracker", "href": "/tracker/", "label": "Live tracker"},
     {"id": "library", "href": "/library/", "label": "Library status"},

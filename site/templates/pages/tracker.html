@@ -24,7 +24,7 @@ The values below are the last successful ones for each measurement, with their o
 {% if not ls %}
 <p class="callout warn">No successful measurement has been recorded yet; the tiles appear after the first run that gets an answer.</p>
 {% else %}
-<div class="grid">
+<div class="grid figures">
   <div class="tile"><p class="label"><span class="lvl lvl-simple">Highest satellite number among recent launches</span><span class="lvl lvl-technical">Highest catalog number, last-30-days CSV</span></p><p class="value">{{ ls.last30.highest | fmt_int }}</p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
   <div class="tile"><p class="label"><span class="lvl lvl-simple">Recent satellites with six-digit numbers</span><span class="lvl lvl-technical">Six-digit objects in that group</span></p><p class="value">{{ ls.last30.six_digit | fmt_int }}<span class="muted small"> of {{ ls.last30.records | fmt_int }}</span></p><p class="sub">{{ ls.last30.checked_at | fmt_ts }}</p></div>
   {% if ls.last30_tle is not defined %}<div class="tile"><p class="label"><span class="lvl lvl-simple">The same list in the old format</span><span class="lvl lvl-technical">last-30-days TLE request</span></p><p class="value">—</p><p class="sub">no successful check yet</p></div>
@@ -50,15 +50,15 @@ The values below are the last successful ones for each measurement, with their o
   <figure class="chart"><figcaption>Nine-digit ids in the Starlink SupGP feed</figcaption><div data-chart="nine">Loading…</div></figure>
   <figure class="chart"><figcaption>Nine-digit ids present (green) or none (slate: the normal state outside the days after a launch)</figcaption><div data-chart="ninebool">Loading…</div></figure>
 </div>
-<noscript><div class="table-wrap"><table><caption>History</caption><thead><tr><th>date</th><th>highest</th><th>six-digit</th><th>TLE 404</th><th>analyst CSV</th><th>analyst TLE</th><th>nine-digit</th></tr></thead><tbody>
-{% for e in tracker_history | reverse %}<tr><td>{{ e.date }}{% if e.kind == 'seed' %} (seed){% endif %}{% if e.status and e.status != 'ok' %} ({{ e.status }}){% endif %}</td><td class="num">{{ e.metrics.last30.highest | fmt_int }}</td><td class="num">{{ e.metrics.last30.six_digit | fmt_int }}</td><td>{% if e.metrics.last30_tle.ok %}{{ e.metrics.last30_tle.is_404 | yesno }}{% else %}—{% endif %}</td><td class="num">{{ e.metrics.analyst.records | fmt_int }}</td><td class="num">{{ e.metrics.analyst_tle.records | fmt_int }}</td><td class="num">{{ e.metrics.supgp_starlink.nine_digit | fmt_int }}</td></tr>
+<noscript><div class="table-wrap"><table class="records"><caption>History</caption><thead><tr><th>date</th><th>highest</th><th>six-digit</th><th>TLE 404</th><th>analyst CSV</th><th>analyst TLE</th><th>nine-digit</th></tr></thead><tbody>
+{% for e in tracker_history | reverse %}<tr><td>{{ e.date }}{% if e.kind == 'seed' %} (seed){% endif %}{% if e.status and e.status != 'ok' %} ({{ e.status }}){% endif %}</td><td class="num inline" data-label="highest">{{ e.metrics.last30.highest | fmt_int }}</td><td class="num inline" data-label="six-digit">{{ e.metrics.last30.six_digit | fmt_int }}</td><td class="inline" data-label="TLE 404">{% if e.metrics.last30_tle.ok %}{{ e.metrics.last30_tle.is_404 | yesno }}{% else %}—{% endif %}</td><td class="num inline" data-label="analyst CSV">{{ e.metrics.analyst.records | fmt_int }}</td><td class="num inline" data-label="analyst TLE">{{ e.metrics.analyst_tle.records | fmt_int }}</td><td class="num inline" data-label="nine-digit">{{ e.metrics.supgp_starlink.nine_digit | fmt_int }}</td></tr>
 {% endfor %}</tbody></table></div></noscript>
 
 <h2>Stable-source drift</h2>
 <div class="lvl lvl-simple"><p>The test kit’s frozen answers rest on CelesTrak’s “first ever record” pages staying the same. Each week the job re-reads them and compares fingerprints. “Match” means unchanged.</p></div>
 <div class="lvl lvl-technical"><p>The corpus assumes <code>gp-first.php</code> is stable (ambiguity <code>gp-first-stability</code>). The job re-fetches each of the 22 stable-tier sources once every 7 days, at most 4 per day so the daily budget stays under 10 requests, and compares the SHA-256 with the manifest of v{{ corpus.version }}. Two of the sources are the 16-byte <code>No GP data found</code> body of a TLE request for a six-digit object; a match there means the 404 semantics are unchanged.</p></div>
-<div class="table-wrap"><table><caption>22 stable sources</caption><thead><tr><th>source</th><th>case</th><th>last checked</th><th>result</th></tr></thead><tbody>
-{% for s in dr.per_source %}<tr><td><code>{{ s.id }}</code></td><td><code>{{ s.case }}</code></td><td>{{ s.last_checked | fmt_ts }}{% if s.last_error_at %}<span class="small muted"> · error {{ s.last_error_at | fmt_ts }}</span>{% endif %}</td><td><span class="badge {{ s.last_status or 'neutral' }}">{{ s.last_status or 'not yet checked' }}</span></td></tr>
+<div class="table-wrap"><table class="records"><caption>22 stable sources</caption><thead><tr><th>source</th><th>case</th><th>last checked</th><th>result</th></tr></thead><tbody>
+{% for s in dr.per_source %}<tr><td class="key"><code>{{ s.id }}</code></td><td class="inline" data-label="case"><code>{{ s.case }}</code></td><td class="inline" data-label="last checked">{{ s.last_checked | fmt_ts }}{% if s.last_error_at %}<span class="small muted"> · error {{ s.last_error_at | fmt_ts }}</span>{% endif %}</td><td class="inline" data-label="result"><span class="badge {{ s.last_status or 'neutral' }}">{{ s.last_status or 'not yet checked' }}</span></td></tr>
 {% endfor %}</tbody></table></div>
 
 <h2>How the tracker works</h2>

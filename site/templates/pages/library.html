@@ -1,28 +1,52 @@
 {% extends "base.html" %}
 {% block title %}Library status{% endblock %}
-{% block description %}Weekly check of the latest python-sgp4 and Skyfield releases against the corpus's no-network reproducers and Alpha-5 vectors.{% endblock %}
+{% block description %}Eight satellite libraries run by hand against the corpus, with their reports, and a weekly check of the latest python-sgp4 and Skyfield releases.{% endblock %}
 {% block content %}
 {% set L = library %}
 <article>
 <h1>Library status</h1>
-<p class="lede lvl lvl-simple">Two popular free libraries do most of the orbit maths in open-source satellite software. Every week we install their newest versions and check, without touching the network, whether the problems the test kit found are fixed yet.</p>
-<p class="lede lvl lvl-technical">A weekly job installs the latest PyPI <code>sgp4</code> and <code>skyfield</code>, runs the corpus’s no-network reproducers (nine-digit id, empty <code>OBJECT_ID</code>, classification) built on the CCSDS 502.0-B-3 annex G example values, and runs the Alpha-5 vectors from corpus v{{ corpus.version }}. Pass means the behaviour the corpus expects; fail means the finding still stands.</p>
+<p class="lede lvl lvl-simple">Results of the test kit on real satellite software: eight programs run once by hand, each at a pinned version, and two popular free libraries checked every week.</p>
+<p class="lede lvl lvl-technical">The corpus run against third-party parsers: eight run once by hand at pinned versions, and a weekly job over the latest python-sgp4 and Skyfield.</p>
+<h2 id="runs">Run once against the corpus</h2>
+<p class="lvl lvl-simple">Eight pieces of satellite software were run by hand in September 2026, each at one pinned version, against the seventeen cases of the time, and PyEphem, Gpredict, libsgp4 and astroz since against the eighteen of the current version; every finding was reproduced by running that software’s own code before it was reported.</p>
+<p class="lvl lvl-technical">Hand-run (<code>site/content/library-runs.json</code>): each row names the corpus version it ran against, with that version’s runner: v0.2.1 for the first round, of 2026-09-24, and v0.4.0 for the second round’s PyEphem, Gpredict, libsgp4 and astroz rows, of 2026-09-27; one run per library on the date shown, through a harness or adapter of the corpus’s own over the library’s unmodified parser; recorded in the corpus <a href="{{ library_runs.url }}">decision log</a> (D-128 and D-132 to D-141; the second round’s PyEphem, Gpredict, libsgp4 and astroz, D-174, D-178, D-182 and D-185), the specifics in the linked reports.</p>
+<div class="table-wrap"><table class="records runs">
+<caption>Runs by hand</caption>
+<thead><tr><th>library</th><th>cases failed</th><th>most serious finding</th><th>this month’s launches</th><th>upstream</th></tr></thead>
+<tbody>
+{% for r in library_runs.runs %}
+<tr class="run" id="run-{{ r.library|lower|replace('.', '')|replace(' ', '-') }}"><td class="key"><a href="{{ r.project_url }}">{{ r.library }}</a><div class="meta">version {{ r.version }}</div><div class="meta">run {{ r.run_date }}</div><div class="meta">corpus {{ r.corpus_version }}</div></td>
+<td class="inline" data-label="cases failed"><span class="count{{ ' long' if r.failed|length > 8 }}">{{ r.failed }}</span></td>
+<td data-label="most serious finding">{{ r.finding }}</td>
+<td class="inline" data-label="this month’s launches">{{ r.gate.short }}</td>
+<td data-label="upstream">{% for u in r.reports %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
+<tr class="run-notes lvl lvl-technical"><td data-label="what was run"><div><span class="sr-only">{{ r.library }}: </span>{{ r.version_detail }}; reads {{ r.reads }}</div></td>
+<td colspan="2" data-label="case results"><div>{{ r.breakdown }}</div></td>
+<td colspan="2" data-label="this month’s launches"><div>{{ r.gate.full }}</div></td></tr>
+{% endfor %}
+</tbody></table></div>
+<p class="lvl lvl-simple">A count is a result against that version on that date, not a verdict on the project, and it does not say how much a user is affected: some data feeds never carry the input that triggers the failure. The counts do not rank the libraries: one that reads fewer formats has fewer cases it can fail, and the skips are in the technical breakdown.</p>
+<p class="lvl lvl-simple">The column “this month’s launches” asks one practical question: can the software load this month’s launches, the 256 objects CelesTrak listed on 21 September 2026, every one numbered above 99,999? Six of the eight read only the TLE format, and CelesTrak leaves every such object out of its TLE feed, so their users are not affected today: the new satellites are simply absent, not misnumbered. Those parsers would misnumber or drop them only if a lettered line reached them from Space-Track or a hand-kept file. Two load them through CelesTrak’s CSV format, and two read the lettered lines correctly.</p>
+<p class="lvl lvl-technical">A row is a result for the version named at that date; skip means the library has no reader for the case’s format, not exercised is the runner’s data check. Every finding was reproduced on the library’s own code before it was reported. Rows are added as reports are filed, never before. Where a fix is proposed, its pull request sits beside the report with its state and date, as in the weekly table, and a report carries its own state in the same shape once a release has come: open means in review, merged means in the library’s source but in no release yet, released means a published release carries the fix, and in every case the finding stands as run against the version named until a run of the release is published. The gate column is the corpus’s gate over this month’s launches (D-142), read from the record counts each run recorded: per format the parser reads, records are loaded (returned with the expected integer id), misidentified (returned as 0, NaN, a string or a wrong number) or dropped (no record came back); CelesTrak’s TLE request for the group answers HTTP 404, so a TLE-only parser on that feed has nothing to load, and the Alpha-5 rendering stands for what Space-Track’s TLE output carries. Six of the eight read TLE only; the wording names the behaviour and never grades the project. Refused and dropped are not distinguished for the first-round runs: they were recorded before the runner’s refusal channel (corpus D-144), so a “dropped” count there may include records the library refused with an error; the second-round runs of PyEphem, Gpredict, libsgp4 and astroz were made with the channel and report the two apart.</p>
+
 <h2>Checked every week</h2>
+<p class="lvl lvl-simple">Two popular free libraries do most of the orbit maths in open-source satellite software. Every week we install their newest versions and check, without touching the network, whether the problems the test kit found are fixed yet.</p>
+<p class="lvl lvl-technical">A weekly job installs the latest PyPI <code>sgp4</code> and <code>skyfield</code>, runs the corpus’s no-network reproducers (nine-digit id, empty <code>OBJECT_ID</code>, classification) built on the CCSDS 502.0-B-3 annex G example values, and runs the Alpha-5 vectors from corpus v{{ corpus.version }}. Pass means the behaviour the corpus expects; fail means the finding still stands.</p>
 {% if not L %}
 <p class="callout warn">No library check has been recorded yet.</p>
 {% else %}
 {% set broken = L.group_errors or not L.behaviours %}
 <p class="callout {{ 'bad' if broken else ('ok' if L.counts.fail == 0 else 'warn') }}">Last check {{ L.checked_at | fmt_ts }}: python-sgp4 <strong>{{ L.versions.sgp4 or '—' }}</strong>{% if L.versions.sgp4_accelerated is not none %} ({{ 'accelerated C++' if L.versions.sgp4_accelerated else 'pure Python' }} build){% endif %}, Skyfield <strong>{{ L.versions.skyfield or '—' }}</strong>, Python {{ L.versions.python }}. {% if broken %}The check could not run{% if L.group_errors %} ({% for k, v in L.group_errors.items() %}{{ k }}: <code>{{ v }}</code>{{ '; ' if not loop.last }}{% endfor %}){% endif %}; this is a failure of the job's environment, not a result about the libraries, and the last results stand in the run history below.{% else %}{{ L.counts.pass }} pass, {{ L.counts.fail }} fail{% if L.counts.error %}, {{ L.counts.error }} could not run{% endif %}.{% endif %}</p>
-<div class="table-wrap"><table>
+<div class="table-wrap"><table class="records">
 <caption>Behaviours</caption>
 <thead><tr><th>result</th><th>behaviour</th><th>library</th><th class="lvl lvl-technical">detail</th><th>upstream</th></tr></thead>
 <tbody>
 {% for b in L.behaviours %}
-<tr><td><span class="badge {{ b.result }}">{{ b.result }}</span></td>
-<td>{{ b.title }}<div class="small muted lvl lvl-technical">expected: {{ b.expected }}</div></td>
-<td>{{ b.library }}</td>
-<td class="lvl lvl-technical"><code class="small">{{ b.detail }}</code></td>
-<td>{% for u in b.upstream %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
+<tr><td class="inline" data-label="result"><span class="badge {{ b.result }}">{{ b.result }}</span></td>
+<td class="key" data-label="behaviour">{{ b.title }}<div class="small muted lvl lvl-technical">expected: {{ b.expected }}</div></td>
+<td class="inline" data-label="library">{{ b.library }}</td>
+<td class="lvl lvl-technical" data-label="detail"><code class="small">{{ b.detail }}</code></td>
+<td data-label="upstream">{% for u in b.upstream %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
 {% endfor %}
 </tbody></table></div>
 {% if L.group_errors %}<p class="callout bad">Some groups could not run: {% for k, v in L.group_errors.items() %}{{ k }}: <code>{{ v }}</code>{{ '; ' if not loop.last }}{% endfor %}</p>{% endif %}
@@ -33,7 +57,7 @@
 </div>
 
 <div class="lvl lvl-simple">
-<h2>What the rows mean</h2>
+<h3>What the rows mean</h3>
 <ul>
   <li><strong>Nine-digit id</strong>: can the library load a record whose catalog number has nine digits, as CelesTrak publishes for new Starlink launches? Today it refuses.</li>
   <li><strong>Empty OBJECT_ID</strong>: can it read an XML record for an object with no launch designation? Today’s release, 2.27, crashes (our report #171; our fix, PR #172, was merged on 24 September 2026 and reaches users with the next release).</li>
@@ -42,7 +66,7 @@
 </ul>
 </div>
 <div class="lvl lvl-technical">
-<h2>Method</h2>
+<h3>Method</h3>
 <ul>
   <li>Inputs: the annex G example (GOES 9) with <code>NORAD_CAT_ID</code> replaced by 799501621, or <code>CLASSIFICATION_TYPE</code> set to C, or rendered as a TLE with C; the same values in CelesTrak’s <code>&lt;ndm&gt;</code>-wrapped XML shape with an empty <code>&lt;OBJECT_ID&gt;</code>; the vendored <code>vectors/alpha5.json</code> (SHA-256 recorded in the repository).</li>
   <li>No provider data, no network: Skyfield’s timescale is loaded from its bundled data. Recorded per behaviour: pass/fail, exception type and message (never element values), the expected behaviour and upstream links; per run: package versions, whether the C++ extension is active, Python version.</li>
@@ -51,30 +75,11 @@
 </ul>
 </div>
 
-<h2>Run history</h2>
-<div class="table-wrap"><table><thead><tr><th>checked</th><th>python-sgp4</th><th>Skyfield</th><th class="num">pass</th><th class="num">fail</th></tr></thead><tbody>
-{% for h in library_history | reverse %}<tr><td>{{ h.checked_at | fmt_ts }}</td><td>{{ h.versions.sgp4 or '—' }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td>{{ h.versions.skyfield or '—' }}</td>{% if (h.counts.pass + h.counts.fail) == 0 %}<td class="num">—</td><td class="num">could not run</td>{% else %}<td class="num">{{ h.counts.pass }}</td><td class="num">{{ h.counts.fail }}</td>{% endif %}</tr>
+<h3>Run history</h3>
+<div class="table-wrap"><table class="records"><thead><tr><th>checked</th><th>python-sgp4</th><th>Skyfield</th><th class="num">pass</th><th class="num">fail</th></tr></thead><tbody>
+{% for h in library_history | reverse %}<tr><td class="key">{{ h.checked_at | fmt_ts }}</td><td class="inline" data-label="python-sgp4">{{ h.versions.sgp4 or '—' }}{% if h.versions.sgp4_accelerated %} (accelerated){% endif %}</td><td class="inline" data-label="Skyfield">{{ h.versions.skyfield or '—' }}</td>{% if (h.counts.pass + h.counts.fail) == 0 %}<td class="num inline" data-label="pass">—</td><td class="num inline" data-label="fail">could not run</td>{% else %}<td class="num inline" data-label="pass">{{ h.counts.pass }}</td><td class="num inline" data-label="fail">{{ h.counts.fail }}</td>{% endif %}</tr>
 {% endfor %}</tbody></table></div>
 {% endif %}
-
-<h2 id="runs">Run once against the corpus</h2>
-<p class="lvl lvl-simple">Eight more pieces of satellite software were run by hand in September 2026, each at one pinned version, against the seventeen cases of the time, and PyEphem, Gpredict, libsgp4 and astroz since against the eighteen of the current version; every finding was reproduced by running that software’s own code before it was reported. A count is a result against that version on that date, not a verdict on the project, and it does not say how much a user is affected: some data feeds never carry the input that triggers the failure. The counts do not rank the libraries: one that reads fewer formats has fewer cases it can fail, and the skips are in the technical breakdown.</p>
-<p class="lvl lvl-simple">The last column asks one practical question: can the software load this month’s launches, the 256 objects CelesTrak listed on 21 September 2026, every one numbered above 99,999? Six of the eight read only the TLE format, and CelesTrak leaves every such object out of its TLE feed, so their users are not affected today: the new satellites are simply absent, not misnumbered. Those parsers would misnumber or drop them only if a lettered line reached them from Space-Track or a hand-kept file. Two load them through CelesTrak’s CSV format, and two read the lettered lines correctly.</p>
-<p class="lvl lvl-technical">Hand-run (<code>site/content/library-runs.json</code>): each row names the corpus version it ran against, with that version’s runner: v0.2.1 for the first round, of 2026-09-24, and v0.4.0 for the second round’s PyEphem, Gpredict, libsgp4 and astroz rows, of 2026-09-27; one run per library on the date shown, through a harness or adapter of the corpus’s own over the library’s unmodified parser; recorded in the corpus <a href="{{ library_runs.url }}">decision log</a> (D-128 and D-132 to D-141; the second round’s PyEphem, Gpredict, libsgp4 and astroz, D-174, D-178, D-182 and D-185), the specifics in the linked reports. A row is a result for the version named at that date; skip means the library has no reader for the case’s format, not exercised is the runner’s data check. Every finding was reproduced on the library’s own code before it was reported. Rows are added as reports are filed, never before. Where a fix is proposed, its pull request sits beside the report with its state and date, as in the weekly table, and a report carries its own state in the same shape once a release has come: open means in review, merged means in the library’s source but in no release yet, released means a published release carries the fix, and in every case the finding stands as run against the version named until a run of the release is published. The gate column is the corpus’s gate over this month’s launches (D-142), read from the record counts each run recorded: per format the parser reads, records are loaded (returned with the expected integer id), misidentified (returned as 0, NaN, a string or a wrong number) or dropped (no record came back); CelesTrak’s TLE request for the group answers HTTP 404, so a TLE-only parser on that feed has nothing to load, and the Alpha-5 rendering stands for what Space-Track’s TLE output carries. Six of the eight read TLE only; the wording names the behaviour and never grades the project. Refused and dropped are not distinguished for the first-round runs: they were recorded before the runner’s refusal channel (corpus D-144), so a “dropped” count there may include records the library refused with an error; the second-round runs of PyEphem, Gpredict, libsgp4 and astroz were made with the channel and report the two apart.</p>
-<div class="table-wrap"><table>
-<caption>Runs by hand</caption>
-<thead><tr><th>library</th><th>version run</th><th>date</th><th>cases failed</th><th>most serious finding</th><th>this month’s launches</th><th>upstream</th></tr></thead>
-<tbody>
-{% for r in library_runs.runs %}
-<tr><td><a href="{{ r.project_url }}">{{ r.library }}</a></td>
-<td>{{ r.version }}<div class="small muted lvl lvl-technical">{{ r.version_detail }}; reads {{ r.reads }}</div></td>
-<td>{{ r.run_date }}<div class="small muted">corpus {{ r.corpus_version }}</div></td>
-<td><span class="badge neutral">{{ r.failed }}</span><div class="small muted lvl lvl-technical">{{ r.breakdown }}</div></td>
-<td>{{ r.finding }}</td>
-<td><span class="lvl lvl-simple">{{ r.gate.short }}</span><span class="small lvl lvl-technical">{{ r.gate.full }}</span></td>
-<td>{% for u in r.reports %}<a href="{{ u.url }}">{{ u.label }}</a>{{ ', ' if not loop.last }}{% endfor %}</td></tr>
-{% endfor %}
-</tbody></table></div>
 
 <h2 id="ecosystem">Elsewhere in the ecosystem</h2>
 <p class="small muted lvl lvl-technical">Hand-maintained (<code>site/content/ecosystem.json</code>); each entry links to a public statement by the project. Statements, not results: nothing in this list has been run against the corpus.</p>

@@ -7,9 +7,9 @@
 <meta name="description" content="{% block description %}A free test kit for satellite-data software crossing the 2026 catalog-number boundary.{% endblock %}">
 <link rel="canonical" href="{{ site_url }}{{ page_href }}">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/static/css/site.css">
-<script src="/static/js/theme.js"></script>
+<link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ asset('css/site.css') }}">
+<script src="{{ asset('js/theme.js') }}"></script>
 </head>
 <body class="page-{{ page_id }}">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -54,7 +54,7 @@
     </div>
   </div>
 </footer>
-<script src="/static/js/site.js" defer></script>
+<script src="{{ asset('js/site.js') }}" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

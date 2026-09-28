@@ -7,6 +7,7 @@ they work without JavaScript; scripts add charts and the client-side tools.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import sys
@@ -107,6 +108,13 @@ def yesno(value):
     return {True: "yes", False: "no"}.get(value, "unknown")
 
 
+def asset(rel: str) -> str:
+    """The URL of a file in site/static, carrying a hash of its content: Cloudflare's edge and a visitor's browser keep
+    /static/* for a day (HEADERS), so a changed file must change its URL or the new pages are served with the old one (S-065)."""
+    digest = hashlib.sha256((SITE / "static" / rel).read_bytes()).hexdigest()[:12]
+    return f"/static/{rel}?v={digest}"
+
+
 def context() -> dict:
     tracker_latest = load(DATA / "tracker" / "latest.json")
     tracker_history = load(DATA / "tracker" / "history.json", [])
@@ -135,6 +143,7 @@ def main(out: Path = DIST) -> Path:
     env = Environment(loader=FileSystemLoader(str(SITE / "templates")), autoescape=select_autoescape(["html"]), undefined=ChainableUndefined,  # a missing metric group renders as a dash, not a crash (S-030)
                       trim_blocks=True, lstrip_blocks=True)
     env.filters.update({"fmt_int": fmt_int, "fmt_ts": fmt_ts, "yesno": yesno})
+    env.globals["asset"] = asset
     ctx = context()
     if out.exists():
         shutil.rmtree(out)

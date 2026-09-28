@@ -42,4 +42,4 @@
 <script type="application/json" id="alpha5-vectors">{{ alpha5_vectors | tojson }}</script>
 </article>
 {% endblock %}
-{% block scripts %}<script src="/static/js/alpha5.js" defer></script><script src="/static/js/tle.js" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ asset('js/alpha5.js') }}" defer></script><script src="{{ asset('js/tle.js') }}" defer></script>{% endblock %}

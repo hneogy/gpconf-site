@@ -1,7 +1,7 @@
 # Handoff: how to pick this project up on another computer
 
 For a Claude Code session (or a person) resuming work on the gp-omm-conformance corpus and this site.
-Public-safe by design: no provider data, no credentials, no private paths. Updated 2026-09-27.
+Public-safe by design: no provider data, no credentials, no private paths. Updated 2026-09-28.
 
 ## Start here
 
@@ -78,12 +78,14 @@ that settles it removes the line here and appends the correcting entry to the lo
 ## Working conventions
 
 - Site: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`; tests
-  `.venv/bin/python -m unittest discover -s tests -t .` (48 tests; the JavaScript tests run through `node --test`,
+  `.venv/bin/python -m unittest discover -s tests -t .` (49 tests; the JavaScript tests run through `node --test`,
   which the Python suite calls locally and `ci.yml` runs as its own step); build `python build.py`;
   local preview `python3 -m http.server -d dist 8765`; function emulation `npx wrangler pages dev dist --port 8788`.
   A step passes on its own exit code.
 - After a push, compare the pages Cloudflare serves with a local build of the same commit: they match but for the
   "Page built" line and, on the home page, the two `email_off` comments, which Cloudflare removes as it honours them.
+  Fetch the static files through the hashed URLs the pages name (S-065): Cloudflare's edge keeps `/static/*` for a
+  day and a deploy does not refresh it, so the bare path can serve the previous deploy's file.
   Cloudflare's email-address obfuscation is on for the zone and rewrites address-shaped text, `name@v0.4.0` included;
   such text goes between `<!--email_off-->` and `<!--/email_off-->`, and the suite fails on any outside that pair
   (S-058).

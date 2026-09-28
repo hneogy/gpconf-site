@@ -203,6 +203,20 @@ class Build(unittest.TestCase):
         self.assertRegex(self.pages["index.html"],
                          r"<!--email_off-->\s*<pre[^>]*><code>- uses: hneogy/gp-omm-conformance@v0\.4\.0\n")
 
+    def test_static_files_are_named_with_their_content_hash(self):
+        """S-065: every page names each file under /static/ with a hash of the file it ships with. Cloudflare's edge and a
+        visitor's browser keep /static/* for a day (_headers), and the push of cbdb2cc was served with the previous
+        stylesheet from the edge until the URL changed; a hash in the URL makes a changed file a new URL."""
+        import hashlib
+        for name, html in self.pages.items():
+            refs = re.findall(r'(?:src|href)="(/static/[^"]*)"', html)
+            self.assertTrue(refs, name)
+            for ref in refs:
+                path, _, query = ref.partition("?")
+                self.assertRegex(query, r"^v=[0-9a-f]{12}$", f"{name}: {ref}")
+                built = (Path(self.tmp) / path.lstrip("/")).read_bytes()
+                self.assertEqual(query[2:], hashlib.sha256(built).hexdigest()[:12], f"{name}: {ref}")
+
     def test_headers_and_robots(self):
         headers = (Path(self.tmp) / "_headers").read_text()
         self.assertIn("Content-Security-Policy", headers)

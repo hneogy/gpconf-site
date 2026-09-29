@@ -172,12 +172,17 @@
    "bytes": 16,
    "baseline_http_status": 404,
    "baseline_retrieved": "2026-09-21T00:43:53Z",
-   "last_checked": "2026-09-21T05:52:01Z",
+   "last_checked": "2026-09-29T06:48:20Z",
    "last_status": "match",
    "last_http_status": 404,
    "history": [
     {
      "checked_at": "2026-09-21T05:52:01Z",
+     "result": "match",
+     "http_status": 404
+    },
+    {
+     "checked_at": "2026-09-29T06:48:20Z",
      "result": "match",
      "http_status": 404
     }
@@ -268,12 +273,17 @@
    "bytes": 632,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:44:03Z",
-   "last_checked": "2026-09-21T05:51:59Z",
+   "last_checked": "2026-09-29T06:48:18Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-21T05:51:59Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-09-29T06:48:18Z",
      "result": "match",
      "http_status": 200
     }

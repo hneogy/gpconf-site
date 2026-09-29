@@ -1,27 +1,27 @@
 {
- "generated_at": "2026-09-28T07:00:56Z",
+ "generated_at": "2026-09-29T06:48:04Z",
  "site": "https://gpconf.neogy.dev",
  "latest": {
-  "date": "2026-09-28",
-  "checked_at": "2026-09-28T07:00:56Z",
+  "date": "2026-09-29",
+  "checked_at": "2026-09-29T06:48:04Z",
   "kind": "scheduled",
   "status": "ok",
   "metrics": {
    "last30": {
     "ok": true,
     "status": 200,
-    "checked_at": "2026-09-28T07:00:56Z",
-    "bytes": 28092,
-    "records": 183,
+    "checked_at": "2026-09-29T06:48:04Z",
+    "bytes": 28018,
+    "records": 182,
     "highest": 100831,
-    "six_digit": 183,
+    "six_digit": 182,
     "nine_digit": 0,
     "below_100000": 0
    },
    "last30_tle": {
     "ok": true,
     "status": 404,
-    "checked_at": "2026-09-28T07:01:00Z",
+    "checked_at": "2026-09-29T06:48:07Z",
     "bytes": 16,
     "is_404": true,
     "body_is_no_gp_data": true,
@@ -30,8 +30,8 @@
    "analyst": {
     "ok": true,
     "status": 200,
-    "checked_at": "2026-09-28T07:01:03Z",
-    "bytes": 81158,
+    "checked_at": "2026-09-29T06:48:09Z",
+    "bytes": 81152,
     "records": 596,
     "highest": 290027,
     "six_digit": 376,
@@ -41,7 +41,7 @@
    "analyst_tle": {
     "ok": true,
     "status": 200,
-    "checked_at": "2026-09-28T07:01:07Z",
+    "checked_at": "2026-09-29T06:48:13Z",
     "bytes": 36960,
     "is_404": false,
     "records": 220
@@ -49,14 +49,14 @@
    "supgp_starlink": {
     "ok": true,
     "status": 200,
-    "checked_at": "2026-09-28T07:01:10Z",
-    "bytes": 1802972,
-    "records": 11132,
-    "highest": 100779,
+    "checked_at": "2026-09-29T06:48:15Z",
+    "bytes": 1806058,
+    "records": 11156,
+    "highest": 799501673,
     "six_digit": 446,
-    "nine_digit": 0,
-    "below_100000": 10686,
-    "nine_digit_present": false
+    "nine_digit": 26,
+    "below_100000": 10684,
+    "nine_digit_present": true
    }
   },
   "relations": {
@@ -64,77 +64,67 @@
    "analyst_tle_equals_below_100000": true
   },
   "drift": {
-   "checked": 4,
+   "checked": 2,
    "results": [
     {
-     "id": "gp-first-81011-JSON",
+     "id": "gp-first-100000-KVN",
      "result": "match",
      "http_status": 200
     },
     {
-     "id": "gp-first-81011-TLE",
+     "id": "gp-first-100000-TLE",
      "result": "match",
-     "http_status": 200
-    },
-    {
-     "id": "gp-first-100000-CSV",
-     "result": "match",
-     "http_status": 200
-    },
-    {
-     "id": "gp-first-100000-JSON",
-     "result": "match",
-     "http_status": 200
+     "http_status": 404
     }
    ]
   },
   "fetch": {
-   "requests": 9,
+   "requests": 7,
    "errors": 0,
-   "bytes": 1950562
+   "bytes": 1952852
   }
  },
  "last_successful": {
   "last30": {
-   "records": 183,
+   "records": 182,
    "highest": 100831,
-   "six_digit": 183,
+   "six_digit": 182,
    "nine_digit": 0,
    "below_100000": 0,
-   "checked_at": "2026-09-28T07:00:56Z",
-   "entry_date": "2026-09-28",
+   "checked_at": "2026-09-29T06:48:04Z",
+   "entry_date": "2026-09-29",
    "seed": false
   },
   "last30_tle": {
    "status": 404,
    "is_404": true,
    "records": 0,
-   "checked_at": "2026-09-28T07:01:00Z",
-   "entry_date": "2026-09-28",
+   "checked_at": "2026-09-29T06:48:07Z",
+   "entry_date": "2026-09-29",
    "seed": false
   },
   "analyst": {
    "records": 596,
    "six_digit": 376,
    "below_100000": 220,
-   "checked_at": "2026-09-28T07:01:03Z",
-   "entry_date": "2026-09-28",
+   "checked_at": "2026-09-29T06:48:09Z",
+   "entry_date": "2026-09-29",
    "seed": false
   },
   "analyst_tle": {
    "status": 200,
    "is_404": false,
    "records": 220,
-   "checked_at": "2026-09-28T07:01:07Z",
-   "entry_date": "2026-09-28",
+   "checked_at": "2026-09-29T06:48:13Z",
+   "entry_date": "2026-09-29",
    "seed": false
   },
   "supgp_starlink": {
-   "records": 11132,
-   "nine_digit": 0,
-   "nine_digit_present": false,
-   "checked_at": "2026-09-28T07:01:10Z",
-   "entry_date": "2026-09-28",
+   "records": 11156,
+   "nine_digit": 26,
+   "nine_digit_present": true,
+   "checked_at": "2026-09-29T06:48:15Z",
+   "entry_date": "2026-09-29",
    "seed": false
   }
  },
@@ -145,7 +135,7 @@
   "drift": 0,
   "error": 0,
   "never_checked": 0,
-  "last_check": "2026-09-28T07:01:41Z",
+  "last_check": "2026-09-29T06:48:20Z",
   "baseline": {
    "corpus_version": "0.1.0",
    "tag": "v0.1.0",
@@ -212,7 +202,7 @@
    {
     "id": "gp-first-100000-TLE",
     "case": "six-digit-omm-saramago",
-    "last_checked": "2026-09-21T05:52:01Z",
+    "last_checked": "2026-09-29T06:48:20Z",
     "last_status": "match",
     "last_http_status": 404,
     "last_error_at": null
@@ -244,7 +234,7 @@
    {
     "id": "gp-first-100000-KVN",
     "case": "six-digit-omm-saramago",
-    "last_checked": "2026-09-21T05:51:59Z",
+    "last_checked": "2026-09-29T06:48:18Z",
     "last_status": "match",
     "last_http_status": 200,
     "last_error_at": null
@@ -331,21 +321,21 @@
    }
   ]
  },
- "history_entries": 9,
+ "history_entries": 10,
  "fetch_log": [
   {
    "label": "last30-csv",
    "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=CSV",
-   "requested_at": "2026-09-28T07:00:56Z",
+   "requested_at": "2026-09-29T06:48:04Z",
    "status": 200,
-   "bytes": 28092,
-   "sha256": "9a0f3a42f0e73626e179c523a1ac05d0f388f0841d9e3b5c4cf2f3388791edf5",
+   "bytes": 28018,
+   "sha256": "9694b48ce0dce6011cb3e71cccdeeeeef606d3e73c377e152a50eeec32e53c9a",
    "error": null
   },
   {
    "label": "last30-tle",
    "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=TLE",
-   "requested_at": "2026-09-28T07:01:00Z",
+   "requested_at": "2026-09-29T06:48:07Z",
    "status": 404,
    "bytes": 16,
    "sha256": "000844fd5b7a7b64f14b58cc34f0016ad51b0982b0d38f915986560e4e217683",
@@ -354,64 +344,46 @@
   {
    "label": "analyst-csv",
    "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=analyst&FORMAT=CSV",
-   "requested_at": "2026-09-28T07:01:03Z",
+   "requested_at": "2026-09-29T06:48:09Z",
    "status": 200,
-   "bytes": 81158,
-   "sha256": "e27d4cbfc91ff99d4a130e1671ec0afc254d04416b4ae4f9e510658f9a34b347",
+   "bytes": 81152,
+   "sha256": "a740c17a3d678c427ba7f0d9a5c9412c94695f9482c7be8db938cef228b02ea9",
    "error": null
   },
   {
    "label": "analyst-tle",
    "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=analyst&FORMAT=TLE",
-   "requested_at": "2026-09-28T07:01:07Z",
+   "requested_at": "2026-09-29T06:48:13Z",
    "status": 200,
    "bytes": 36960,
-   "sha256": "cdaee18fe94de4b09d246d94e6ee7968f7c74f2e81507bc0dcabe0c355fc1516",
+   "sha256": "2598cdffc2d337b466ed7bacc5b51d274c8e910f69b62c431ad3b96d0eecc042",
    "error": null
   },
   {
    "label": "supgp-starlink-csv",
    "url": "https://celestrak.org/NORAD/elements/supplemental/sup-gp.php?FILE=starlink&FORMAT=CSV",
-   "requested_at": "2026-09-28T07:01:10Z",
+   "requested_at": "2026-09-29T06:48:15Z",
    "status": 200,
-   "bytes": 1802972,
-   "sha256": "07c2770d6c668a2a46e8c65cb69803204dc38bc0270749c9b4131fced408ae50",
+   "bytes": 1806058,
+   "sha256": "55be9af320d405355c1493737677a2fabca9166b01f8876e0f8afebf7c379352",
    "error": null
   },
   {
-   "label": "drift-gp-first-81011-JSON",
-   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=81011&FORMAT=JSON",
-   "requested_at": "2026-09-28T07:01:31Z",
+   "label": "drift-gp-first-100000-KVN",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=KVN",
+   "requested_at": "2026-09-29T06:48:18Z",
    "status": 200,
-   "bytes": 402,
-   "sha256": "742bd531a42360d694b5d99603fa66e8686ed3ecdae18c02e7d42485ee031906",
+   "bytes": 632,
+   "sha256": "bb9073b3b323e25961ef7a4012aadc252abb46653c011b8806a205e7044d719e",
    "error": null
   },
   {
-   "label": "drift-gp-first-81011-TLE",
-   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=81011&FORMAT=TLE",
-   "requested_at": "2026-09-28T07:01:34Z",
-   "status": 200,
-   "bytes": 168,
-   "sha256": "f06539e94675d87b1b5f4958e7b918ffb67cf10204da1f3bb966acb529c004e2",
-   "error": null
-  },
-  {
-   "label": "drift-gp-first-100000-CSV",
-   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=CSV",
-   "requested_at": "2026-09-28T07:01:38Z",
-   "status": 200,
-   "bytes": 374,
-   "sha256": "2a1913dc0c5e2babfc914fd92df9685181cdf964134e9cb9133d7edb89095a9d",
-   "error": null
-  },
-  {
-   "label": "drift-gp-first-100000-JSON",
-   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=JSON",
-   "requested_at": "2026-09-28T07:01:41Z",
-   "status": 200,
-   "bytes": 420,
-   "sha256": "1d04dc3b4e49d6f7162c69b2f86b6132302bf302265f912a312dcee7b5585b0a",
+   "label": "drift-gp-first-100000-TLE",
+   "url": "https://celestrak.org/NORAD/elements/gp-first.php?CATNR=100000&FORMAT=TLE",
+   "requested_at": "2026-09-29T06:48:20Z",
+   "status": 404,
+   "bytes": 16,
+   "sha256": "000844fd5b7a7b64f14b58cc34f0016ad51b0982b0d38f915986560e4e217683",
    "error": null
   }
  ]

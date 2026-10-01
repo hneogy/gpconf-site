@@ -136,8 +136,11 @@ class Build(unittest.TestCase):
         pe = next(r for r in runs["runs"] if r["library"] == "PyEphem")
         self.assertEqual((pe["version"], pe["run_date"], pe["failed"]), ("4.2.1", "2026-09-27", "7 of 18"))
         labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in pe["reports"]}
+        # S-072: #297 was closed as completed on 2026-10-01 with no change to readtle() (corpus D-198); the label says what
+        # closed means here, and the row's count and finding stay, since a closure changes no measurement.
         self.assertEqual(labels, {"296": "issue #296 (open 2026-09-25; Alpha-5 catalog numbers read as 0)",
-                                  "297": "issue #297 (open 2026-09-28; a letter in a numeric field)"})
+                                  "297": "issue #297 (closed 2026-10-01; a letter in a numeric field; no validation added, by the maintainer's choice for a legacy library, reopenable)"})
+        self.assertIn(str(escape(labels["297"])), html)
         self.assertIn("(#297)", pe["finding"])
         self.assertIn("every catalog number read as 0", pe["gate"]["full"])
         self.assertTrue(runs["url"].endswith("/blob/63454b1/DECISIONS.md"))  # D-174 and D-178 carry their links there

@@ -6,7 +6,7 @@
   var A = window.Alpha5;
   var F1 = [
     { c: [1, 1], name: 'Line number', desc: 'Always 1.' },
-    { c: [3, 7], name: 'Catalog number', kind: 'catnr', desc: 'Five characters. Plain digits up to 99999. From 100000 on, Space-Track replaces the first digit with a letter (Alpha-5: A=10 … Z=33, no I or O). CelesTrak instead leaves those objects out of TLE output altogether.' },
+    { c: [3, 7], name: 'Catalog number', kind: 'catnr', desc: 'Five characters. Plain digits up to 99999. From 100000 on, Space-Track writes the first two digits as one letter and keeps the last four (Alpha-5: A=10 … Z=33, no I or O). CelesTrak instead leaves those objects out of TLE output altogether.' },
     { c: [8, 8], name: 'Classification', desc: 'U unclassified, C classified (CelesTrak supplemental records use C), S secret.' },
     { c: [10, 11], name: 'Launch year', desc: 'Two digits of the international designator; no rule in any format document says how to pick the century.' },
     { c: [12, 14], name: 'Launch number of the year' },

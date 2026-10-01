@@ -219,6 +219,20 @@ class Build(unittest.TestCase):
                 built = (Path(self.tmp) / path.lstrip("/")).read_bytes()
                 self.assertEqual(query[2:], hashlib.sha256(built).hexdigest()[:12], f"{name}: {ref}")
 
+    def test_story_page_has_the_alpha5_explorer_and_its_fallback(self):
+        """S-071: the story page builds an Alpha-5 explorer at both reading levels with the Tools page's own encoder;
+        the letter table stays in the page as what a reader without scripts gets. The page, the glossary and the Tools
+        page's field description all say the first two digits become one letter, never "the first digit"."""
+        html = self.pages["migration/index.html"]
+        self.assertEqual(html.count("data-alpha5-explorer"), 2)
+        self.assertEqual(html.count("data-alpha5-fallback"), 1)
+        self.assertIn("The Alpha-5 letter table", html)
+        self.assertLess(html.index("/static/js/alpha5.js?v="), html.index("/static/js/alpha5-explorer.js?v="))  # the encoder loads first
+        self.assertIn("writes the first two digits of a six-digit number as one letter", html)
+        for name, page in self.pages.items():
+            self.assertNotIn("first digit", page, name)
+        self.assertNotIn("first digit", (ROOT / "site/static/js/tle.js").read_text(encoding="utf-8"))
+
     def test_headers_and_robots(self):
         headers = (Path(self.tmp) / "_headers").read_text()
         self.assertIn("Content-Security-Policy", headers)

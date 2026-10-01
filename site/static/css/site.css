@@ -225,6 +225,55 @@ td.date { white-space: nowrap; }
   .pairs td::before { content: attr(data-label); display: block; font-family: var(--mono); font-weight: 600; }
 }
 
+/* the Alpha-5 explorer (story page, S-071): a catalog number the reader drags or types, shown as its five-character
+   field. Reader-driven only: nothing here moves unless the reader moves it, and no transition softens the change. The
+   scale is drawn by alpha5-explorer.js at its own width. The one blue marks what is selected: the first character,
+   the digits it stands for, the segment the number is in. Nothing on it is a result, so nothing is red or green. */
+.a5x { margin: 2rem 0 2.5rem; }
+@media (min-width: 60.01rem) { .prose .a5x { width: min(70rem, calc(100vw - 2rem)); } }
+.a5x figcaption { font-weight: 600; margin: 0 0 1rem; max-width: var(--measure); }
+html.no-js .a5x { display: none; } /* it needs scripts; without them the letter table and the sentence stand */
+.a5x-body { display: grid; gap: 1.1rem 2.5rem; grid-template-areas: "readout" "scale" "controls" "sentence"; }
+@media (min-width: 48rem) { .a5x-body { grid-template-columns: 20rem minmax(0, 34rem); grid-template-areas: "readout sentence" "scale scale" "controls controls"; align-items: start; } }
+.a5x-readout { grid-area: readout; }
+main .a5x-number { margin: 0; font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.a5x-number b, .a5x-cell.head { color: var(--accent); }
+main .a5x-cells { display: flex; gap: .35rem; margin: .6rem 0 .45rem; }
+.a5x-cell { display: grid; place-items: center; width: 2.6rem; height: 3.1rem; border: 1px solid var(--rule); border-radius: var(--radius); font: 600 1.75rem/1 var(--mono); }
+.a5x-cell.head { border: 2px solid var(--accent); }
+.a5x-cell.none { border-style: dashed; }
+main .a5x-legend { margin: 0; min-height: 2.9em; max-width: 19rem; font-size: .875rem; color: var(--fg-muted); }
+.a5x-legend b { color: var(--fg); font-weight: 600; font-family: var(--mono); }
+main .a5x-sentence { grid-area: sentence; margin: 0; }
+.a5x-scale { grid-area: scale; position: relative; }
+.a5x-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.a5x-svg .seg { stroke: var(--bg); stroke-width: 1; }
+.a5x-svg .seg.digits { fill: var(--line); }
+.a5x-svg .seg.letters { fill: var(--rule); }
+.a5x-svg .seg.none { fill: none; stroke: var(--fg-muted); stroke-dasharray: 3 3; }
+.a5x-svg .seg.cur { fill: var(--accent); }
+.a5x-svg .lbl { fill: var(--fg-muted); font-size: 14px; font-family: var(--font); }
+.a5x-svg .lbl.ch { font-family: var(--mono); }
+.a5x-svg .lbl.cur { fill: var(--accent); font-weight: 600; }
+.a5x-svg .lbl.skip { font-size: 12px; }
+.a5x-svg .strike, .a5x-svg .tick { stroke: var(--fg-muted); stroke-width: 1; }
+.a5x-svg .today { stroke: var(--fg); stroke-width: 1.5; }
+/* the native range input lies over the bar: its keyboard, touch and screen-reader behaviour are the browser's own */
+.a5x-range { position: absolute; left: 0; top: 7px; width: 100%; height: 44px; margin: 0; padding: 0; border: 0; background: transparent; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.a5x-range::-webkit-slider-runnable-track { height: 44px; background: transparent; }
+.a5x-range::-moz-range-track { height: 44px; background: transparent; }
+.a5x-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; width: 28px; height: 26px; margin-top: 9px; border: 2px solid var(--accent); border-radius: var(--radius); background: var(--bg); }
+.a5x-range::-moz-range-thumb { box-sizing: border-box; width: 28px; height: 26px; border: 2px solid var(--accent); border-radius: var(--radius); background: var(--bg); }
+.a5x-range:focus-visible { outline: none; }
+.a5x-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 5px var(--accent); }
+.a5x-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(--bg), 0 0 0 5px var(--accent); }
+.a5x-controls { grid-area: controls; display: flex; flex-wrap: wrap; align-items: end; gap: .9rem 1.75rem; }
+.a5x-field label { margin: 0 0 .3rem; font-size: .875rem; }
+.a5x-field .a5x-text { width: 13rem; min-height: 44px; font-family: var(--mono); border-radius: var(--radius); }
+.a5x-stops { display: flex; flex-wrap: wrap; gap: .4rem; }
+.a5x-stops button { min-height: 44px; padding: 0 .75rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); color: var(--fg); font: inherit; font-size: .9375rem; font-variant-numeric: tabular-nums; cursor: pointer; }
+.a5x-stops button[aria-current="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
 /* code */
 code, pre, .mono { font-family: var(--mono); font-size: .92em; }
 code { background: var(--code-bg); padding: .08em .35em; border-radius: 4px; }

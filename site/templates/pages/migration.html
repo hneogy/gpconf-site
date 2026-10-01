@@ -2,7 +2,8 @@
 {% block title %}The story and the migration{% endblock %}
 {% block description %}What happened to satellite catalog numbers in July 2026, why it matters, and the old and new data formats side by side.{% endblock %}
 {% block content %}
-{% set g = examples.goes9 %}{% set s = examples.saramago %}
+{% set g = examples.goes9 %}{% set s = examples.saramago %}{% set ls = tracker.last_successful if tracker else {} %}
+{% set today %}{% if ls and ls.last30 and ls.last30.highest %} data-today="{{ ls.last30.highest }}" data-today-at="{{ ls.last30.checked_at | fmt_ts }}"{% endif %}{% endset %}
 <article class="prose">
 <div class="lvl lvl-simple">
 <h1>The story: when the licence plates ran out</h1>
@@ -15,9 +16,13 @@
 
 <h2>Two ways out</h2>
 <ol>
-  <li><strong>Letters on the plate.</strong> Space-Track, the US Space Force’s public catalog, replaces the first digit with a letter. A means 10, B means 11, and so on up to Z for 33. So 100000 is written <code>A0000</code> and the plate stretches to 339999. The letters I and O are skipped so nobody mistakes them for 1 and 0. This is called <strong>Alpha-5</strong>. It is a stopgap.</li>
+  <li><strong>Letters on the plate.</strong> Space-Track, the US Space Force’s public catalog, writes the first two digits of a six-digit number as one letter and keeps the last four. A means 10, B means 11, and so on up to Z for 33. So 100000 is written <code>A0000</code> and the plate stretches to 339999. The letters I and O are skipped so nobody mistakes them for 1 and 0. This is called <strong>Alpha-5</strong>. It is a stopgap.</li>
   <li><strong>A new form with room to spare.</strong> Since 2020 both catalogs also publish the same information in a modern form called the <strong>OMM</strong>, where each value has a name and a full number, up to nine digits. No plate, no squeezing.</li>
 </ol>
+<figure class="a5x">
+<figcaption>Try the lettered plate: drag the marker, or type a number, and watch the first two digits become one letter at 100,000.</figcaption>
+<div data-alpha5-explorer{{ today }}></div>
+</figure>
 
 <h2>What CelesTrak does</h2>
 <p>CelesTrak is the free, widely used mirror of the catalog that most hobby and open-source software reads. It chose not to use letters. If you ask CelesTrak for the old format, it simply <strong>leaves out</strong> every object with a six-digit number. If none are left to show, it answers “not found” (an HTTP 404). Old software often reads that as “nothing new happened” and carries on, missing every recent launch.</p>
@@ -57,7 +62,7 @@ NORAD_CAT_ID        = 23581
   <dt>Catalog number (NORAD id)</dt><dd>The unique number every tracked object gets, in order of cataloguing. The licence plate.</dd>
   <dt>TLE</dt><dd>Two-line element set. The 1960s-era text format for an orbit: two lines of 69 characters (often with a name line above). Five characters for the catalog number.</dd>
   <dt>OMM</dt><dd>Orbit Mean-Elements Message. The modern standard (CCSDS 502.0) for the same information, with named fields. Comes as CSV, JSON, XML or a key = value text called KVN.</dd>
-  <dt>Alpha-5</dt><dd>Space-Track’s trick of writing the first digit of a six-digit number as a letter so it still fits in five characters. Works up to 339999.</dd>
+  <dt>Alpha-5</dt><dd>Space-Track’s trick of writing the first two digits of a six-digit number as one letter, so it still fits in five characters. Works up to 339999.</dd>
   <dt>CelesTrak</dt><dd>A non-profit site run by Dr. T.S. Kelso that republishes catalog data for free. Most open-source software reads it.</dd>
   <dt>Space-Track</dt><dd>The US Space Force’s official public catalog site. Requires an account; its terms forbid passing its data on, which is why nothing from it appears here.</dd>
   <dt>Parser</dt><dd>The part of a program that reads a data format. The test kit tests parsers, and one case tests the writing side.</dd>
@@ -76,8 +81,12 @@ NORAD_CAT_ID        = 23581
 <p>The usable five-digit range ends at 69999, not 99999. Of the 70000–99999 block, primary sources describe only 80000–89999, the analyst range (Space-Track); the 72000-series ids seen in supplemental launch data and the 90000 block are described by secondary sources only. The corpus records this as a stated gap rather than guessing.</p>
 
 <h2>Alpha-5 (Space-Track only)</h2>
-<p>Space-Track’s definition: replace the first digit of the five-character field with a letter, A=10 … Z=33, skipping I and O, capitals only. 100000 becomes <code>A0000</code>, 339999 becomes <code>Z9999</code>, and nothing above 339999 has a TLE form. Only the TLE and 3LE formats show Alpha-5; the other formats carry integers up to 999,999,999. Its legacy API classes stay five-digit. In the checksum a letter counts 0, like a blank.</p>
-<div class="table-wrap wide"><table class="pairs"><caption>The Alpha-5 letter table</caption><thead><tr><th>letter</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
+<p>Space-Track’s definition: the first two digits of a six-digit number, 10 to 33, become one letter in the field’s first character, A=10 … Z=33, skipping I and O, capitals only; the last four digits stay as they are. 100000 becomes <code>A0000</code>, 339999 becomes <code>Z9999</code>, and nothing above 339999 has a TLE form. Only the TLE and 3LE formats show Alpha-5; the other formats carry integers up to 999,999,999. Its legacy API classes stay five-digit. In the checksum a letter counts 0, like a blank.</p>
+<figure class="a5x">
+<figcaption>The Alpha-5 field over its whole range, by the strict encoder of the <a href="/tools/">tools</a>. The arrow keys move by one, Page Up and Page Down by one letter.</figcaption>
+<div data-alpha5-explorer{{ today }}></div>
+</figure>
+<div class="table-wrap wide" data-alpha5-fallback><table class="pairs"><caption>The Alpha-5 letter table</caption><thead><tr><th>letter</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>J</th><th>K</th><th>L</th><th>M</th><th>N</th><th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th><th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
 <tbody><tr><th scope="row">value</th><td data-label="A">10</td><td data-label="B">11</td><td data-label="C">12</td><td data-label="D">13</td><td data-label="E">14</td><td data-label="F">15</td><td data-label="G">16</td><td data-label="H">17</td><td data-label="J">18</td><td data-label="K">19</td><td data-label="L">20</td><td data-label="M">21</td><td data-label="N">22</td><td data-label="P">23</td><td data-label="Q">24</td><td data-label="R">25</td><td data-label="S">26</td><td data-label="T">27</td><td data-label="U">28</td><td data-label="V">29</td><td data-label="W">30</td><td data-label="X">31</td><td data-label="Y">32</td><td data-label="Z">33</td></tr></tbody></table></div>
 <p>Real catalog numbers so far exist only for letters A (100000–100789 at the corpus snapshot) and T (270000–270449, Space Fence analyst objects); every other letter is covered by vectors only. The corpus’s <a href="{{ corpus.tree }}/derived/alpha5-tle">derived Alpha-5 lines</a> are rendered from CelesTrak OMM records, because CelesTrak emits no Alpha-5; their encoding was corroborated by the maintainer against Space-Track output (44 records, letters A and T, zero defects; corpus decision D-070) without redistributing any of it.</p>
 
@@ -162,3 +171,4 @@ MEAN_MOTION_DDOT    = {{ g.omm.MEAN_MOTION_DDOT }}</pre>
 </div>
 </article>
 {% endblock %}
+{% block scripts %}<script src="{{ asset('js/alpha5.js') }}" defer></script><script src="{{ asset('js/alpha5-explorer.js') }}" defer></script>{% endblock %}

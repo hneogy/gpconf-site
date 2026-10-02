@@ -56,6 +56,11 @@
      "label": "PR #187 (merged 2026-09-28; Alpha-5 decoder in develop, awaiting a release)",
      "url": "https://github.com/shashwatak/satellite-js/pull/187",
      "date": "2026-09-25"
+    },
+    {
+     "label": "PR #197 (open 2026-10-02; the eleven field conversions moved to Number, from #190)",
+     "url": "https://github.com/shashwatak/satellite-js/pull/197",
+     "date": "2026-10-02"
     }
    ],
    "gate": {

@@ -87,7 +87,7 @@ class Build(unittest.TestCase):
                 if u["label"].startswith("PR #"):
                     self.assertRegex(u["label"], r"^PR #\d+ \((open|merged|closed|released) \d{4}-\d{2}-\d{2}; [^)]+\)$", f"{r['library']}: {u['label']}")
         for url in ("https://github.com/shashwatak/satellite-js/pull/186", "https://github.com/shashwatak/satellite-js/pull/187",
-                    "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
+                    "https://github.com/shashwatak/satellite-js/pull/197", "https://github.com/bilawalsidhu/gods-eye-view/pull/767"):
             self.assertIn(url, html)
         # satellite.js PR #186 merged on 2026-09-26 into develop and #187 on 2026-09-28, and neither is in a release: the labels
         # say so, and the row stays as run until a release ships the fixes, as python-sgp4's did after #172 (S-036, S-049, S-069).
@@ -95,6 +95,10 @@ class Build(unittest.TestCase):
         labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in sat["reports"]}
         self.assertEqual(labels["186"], "PR #186 (merged 2026-09-26; fixed in develop, awaiting a release)")
         self.assertEqual(labels["187"], "PR #187 (merged 2026-09-28; Alpha-5 decoder in develop, awaiting a release)")
+        # S-073: PR #197 (corpus D-199, D-200) moves the eleven field conversions to Number(), the fix for #190; open, so the
+        # row stays as run.
+        self.assertEqual(labels["197"], "PR #197 (open 2026-10-02; the eleven field conversions moved to Number, from #190)")
+        self.assertIn(str(escape(labels["197"])), html)
         self.assertIn(str(escape(labels["187"])), html)
         self.assertEqual((sat["version"], sat["failed"]), ("7.1.0", "7 of 17"))
         self.assertIn(str(escape(labels["186"])), html)

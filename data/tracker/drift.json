@@ -14,12 +14,17 @@
    "bytes": 168,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:11:49Z",
-   "last_checked": "2026-09-25T06:46:32Z",
+   "last_checked": "2026-10-02T12:47:16Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-25T06:46:32Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-10-02T12:47:16Z",
      "result": "match",
      "http_status": 200
     }
@@ -127,12 +132,17 @@
    "bytes": 517,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:50Z",
-   "last_checked": "2026-09-25T06:46:27Z",
+   "last_checked": "2026-10-02T12:47:11Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-25T06:46:27Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-10-02T12:47:11Z",
      "result": "match",
      "http_status": 200
     }
@@ -147,12 +157,17 @@
    "bytes": 1198,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:41Z",
-   "last_checked": "2026-09-25T06:46:34Z",
+   "last_checked": "2026-10-02T12:47:19Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-25T06:46:34Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-10-02T12:47:19Z",
      "result": "match",
      "http_status": 200
     }
@@ -167,12 +182,17 @@
    "bytes": 626,
    "baseline_http_status": 200,
    "baseline_retrieved": "2026-09-21T00:43:45Z",
-   "last_checked": "2026-09-25T06:46:29Z",
+   "last_checked": "2026-10-02T12:47:14Z",
    "last_status": "match",
    "last_http_status": 200,
    "history": [
     {
      "checked_at": "2026-09-25T06:46:29Z",
+     "result": "match",
+     "http_status": 200
+    },
+    {
+     "checked_at": "2026-10-02T12:47:14Z",
      "result": "match",
      "http_status": 200
     }

@@ -147,7 +147,7 @@ class Build(unittest.TestCase):
         self.assertIn(str(escape(labels["297"])), html)
         self.assertIn("(#297)", pe["finding"])
         self.assertIn("every catalog number read as 0", pe["gate"]["full"])
-        self.assertTrue(runs["url"].endswith("/blob/63454b1/DECISIONS.md"))  # D-174 and D-178 carry their links there
+        self.assertTrue(runs["url"].endswith("/blob/v0.5.0/DECISIONS.md"))  # S-074: the tag carries every entry the rows cite
         # S-060: the Gpredict row reports the second round (corpus D-178, D-183) once its second-round report was filed
         # (#427, corpus D-193); the gate text stays, for the reason in S-059.
         gp = next(r for r in runs["runs"] if r["library"] == "Gpredict")
@@ -169,24 +169,24 @@ class Build(unittest.TestCase):
             self.assertNotIn("bad", html[tile_open:html.index(">", tile_open)], name)
         self.assertIn("404 (slate: CelesTrak declining", self.pages["tracker/index.html"])
 
-    def test_the_site_is_at_corpus_v040_with_its_doi_and_an_install_section(self):
-        """S-053, S-057: corpus v0.4.0 with its version DOI, an install section on the home page that matches the README's
-        pip path and Action lines, and the findings table from the v0.4.0 FAILURES.md, whose totals the page states."""
+    def test_the_site_is_at_corpus_v050_with_its_doi_and_an_install_section(self):
+        """S-053, S-057, S-074: corpus v0.5.0 with its version DOI, an install section on the home page that matches the
+        README's pip path and Action lines, and the findings table from the v0.5.0 FAILURES.md, whose totals the page states."""
         home, findings = self.pages["index.html"], self.pages["findings/index.html"]
-        self.assertIn("version 0.4.0", home)
-        self.assertIn("10.5281/zenodo.23002261", home)
+        self.assertIn("version 0.5.0", home)
+        self.assertIn("10.5281/zenodo.23093982", home)
         self.assertNotIn("is added once Zenodo has archived the release", home)  # DOI and version in step
-        for line in ("pip install gpconf", "gpconf fetch", "gpconf run --preset reference", "- uses: hneogy/gp-omm-conformance@v0.4.0"):
+        for line in ("pip install gpconf", "gpconf fetch", "gpconf run --preset reference", "- uses: hneogy/gp-omm-conformance@v0.5.0"):
             self.assertIn(line, home)
         failures = json.loads((ROOT / "site" / "content" / "failures.json").read_text(encoding="utf-8"))
-        self.assertTrue(failures["url"].endswith("/blob/v0.4.0/docs/FAILURES.md"))
+        self.assertTrue(failures["url"].endswith("/blob/v0.5.0/docs/FAILURES.md"))
         naive_failed = sum(1 for r in failures["rows"] if r[3] == "fail")
         sgp4_failed, sgp4_items = sum(1 for r in failures["rows"] if r[5] == "fail"), sum(r[6] for r in failures["rows"])
         self.assertEqual((naive_failed, sgp4_failed, sgp4_items), (15, 8, 24))
         self.assertIn(f"Naive fails {naive_failed} of 18 cases; python-sgp4 fails {sgp4_failed}, with {sgp4_items} failing items", findings)
         timeline = json.loads((ROOT / "data" / "timeline.json").read_text(encoding="utf-8"))["events"]
-        self.assertIn("Corpus v0.4.0 published", [e["title"] for e in timeline])
-        self.assertIn("https://doi.org/10.5281/zenodo.23002261", [e["url"] for e in timeline])
+        self.assertIn("Corpus v0.5.0 published", [e["title"] for e in timeline])
+        self.assertIn("https://doi.org/10.5281/zenodo.23093982", [e["url"] for e in timeline])
 
     def test_no_external_resources(self):
         for name, html in self.pages.items():
@@ -210,7 +210,7 @@ class Build(unittest.TestCase):
             m = address.search(outside)
             self.assertIsNone(m, f"{name}: {m and m.group(0)} would be obfuscated; wrap it in <!--email_off-->")
         self.assertRegex(self.pages["index.html"],
-                         r"<!--email_off-->\s*<pre[^>]*><code>- uses: hneogy/gp-omm-conformance@v0\.4\.0\n")
+                         r"<!--email_off-->\s*<pre[^>]*><code>- uses: hneogy/gp-omm-conformance@v0\.5\.0\n")
 
     def test_static_files_are_named_with_their_content_hash(self):
         """S-065: every page names each file under /static/ with a hash of the file it ships with. Cloudflare's edge and a

@@ -48,6 +48,12 @@
    "technical": "Release v0.4.0 of gp-omm-conformance (tag on commit e5fa812), also on PyPI as gpconf 0.4.0: the eighteenth case, corrupt-input, hands a parser one corrupt input between valid records, a refusal with a reason passing and the records around it having to load (DECISIONS D-171 to D-190); no frozen expected value changed; naive and python-sgp4 fail 15 and 8 of 18 cases."},
   {"date": "2026-09-27", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.23002261",
    "simple": "The new version of the test kit received its own permanent citation number.",
-   "technical": "Version DOI 10.5281/zenodo.23002261 (v0.4.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
+   "technical": "Version DOI 10.5281/zenodo.23002261 (v0.4.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."},
+  {"date": "2026-10-02", "time": "2026-10-02T03:09:55Z", "title": "Corpus v0.5.0 published", "url": "https://github.com/hneogy/gp-omm-conformance/releases/tag/v0.5.0",
+   "simple": "A new version of the test kit: its installable package can be rebuilt byte for byte from the source, a library can say which operations it does not have instead of failing them, and the kit counts each missing record once; the eighteen tests are unchanged.",
+   "technical": "Release v0.5.0 of gp-omm-conformance (tag on commit e6a3000; dated 2026-10-01 in the corpus, published 03:09:55 UTC on 2026-10-02), also on PyPI as gpconf 0.5.0: reproducible package builds under SOURCE_DATE_EPOCH, the \"unsupported\" answer for vector hooks run by command, and the gate's record counts to one outcome per record (DECISIONS D-203 to D-208); no frozen expected value changed; naive and python-sgp4 still fail 15 and 8 of 18 cases."},
+  {"date": "2026-10-02", "title": "Zenodo DOI minted", "url": "https://doi.org/10.5281/zenodo.23093982",
+   "simple": "The new version of the test kit received its own permanent citation number.",
+   "technical": "Version DOI 10.5281/zenodo.23093982 (v0.5.0) under the concept DOI 10.5281/zenodo.22867654; recorded in CITATION.cff."}
  ]
 }

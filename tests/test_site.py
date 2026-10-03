@@ -159,15 +159,17 @@ class Build(unittest.TestCase):
         self.assertIn("every catalog number read as 0", gp["gate"]["full"])
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
-        """A 404 on the last-30-days TLE request is CelesTrak declining to serve objects above 99999 in the TLE
-        format: the tile that shows it carries no 'bad' class in either state, and the chart caption says slate (S-048).
+        """A 404 on the last-30-days TLE request is the TLE format at CelesTrak carrying no object above 99999, as its
+        documentation says (S-075): the tile that shows it carries no 'bad' class in either state, and the chart caption
+        says slate (S-048).
         The home page carried the tile too until S-070 took the tracker's figures off it."""
         for name, marker in (("tracker/index.html", "last-30-days TLE request"),):
             html = self.pages[name]
             i = html.index(marker)
             tile_open = html.rfind('<div class="tile', 0, i)
             self.assertNotIn("bad", html[tile_open:html.index(">", tile_open)], name)
-        self.assertIn("404 (slate: CelesTrak declining", self.pages["tracker/index.html"])
+        self.assertIn("404 (slate: no object above 99999 in CelesTrak’s TLE format", self.pages["tracker/index.html"])
+        self.assertNotIn("declining to serve", self.pages["tracker/index.html"])
 
     def test_the_site_is_at_corpus_v050_with_its_doi_and_an_install_section(self):
         """S-053, S-057, S-074: corpus v0.5.0 with its version DOI, an install section on the home page that matches the

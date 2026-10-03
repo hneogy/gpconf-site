@@ -69,10 +69,11 @@ class Build(unittest.TestCase):
         self.assertIn("so their users are not affected today", html)
         self.assertIn("HTTP 404", html)
         self.assertIn("Refused and dropped are not distinguished for the first-round runs", html)  # corpus D-144 footnote
-        # S-056, S-057, S-059, S-060: PyEphem, Gpredict, libsgp4 and astroz report the second round (corpus v0.4.0); the other four rows stay at the first round
-        # (corpus v0.2.1) until each library's second-round report is filed. A row moves only with the entry that links its report.
+        # S-056, S-057, S-059, S-060, S-076, S-077: PyEphem, satellite.js, Gpredict, libsgp4, tle.js and astroz report the second round
+        # (corpus v0.4.0); gods-eye-view and SatDump stay at the first round (corpus v0.2.1) until each one's second-round report is
+        # filed. A row moves only with the entry that links its report.
         for r in runs["runs"]:
-            if r["library"] in ("PyEphem", "Gpredict", "libsgp4", "astroz"):
+            if r["library"] in ("PyEphem", "satellite.js", "Gpredict", "libsgp4", "tle.js", "astroz"):
                 self.assertEqual(r["corpus_version"], "0.4.0", r["library"])
                 self.assertTrue(r["failed"].endswith(" of 18"), r["library"])
             else:
@@ -100,7 +101,15 @@ class Build(unittest.TestCase):
         self.assertEqual(labels["197"], "PR #197 (open 2026-10-02; the eleven field conversions moved to Number, from #190)")
         self.assertIn(str(escape(labels["197"])), html)
         self.assertIn(str(escape(labels["187"])), html)
-        self.assertEqual((sat["version"], sat["failed"]), ("7.1.0", "7 of 17"))
+        # S-076: the row reports the second round (corpus D-176, D-177, D-183) with #190 as its second-round report; the two other
+        # corrupt inputs the reader accepts follow from the lineage's design and are not filed (owner ruling, 2026-10-03).
+        self.assertEqual((sat["version"], sat["run_date"], sat["failed"]), ("7.1.0", "2026-09-27", "8 of 18"))
+        self.assertEqual(labels["185"], "issue #185 (open 2026-09-24; OMM epoch digits and the Alpha-5 field)")
+        self.assertEqual(labels["190"], "issue #190 (open 2026-09-28; a letter in a numeric field)")
+        self.assertEqual(list(labels), ["185", "186", "187", "190", "197"])
+        self.assertIn("(#185)", sat["finding"])
+        self.assertIn("(#190)", sat["finding"])
+        self.assertIn("not filed as a defect", sat["breakdown"])
         self.assertIn(str(escape(labels["186"])), html)
         self.assertIn("merged means in the library’s source but in no release yet", html)
         # libsgp4 released v3.0 on 2026-09-26 with an Alpha-5 decoder (the maintainer's own #46, not PR #42, which is still
@@ -134,7 +143,7 @@ class Build(unittest.TestCase):
         self.assertIn("67ca74c", az["version_detail"])
         self.assertEqual(az["gate"]["short"], "reads them")
         self.assertNotIn("Caveat", az["gate"]["full"])
-        self.assertIn("the second round’s PyEphem, Gpredict, libsgp4 and astroz, D-174, D-178, D-182 and D-185", html)
+        self.assertIn("the second round’s PyEphem, satellite.js, Gpredict, libsgp4, tle.js and astroz, D-174, D-176, D-178, D-182, D-184 and D-185", html)
         # S-059: the PyEphem row reports the second round (corpus D-174, D-175, D-183) once its second-round report was filed
         # (#297, corpus D-193); the gate text stays as S-042 wrote it, which the second-round run measures again.
         pe = next(r for r in runs["runs"] if r["library"] == "PyEphem")
@@ -157,6 +166,19 @@ class Build(unittest.TestCase):
                                   "427": "issue #427 (open 2026-09-28; a letter in the epoch field)"})
         self.assertIn("(#427)", gp["finding"])
         self.assertIn("every catalog number read as 0", gp["gate"]["full"])
+        # S-077: the tle.js row reports the second round (corpus D-184) with #63 as its second-round report; the getters validating
+        # nothing unless asked is the library's design, and isValidTLE() returns false for the two other corrupt inputs, so neither
+        # is filed (owner ruling, 2026-10-03).
+        tj = next(r for r in runs["runs"] if r["library"] == "tle.js")
+        self.assertEqual((tj["version"], tj["run_date"], tj["failed"]), ("5.0.3", "2026-09-27", "3 of 18"))
+        labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in tj["reports"]}
+        self.assertEqual(labels, {"62": "issue #62 (open 2026-09-24; Alpha-5 fields and the year pivot)",
+                                  "63": "issue #63 (open 2026-09-28; a letter in the epoch field)"})
+        self.assertIn("(#63)", tj["finding"])
+        self.assertIn("8 fail when taken from the millisecond timestamp API", tj["breakdown"])
+        self.assertIn("neither is filed as a defect", tj["breakdown"])
+        # Two rows remain at the first round, held under S-056.
+        self.assertEqual(sorted(r["library"] for r in runs["runs"] if r["corpus_version"] == "0.2.1"), ["SatDump", "gods-eye-view"])
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is the TLE format at CelesTrak carrying no object above 99999, as its

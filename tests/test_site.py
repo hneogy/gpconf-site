@@ -70,11 +70,14 @@ class Build(unittest.TestCase):
         self.assertIn("HTTP 404", html)
         self.assertIn("Refused and dropped are not distinguished for the first-round runs", html)  # corpus D-144 footnote
         # S-056, S-057, S-059, S-060, S-076, S-077: PyEphem, satellite.js, Gpredict, libsgp4, tle.js and astroz report the second round
-        # (corpus v0.4.0); gods-eye-view and SatDump stay at the first round (corpus v0.2.1) until each one's second-round report is
-        # filed. A row moves only with the entry that links its report.
+        # (corpus v0.4.0); S-079: gods-eye-view reports a run of its release v0.2.1 against corpus v0.5.0; SatDump stays at the
+        # first round (corpus v0.2.1) until its second-round report is filed. A row moves only with the entry that links its report.
         for r in runs["runs"]:
             if r["library"] in ("PyEphem", "satellite.js", "Gpredict", "libsgp4", "tle.js", "astroz"):
                 self.assertEqual(r["corpus_version"], "0.4.0", r["library"])
+                self.assertTrue(r["failed"].endswith(" of 18"), r["library"])
+            elif r["library"] == "gods-eye-view":
+                self.assertEqual(r["corpus_version"], "0.5.0", r["library"])
                 self.assertTrue(r["failed"].endswith(" of 18"), r["library"])
             else:
                 self.assertEqual(r["corpus_version"], "0.2.1", r["library"])
@@ -82,6 +85,7 @@ class Build(unittest.TestCase):
         self.assertNotIn("corpus_version", runs)  # a version per row, none for the table
         self.assertIn("corpus 0.2.1", html)
         self.assertIn("corpus 0.4.0", html)
+        self.assertIn("corpus 0.5.0", html)
         # Pull requests carry their state and date in the label, in the python-sgp4 row's shape (S-044).
         for r in runs["runs"]:
             for u in r["reports"]:
@@ -156,7 +160,7 @@ class Build(unittest.TestCase):
         self.assertIn(str(escape(labels["297"])), html)
         self.assertIn("(#297)", pe["finding"])
         self.assertIn("every catalog number read as 0", pe["gate"]["full"])
-        self.assertTrue(runs["url"].endswith("/blob/v0.5.0/DECISIONS.md"))  # S-074: the tag carries every entry the rows cite
+        self.assertTrue(runs["url"].endswith("/blob/f0faea2/DECISIONS.md"))  # S-079: the export that carries D-221 to D-223, which the v0.5.0 tag (S-074) precedes
         # S-060: the Gpredict row reports the second round (corpus D-178, D-183) once its second-round report was filed
         # (#427, corpus D-193); the gate text stays, for the reason in S-059.
         gp = next(r for r in runs["runs"] if r["library"] == "Gpredict")
@@ -177,8 +181,29 @@ class Build(unittest.TestCase):
         self.assertIn("(#63)", tj["finding"])
         self.assertIn("8 fail when taken from the millisecond timestamp API", tj["breakdown"])
         self.assertIn("neither is filed as a defect", tj["breakdown"])
-        # Two rows remain at the first round, held under S-056.
-        self.assertEqual(sorted(r["library"] for r in runs["runs"] if r["corpus_version"] == "0.2.1"), ["SatDump", "gods-eye-view"])
+        # S-079: the gods-eye-view row reports the corpus's run of release v0.2.1 (corpus D-221), every item as at ce671ce, with
+        # #906 as its second-round report (corpus D-223) and PR #767 rebased onto that release (corpus D-222). The breakdown says
+        # what the count rests on beyond the two reports: five of the seven fail on the dependency's mean motion.
+        gev = next(r for r in runs["runs"] if r["library"] == "gods-eye-view")
+        self.assertEqual((gev["version"], gev["run_date"], gev["failed"]), ("0.2.1", "2026-10-03", "7 of 18"))
+        self.assertIn("aa16b7c", gev["version_detail"])
+        labels = {u["url"].rsplit("/", 1)[1]: u["label"] for u in gev["reports"]}
+        self.assertEqual(labels, {"751": "issue #751 (open 2026-09-24; Alpha-5 satellites collapse onto one catalog entry)",
+                                  "767": "PR #767 (open 2026-09-25; decoder in review, rebased onto v0.2.1 on 2026-10-03)",
+                                  "906": "issue #906 (open 2026-10-03; one set with a missing line drops the rest of its group)"})
+        self.assertEqual(list(labels), ["751", "767", "906"])
+        self.assertIn("(#751)", gev["finding"])
+        self.assertIn("(#906)", gev["finding"])
+        self.assertIn("five of the seven fail on the mean motion, which satellite.js 6.0.2, the application's dependency,", gev["breakdown"])
+        self.assertIn("not a fault of the application", gev["breakdown"])
+        self.assertIn(str(escape(gev["breakdown"])), html)
+        self.assertIn("1 misidentified (kept under the key NaN), 255 dropped as duplicates of it", gev["gate"]["full"])  # as the release's run measures again
+        self.assertIn("and v0.5.0 for gods-eye-view’s row, a run of its release v0.2.1 on 2026-10-03", html)
+        self.assertIn("gods-eye-view’s release v0.2.1, D-221", html)
+        # One row remains at the first round, held under S-056.
+        self.assertEqual(sorted(r["library"] for r in runs["runs"] if r["corpus_version"] == "0.2.1"), ["SatDump"])
+        # The home page's eight rows were not all run in September any more: its sentence names no month.
+        self.assertIn("Each was run at one pinned version on the date shown", self.pages["index.html"])
 
     def test_tle_404_is_never_drawn_as_a_fault(self):
         """A 404 on the last-30-days TLE request is the TLE format at CelesTrak carrying no object above 99999, as its
